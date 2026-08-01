@@ -1,0 +1,23 @@
+global:
+  elasticsearch:
+    url: https://elasticsearch.example.svc:9200
+    existingSecret: mqdeck-elasticsearch
+
+agent:
+  enabled: false
+
+api:
+  enabled: true
+
+web:
+  enabled: true
+
+ingress:
+  enabled: false
+
+openshiftRoute:
+  enabled: true
+  host: mqdeck.apps.example.com
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

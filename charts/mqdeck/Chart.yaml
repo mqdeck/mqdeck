@@ -1,0 +1,16 @@
+apiVersion: v2
+name: mqdeck
+description: Install MQDeck Agent, API, and Web components independently or together.
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+home: https://github.com/mqdeck/mqdeck
+sources:
+  - https://github.com/mqdeck/mqdeck
+keywords:
+  - ibmmq
+  - rabbitmq
+  - observability
+  - messaging
+maintainers:
+  - name: MQDeck

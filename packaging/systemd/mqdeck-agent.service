@@ -1,0 +1,28 @@
+[Unit]
+Description=MQDeck read-only collection agent
+Documentation=https://github.com/mqdeck/mqdeck
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=mqdeck
+Group=mqdeck
+EnvironmentFile=-/etc/mqdeck/agent.env
+ExecStart=/opt/mqdeck/agent/mqdeck-agent -config /etc/mqdeck/agent.yaml
+Restart=on-failure
+RestartSec=10s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target

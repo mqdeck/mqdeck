@@ -1,8 +1,7 @@
 # Configuration
 
-MQDeck keeps deployment-specific endpoints and secrets outside source code.
-The following overview links each configuration surface to its authoritative
-repository.
+MQDeck keeps deployment-specific endpoints and secrets outside binaries and
+container images.
 
 ## Agent
 
@@ -28,9 +27,8 @@ Each host can define:
   validation;
 - labels for topology and report behavior.
 
-See the versioned
-[`mqdeck.yaml`](https://github.com/mqdeck/mqdeck-agent/blob/main/mqdeck.yaml) for
-a complete multi-broker example.
+Start with the public [`examples/agent.yaml`](../examples/agent.yaml). Validate
+every change with `mqdeck-agent -config agent.yaml -validate`.
 
 ## API
 
@@ -54,15 +52,9 @@ and evidence indices.
 `MQDECK_API_URL` configures the server-side API target and defaults to
 `http://localhost:8080`. The browser calls only same-origin proxy routes.
 
-## Local environment
-
-`mqdeck-local/.env.example` pins the development image versions, host ports,
-and disposable local credentials. `make up` copies it to the ignored `.env`
-file on first use.
-
-The example IBM MQ settings accept the developer image license and the local
-agent disables TLS verification for the self-signed development endpoints.
-Review the IBM license and replace these settings for any non-local deployment.
+`MQDECK_TEST_RUNNER_URL` and `MQDECK_TEST_RUNNER_TOKEN` enable real Test Flight
+requests through a selected Agent. Leave both unset when Test Flight is not
+used.
 
 ## Production guidance
 

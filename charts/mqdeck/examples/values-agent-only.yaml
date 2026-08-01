@@ -1,0 +1,14 @@
+global:
+  elasticsearch:
+    url: https://elasticsearch.example.com:9200
+
+agent:
+  enabled: true
+  existingConfigMap: mqdeck-agent-config
+  existingSecret: mqdeck-agent-secrets
+
+api:
+  enabled: false
+
+web:
+  enabled: false

@@ -1,0 +1,86 @@
+{{- if .Values.agent.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mqdeck.fullname" . }}-agent
+  labels:
+    {{- include "mqdeck.componentLabels" (dict "root" . "component" "agent") | nindent 4 }}
+spec:
+  replicas: {{ .Values.agent.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "mqdeck.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: agent
+  template:
+    metadata:
+      labels:
+        {{- include "mqdeck.componentLabels" (dict "root" . "component" "agent") | nindent 8 }}
+        {{- with .Values.agent.podLabels }}{{ toYaml . | nindent 8 }}{{- end }}
+      {{- with .Values.agent.podAnnotations }}
+      annotations: {{ toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "mqdeck.serviceAccountName" . }}
+      automountServiceAccountToken: false
+      securityContext: {{ toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: agent
+          image: {{ include "mqdeck.image" (dict "root" . "image" .Values.agent.image) | quote }}
+          imagePullPolicy: {{ .Values.agent.image.pullPolicy }}
+          args: ["-config", "/etc/mqdeck/mqdeck.yaml"]
+          securityContext: {{ toYaml .Values.containerSecurityContext | nindent 12 }}
+          env:
+            - name: MQDECK_ELASTICSEARCH_URL
+              value: {{ .Values.global.elasticsearch.url | quote }}
+          {{- if or .Values.agent.existingSecret .Values.agent.secretValues }}
+          envFrom:
+            - secretRef:
+                name: {{ default (printf "%s-agent" (include "mqdeck.fullname" .)) .Values.agent.existingSecret }}
+          {{- end }}
+          {{- if .Values.agent.service.enabled }}
+          ports:
+            - name: test-runner
+              containerPort: {{ .Values.agent.service.port }}
+          {{- end }}
+          resources: {{ toYaml .Values.agent.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/mqdeck
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          configMap:
+            name: {{ default (printf "%s-agent" (include "mqdeck.fullname" .)) .Values.agent.existingConfigMap }}
+        - name: tmp
+          emptyDir: {}
+      nodeSelector: {{ toYaml .Values.agent.nodeSelector | nindent 8 }}
+      affinity: {{ toYaml .Values.agent.affinity | nindent 8 }}
+      tolerations: {{ toYaml .Values.agent.tolerations | nindent 8 }}
+{{- if .Values.agent.service.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mqdeck.fullname" . }}-agent
+  labels:
+    {{- include "mqdeck.componentLabels" (dict "root" . "component" "agent") | nindent 4 }}
+spec:
+  type: {{ .Values.agent.service.type }}
+  selector:
+    app.kubernetes.io/name: {{ include "mqdeck.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: agent
+  ports:
+    - name: http
+      port: {{ .Values.agent.service.port }}
+      targetPort: test-runner
+{{- end }}
+{{- end }}

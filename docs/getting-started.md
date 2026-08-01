@@ -1,127 +1,58 @@
 # Getting started
 
-This guide starts the complete MQDeck development topology: Elasticsearch, a
-three-node RabbitMQ cluster, four IBM MQ queue managers, the collection agent,
-the read-only API, and the web interface.
+MQDeck requires an existing Elasticsearch deployment and at least one IBM MQ
+or RabbitMQ endpoint. Start with API and Web, then add an Agent after preparing
+read-only broker credentials.
 
-## Requirements
+## Choose an installation model
 
-- Docker Desktop or Docker Engine with Docker Compose v2
-- Go 1.25 or newer
-- Node.js 22.13 or newer
-- `curl` and `jq` for verification and the message simulator
-- At least 10 GB of memory allocated to Docker is recommended
-
-On Apple Silicon, Docker must support `linux/amd64` emulation because the IBM MQ
-developer image used by the local environment does not publish an `arm64`
-variant.
-
-## Clone the repositories
-
-The development scripts use sibling repository paths:
-
-```text
-mqdeck-workspace/
-├── mqdeck-agent/
-├── mqdeck-api/
-├── mqdeck-local/
-└── mqdeck-web/
-```
-
-Create that layout:
-
-```bash
-mkdir mqdeck-workspace
-cd mqdeck-workspace
-git clone https://github.com/mqdeck/mqdeck-agent.git
-git clone https://github.com/mqdeck/mqdeck-api.git
-git clone https://github.com/mqdeck/mqdeck-local.git
-git clone https://github.com/mqdeck/mqdeck-web.git
-```
-
-The agent vendors the adapter modules, so cloning the adapter repositories is
-only necessary when developing an adapter.
-
-## Start the platform
-
-From `mqdeck-local`, start the infrastructure:
-
-```bash
-make up
-```
-
-On the first run, the script creates an ignored `.env` from `.env.example`.
-The included passwords are intentionally limited to local development. Replace
-them before allowing access from another machine.
-
-Wait for the infrastructure to become healthy, then start the application
-processes in another terminal:
-
-```bash
-cd mqdeck-workspace/mqdeck-local
-make dev
-```
-
-Open <http://localhost:3000> and run the end-to-end verification:
-
-```bash
-make verify
-```
-
-The supporting endpoints are:
-
-| Service | Local endpoint |
+| Model | Recommended for |
 | --- | --- |
-| MQDeck web | <http://localhost:3000> |
-| MQDeck API | <http://localhost:8080> |
-| Elasticsearch | <http://localhost:9200> |
-| RabbitMQ management, node 1 | <http://localhost:15672> |
-| IBM MQ console, queue manager 1A | <https://localhost:9443> |
+| Linux binaries and `systemd` | Dedicated servers and simple virtual machines |
+| Windows executable and service | Agent installation beside a Windows-hosted broker |
+| Containers with Helm | Kubernetes, AKS, EKS, and OpenShift |
 
-Additional broker ports are documented in the
-[`mqdeck-local` README](https://github.com/mqdeck/mqdeck-local#endpoints).
+Download every artifact from the
+[1.0.0 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.0) and verify
+it against `SHA256SUMS` before installation.
 
-## Generate message traffic
+## Minimum production topology
 
-The local environment includes producers and consumers that generate queue
-accumulation and drain cycles across both broker types:
+1. Install API and configure a read-only Elasticsearch identity.
+2. Install Web and set `MQDECK_API_URL` to the API's internal URL.
+3. Install one Agent at a network point that can reach the brokers, or install
+   an Agent beside each broker for local diagnostic commands.
+4. Give the Agent an Elasticsearch identity restricted to writes on
+   `mqdeck-hosts` and `mqdeck-evidence-*`.
+5. Configure broker accounts with inspection permissions only.
+6. Validate Agent YAML before enabling its service.
+7. Place Web behind a TLS reverse proxy or ingress.
 
-```bash
-make simulate-start
-make simulate-status
-make simulate-logs
-```
+## Verify the deployment
 
-Stop the workers without deleting queued messages:
-
-```bash
-make simulate-stop
-```
-
-## Stop or reset
-
-Stop containers while retaining broker data:
+API health:
 
 ```bash
-make down
+curl --fail https://api.mqdeck.example.com/healthz
 ```
 
-Delete the local containers and their persistent broker data:
+Agent version and configuration:
 
 ```bash
-make reset
+/opt/mqdeck/agent/mqdeck-agent -version
+sudo -u mqdeck /opt/mqdeck/agent/mqdeck-agent \
+  -config /etc/mqdeck/agent.yaml -validate
 ```
 
-`make reset` is destructive and is intended only for the disposable local
-environment.
+After the Agent's first successful collection, open Web and confirm the host
+appears in Observe. Open its report and review collection health, queues,
+channels, connections, consumers, and findings.
 
-## Common issues
+## Next steps
 
-- **IBM MQ takes several minutes to become healthy:** this is expected on
-  Apple Silicon because the containers run through CPU emulation.
-- **The application repositories are not found:** confirm that `mqdeck-agent`,
-  `mqdeck-api`, `mqdeck-web`, and `mqdeck-local` share the same parent directory.
-- **A port is already in use:** edit the corresponding value in the ignored
-  `mqdeck-local/.env` file and restart the environment.
-- **The web interface has no hosts:** confirm that the agent is running, then
-  check `make verify` and the application output from `make dev`.
+- [Configure the Agent, API, and Web](configuration.md)
+- [Install the Agent on Linux](install-agent-linux.md)
+- [Install the Agent on Windows](install-agent-windows.md)
+- [Install API](install-api.md)
+- [Install Web](install-web.md)
+- [Install with Helm](install-helm.md)

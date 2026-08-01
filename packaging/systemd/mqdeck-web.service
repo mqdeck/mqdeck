@@ -1,0 +1,32 @@
+[Unit]
+Description=MQDeck web interface
+Documentation=https://github.com/mqdeck/mqdeck
+Wants=network-online.target
+After=network-online.target mqdeck-api.service
+
+[Service]
+Type=simple
+User=mqdeck
+Group=mqdeck
+WorkingDirectory=/opt/mqdeck/web
+Environment=NODE_ENV=production
+Environment=HOST=0.0.0.0
+Environment=PORT=3000
+EnvironmentFile=/etc/mqdeck/web.env
+ExecStart=/usr/bin/node /opt/mqdeck/web/server.js
+Restart=on-failure
+RestartSec=10s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target

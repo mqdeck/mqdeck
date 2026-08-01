@@ -1,0 +1,116 @@
+global:
+  imageRegistry: ghcr.io/mqdeck
+  imagePullSecrets: []
+  elasticsearch:
+    url: http://elasticsearch:9200
+    hostsIndex: mqdeck-hosts
+    evidenceIndexPrefix: mqdeck-evidence
+    timeout: 10s
+    existingSecret: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+agent:
+  enabled: false
+  replicaCount: 1
+  image:
+    repository: mqdeck-agent
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  existingConfigMap: ""
+  config: ""
+  existingSecret: ""
+  secretValues: {}
+  service:
+    enabled: false
+    type: ClusterIP
+    port: 8090
+  resources:
+    requests: {cpu: 50m, memory: 64Mi}
+    limits: {cpu: 500m, memory: 256Mi}
+  podAnnotations: {}
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+api:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: mqdeck-api
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+  corsOrigins: ""
+  existingSecret: ""
+  secretValues: {}
+  resources:
+    requests: {cpu: 50m, memory: 64Mi}
+    limits: {cpu: 500m, memory: 256Mi}
+  podAnnotations: {}
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+web:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: mqdeck-web
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  apiURL: ""
+  testRunnerURL: ""
+  existingSecret: ""
+  secretValues: {}
+  service:
+    type: ClusterIP
+    port: 3000
+  resources:
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {cpu: 500m, memory: 512Mi}
+  podAnnotations: {}
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: mqdeck.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+openshiftRoute:
+  enabled: false
+  annotations: {}
+  host: ""
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: [ALL]

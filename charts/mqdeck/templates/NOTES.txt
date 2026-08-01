@@ -1,0 +1,15 @@
+MQDeck {{ .Chart.AppVersion }} was installed.
+
+{{- if .Values.web.enabled }}
+Web service: {{ include "mqdeck.fullname" . }}-web:{{ .Values.web.service.port }}
+{{- end }}
+{{- if .Values.api.enabled }}
+API service: {{ include "mqdeck.fullname" . }}-api:{{ .Values.api.service.port }}
+{{- end }}
+{{- if not .Values.agent.enabled }}
+The Agent is disabled by default because it requires an environment-specific
+read-only broker configuration. Enable it with agent.enabled=true and provide
+agent.config or agent.existingConfigMap.
+{{- end }}
+
+Documentation: https://github.com/mqdeck/mqdeck/tree/main/docs

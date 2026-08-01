@@ -1,51 +1,32 @@
 # Contributing to MQDeck
 
-Thank you for helping improve MQDeck. The platform is split into focused
-repositories so changes can be reviewed and released independently.
+MQDeck implementation repositories are private. This public repository accepts
+issues and pull requests for installation documentation, Helm values examples,
+and packaging guidance only.
 
-## Choose the repository
+## Report an issue
 
-- Platform documentation: `mqdeck`
-- Collection scheduling and storage: `mqdeck-agent`
-- Query endpoints and report normalization: `mqdeck-api`
-- User interface: `mqdeck-web`
-- Local infrastructure and simulation: `mqdeck-local`
-- Broker-specific collection: the corresponding adapter repository
+Open a public issue with:
 
-Open an issue in the repository that owns the behavior. For security concerns,
-follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
+- the affected MQDeck version and component;
+- operating system or Kubernetes distribution;
+- installation method;
+- expected and observed behavior;
+- sanitized logs and configuration excerpts.
 
-## Development workflow
+Never include credentials, broker payloads, Elasticsearch data, or production
+host names. Report suspected vulnerabilities privately through
+[SECURITY.md](SECURITY.md).
 
-1. Fork the relevant repository and create a focused branch.
-2. Keep user-facing text, documentation, commit messages, and pull-request
-   descriptions in English.
-3. Preserve the read-only safety model. New broker operations must have narrow
-   validation and tests that prove mutating inputs are rejected.
-4. Add or update tests and documentation with the implementation.
-5. Open a pull request that explains the change, its operational impact, and
-   the validation performed.
+## Documentation changes
 
-## Validation
+1. Create a focused branch.
+2. Write documentation, commit messages, and pull-request descriptions in
+   English.
+3. Test every command you change where practical.
+4. Run `helm lint charts/mqdeck` and render relevant chart combinations when
+   changing Helm files.
+5. Open a pull request explaining the operator impact and validation performed.
 
-Run the checks for the repository you changed:
-
-| Repository | Commands |
-| --- | --- |
-| `mqdeck-agent` | `make validate` |
-| `mqdeck-api` | `make test` |
-| `mqdeck-web` | Run `build`, `test`, `lint`, and `typecheck` with npm |
-| `mqdeck-local` | `make verify` with the environment running |
-| Go adapters | `go test ./...` |
-
-For cross-component changes, use the sibling checkout described in
-[Getting started](docs/getting-started.md) and run the local end-to-end
-verification.
-
-## Documentation style
-
-- Write concise, task-oriented English.
-- Use sentence case for headings.
-- Put commands in fenced code blocks and identify destructive commands.
-- Link to the owning repository instead of duplicating implementation details
-  that are likely to change.
+External source-code contributions cannot currently be accepted because the
+implementation repositories are not publicly distributed.
