@@ -1,0 +1,26 @@
+name: Validate distribution
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+        with:
+          version: v3.13.1
+      - name: Lint and render chart combinations
+        run: |
+          helm lint charts/mqdeck
+          helm template mqdeck charts/mqdeck --namespace mqdeck >/dev/null
+          helm template mqdeck charts/mqdeck --namespace mqdeck \
+            --set agent.enabled=true --set-file agent.config=examples/agent.yaml >/dev/null
+          helm template mqdeck charts/mqdeck --namespace mqdeck \
+            -f charts/mqdeck/examples/values-openshift.yaml >/dev/null
