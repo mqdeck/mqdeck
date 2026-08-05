@@ -1,0 +1,27 @@
+version: 1
+name: IBM MQ route with a dedicated Agent
+description: Pin the complete route test to one exact MQDeck Agent.
+test: ibmmq
+agent: mqdeck-agent-primary
+timeout_ms: 10000
+
+from:
+  host: ibmmq-source
+  queue: MQDECK.TEST.TO.QM2
+
+to:
+  host: ibmmq-destination
+  queue: MQDECK.TEST.QM2.IN
+  wait_ms: 5000
+
+message:
+  type: mqdeck.test-flight
+  purpose: dedicated-agent-route
+  destination: QM2
+
+expect:
+  channel: QM1.TO.QM2
+  max_ms: 3000
+  payload:
+    destination: QM2
+  dead_letter_queue: MQDECK.DEAD.LETTER

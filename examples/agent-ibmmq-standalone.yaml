@@ -1,0 +1,47 @@
+version: 1
+
+agent:
+  id: mqdeck-agent-qm1
+  timezone: UTC
+  run_on_start: true
+  max_concurrency: 1
+
+elasticsearch:
+  url: ${MQDECK_ELASTICSEARCH_URL}
+  hosts_index: mqdeck-hosts
+  evidence_index_prefix: mqdeck-evidence
+  timeout: 10s
+  api_key: ${MQDECK_ELASTICSEARCH_API_KEY}
+
+test_runner:
+  address: ${MQDECK_TEST_RUNNER_ADDRESS}
+  token: ${MQDECK_TEST_RUNNER_TOKEN}
+  max_body_bytes: 262144
+  max_concurrent: 1
+  credentials:
+    username: ${IBM_MQ_APPLICATION_USERNAME}
+    password: ${IBM_MQ_APPLICATION_PASSWORD}
+
+hosts:
+  - id: ibmmq-standalone
+    name: IBM MQ standalone QM1
+    adapter: ibmmq
+    transport: rest
+    endpoint: ${IBM_MQ_ADMIN_URL}
+    queue_manager: QM1
+    location: primary-datacenter
+    schedule: "@every 30s"
+    timeout: 20s
+    labels:
+      machine: mq1.example.com
+      topology: standalone
+    credentials:
+      username: ${IBM_MQ_OBSERVER_USERNAME}
+      password: ${IBM_MQ_OBSERVER_PASSWORD}
+    tls:
+      insecure_skip_verify: false
+    tests: [queue_manager, queue_status, channel_status]
+    detail_tests: [queues, channels]
+    capture:
+      detail_interval: 10m
+      max_response_bytes: 2097152

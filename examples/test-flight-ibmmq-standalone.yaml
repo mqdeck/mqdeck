@@ -1,0 +1,28 @@
+version: 1
+name: IBM MQ standalone loopback
+description: Put and get one correlated message on a local queue in QM1.
+test: ibmmq
+pool: standalone
+timeout_ms: 10000
+
+from:
+  host: ibmmq-standalone
+  queue: MQDECK.TEST.LOCAL
+
+to:
+  host: ibmmq-standalone
+  queue: MQDECK.TEST.LOCAL
+  wait_ms: 5000
+
+message:
+  type: mqdeck.test-flight
+  purpose: standalone-loopback
+  queue_manager: QM1
+
+expect:
+  max_ms: 1500
+  payload:
+    type: mqdeck.test-flight
+    purpose: standalone-loopback
+    queue_manager: QM1
+  dead_letter_queue: MQDECK.DEAD.LETTER

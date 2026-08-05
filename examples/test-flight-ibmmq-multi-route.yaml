@@ -1,0 +1,45 @@
+version: 1
+name: IBM MQ multiple routes
+description: Execute two independent IBM MQ routes in one Test Flight run.
+test: ibmmq
+pool: distributed-mq
+timeout_ms: 15000
+
+message:
+  payload: Hello from MQDeck
+
+tests:
+  - id: qm1-to-qm2
+    source:
+      connection:
+        host: ibmmq-qm1
+        queueManager: QM1
+      queue:
+        name: MQDECK.TEST.TO.QM2
+        type: remote
+    destination:
+      connection:
+        host: ibmmq-qm2
+        queueManager: QM2
+      queue:
+        name: MQDECK.TEST.QM2.IN
+        type: local
+
+  - id: qm3-to-qm4
+    source:
+      connection:
+        host: ibmmq-qm3
+        queueManager: QM3
+      queue:
+        name: MQDECK.TEST.TO.QM4
+        type: remote
+    destination:
+      connection:
+        host: ibmmq-qm4
+        queueManager: QM4
+      queue:
+        name: MQDECK.TEST.QM4.IN
+        type: local
+
+expect:
+  max_ms: 3000

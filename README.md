@@ -58,6 +58,14 @@ broker endpoints and read-only credentials are environment-specific.
 - [Upgrade and rollback](docs/upgrade.md)
 - [Security and verification](SECURITY.md)
 
+## Public examples
+
+The [`examples`](examples/) directory contains public Agent configurations and
+Test Flight definitions for RabbitMQ, distributed IBM MQ routes, and a
+standalone IBM MQ queue manager. The standalone laboratory demonstrates a
+publisher and consumer connected to the same local queue without depending on
+a second queue manager or MQ channel.
+
 ## Containers
 
 Official multi-architecture images use immutable version tags:

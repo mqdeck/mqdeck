@@ -27,8 +27,11 @@ Each host can define:
   validation;
 - labels for topology and report behavior.
 
-Start with the public [`examples/agent.yaml`](../examples/agent.yaml). Validate
-every change with `mqdeck-agent -config agent.yaml -validate`.
+Start with the public [`examples/agent.yaml`](../examples/agent.yaml) for
+RabbitMQ or
+[`examples/agent-ibmmq-standalone.yaml`](../examples/agent-ibmmq-standalone.yaml)
+for one IBM MQ queue manager. Validate every change with
+`mqdeck-agent -config agent.yaml -validate`.
 
 ## API
 
