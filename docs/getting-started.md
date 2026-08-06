@@ -13,7 +13,7 @@ read-only broker credentials.
 | Containers with Helm | Kubernetes, AKS, EKS, and OpenShift |
 
 Download every artifact from the
-[1.0.0 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.0) and verify
+[1.0.1 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.1) and verify
 it against `SHA256SUMS` before installation.
 
 ## Minimum production topology

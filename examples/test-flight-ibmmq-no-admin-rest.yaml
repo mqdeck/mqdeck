@@ -1,0 +1,30 @@
+version: 1
+name: IBM MQ Test Flight without Admin REST
+description: Verify a correlated local message using only IBM MQ Messaging REST.
+test: ibmmq
+pool: standalone
+timeout_ms: 10000
+
+from:
+  host: ibmmq-standalone
+  queue: MQDECK.TEST.LOCAL
+
+to:
+  host: ibmmq-standalone
+  queue: MQDECK.TEST.LOCAL
+  wait_ms: 5000
+
+message:
+  type: mqdeck.test-flight
+  purpose: messaging-rest-only
+  queue_manager: QM1
+
+# Channel status and dead-letter depth require Admin REST and are therefore
+# intentionally absent. Put/get, payload integrity, correlation, and duration
+# assertions still run normally.
+expect:
+  max_ms: 1500
+  payload:
+    type: mqdeck.test-flight
+    purpose: messaging-rest-only
+    queue_manager: QM1

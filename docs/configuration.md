@@ -27,10 +27,19 @@ Each host can define:
   validation;
 - labels for topology and report behavior.
 
-Start with the public [`examples/agent.yaml`](../examples/agent.yaml) for
-RabbitMQ or
-[`examples/agent-ibmmq-standalone.yaml`](../examples/agent-ibmmq-standalone.yaml)
-for one IBM MQ queue manager. Validate every change with
+For IBM MQ, Administrative REST is optional when the Agent runs beside the
+queue manager. Use `transport: command` for bounded read-only `runmqsc DISPLAY`
+collection and set `messaging_endpoint` only if Test Flight should use Messaging
+REST v3. Set `admin_endpoint` only when optional channel-state or dead-letter
+depth assertions are required. Existing `transport: rest` configurations keep
+using `endpoint` as the backward-compatible default for both REST surfaces.
+
+Start with the public [`examples/agent.yaml`](../examples/agent.yaml) and adapt
+its bounded capture, scheduling, and Elasticsearch settings to each broker.
+For IBM MQ Test Flight without Administrative REST, use
+[`examples/test-flight-ibmmq-no-admin-rest.yaml`](../examples/test-flight-ibmmq-no-admin-rest.yaml)
+with a command-transport host that defines `messaging_endpoint`. Validate every
+change with
 `mqdeck-agent -config agent.yaml -validate`.
 
 ## API

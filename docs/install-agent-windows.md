@@ -6,13 +6,13 @@ the Windows service; the included script is an auditable convenience wrapper.
 
 ## Download and verify
 
-Download `mqdeck-agent-1.0.0-windows-amd64.zip` and `SHA256SUMS` from the
-[1.0.0 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.0).
+Download `mqdeck-agent-1.0.1-windows-amd64.zip` and `SHA256SUMS` from the
+[1.0.1 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.1).
 
 In PowerShell:
 
 ```powershell
-$Version = "1.0.0"
+$Version = "1.0.1"
 $File = "mqdeck-agent-$Version-windows-amd64.zip"
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/$File" -OutFile $File
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/SHA256SUMS" -OutFile SHA256SUMS

@@ -7,24 +7,24 @@ release documentation channel. Implementation repositories are private.
 [![Latest release](https://img.shields.io/github/v/release/mqdeck/mqdeck)](https://github.com/mqdeck/mqdeck/releases/latest)
 [![License](https://img.shields.io/badge/license-MQDeck%20Community%20Binary-blue)](LICENSE.md)
 
-## Download version 1.0.0
+## Download version 1.0.1
 
 All release files and `SHA256SUMS` are on the
-[MQDeck 1.0.0 release page](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.0).
+[MQDeck 1.0.1 release page](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.1).
 
 | Component | Linux amd64 | Linux arm64 | Windows amd64 |
 | --- | --- | --- | --- |
-| Agent | `mqdeck-agent-1.0.0-linux-amd64.tar.gz` | `mqdeck-agent-1.0.0-linux-arm64.tar.gz` | `mqdeck-agent-1.0.0-windows-amd64.zip` |
-| API | `mqdeck-api-1.0.0-linux-amd64.tar.gz` | `mqdeck-api-1.0.0-linux-arm64.tar.gz` | `mqdeck-api-1.0.0-windows-amd64.zip` |
-| Web | `mqdeck-web-1.0.0-linux-amd64.tar.gz` | `mqdeck-web-1.0.0-linux-arm64.tar.gz` | — |
-| Helm | `mqdeck-1.0.0.tgz` | platform independent | platform independent |
+| Agent | `mqdeck-agent-1.0.1-linux-amd64.tar.gz` | `mqdeck-agent-1.0.1-linux-arm64.tar.gz` | `mqdeck-agent-1.0.1-windows-amd64.zip` |
+| API | `mqdeck-api-1.0.1-linux-amd64.tar.gz` | `mqdeck-api-1.0.1-linux-arm64.tar.gz` | `mqdeck-api-1.0.1-windows-amd64.zip` |
+| Web | `mqdeck-web-1.0.1-linux-amd64.tar.gz` | `mqdeck-web-1.0.1-linux-arm64.tar.gz` | — |
+| Helm | `mqdeck-1.0.1.tgz` | platform independent | platform independent |
 
 ## Quick install
 
 Install the Agent on Linux:
 
 ```bash
-VERSION=1.0.0
+VERSION=1.0.1
 ARCH=amd64 # use arm64 on ARM servers
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
 tar -xzf "mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
@@ -39,7 +39,7 @@ you explicitly enable the service after editing `/etc/mqdeck/agent.yaml` and
 Install with Helm after downloading the chart:
 
 ```bash
-helm upgrade --install mqdeck ./mqdeck-1.0.0.tgz \
+helm upgrade --install mqdeck ./mqdeck-1.0.1.tgz \
   --namespace mqdeck --create-namespace \
   --set global.elasticsearch.url=https://elasticsearch.example.com:9200
 ```
@@ -60,20 +60,21 @@ broker endpoints and read-only credentials are environment-specific.
 
 ## Public examples
 
-The [`examples`](examples/) directory contains public Agent configurations and
-Test Flight definitions for RabbitMQ, distributed IBM MQ routes, and a
-standalone IBM MQ queue manager. The standalone laboratory demonstrates a
-publisher and consumer connected to the same local queue without depending on
-a second queue manager or MQ channel.
+The [`examples`](examples/) directory contains a public Agent configuration and
+Test Flight definitions for distributed IBM MQ routes and standalone queue
+managers. The standalone definitions demonstrate a publisher and consumer on
+the same local queue without depending on a second queue manager or MQ channel,
+including a Messaging REST-only Test Flight that does not require
+Administrative REST.
 
 ## Containers
 
 Official multi-architecture images use immutable version tags:
 
 ```bash
-docker pull ghcr.io/mqdeck/mqdeck-agent:1.0.0
-docker pull ghcr.io/mqdeck/mqdeck-api:1.0.0
-docker pull ghcr.io/mqdeck/mqdeck-web:1.0.0
+docker pull ghcr.io/mqdeck/mqdeck-agent:1.0.1
+docker pull ghcr.io/mqdeck/mqdeck-api:1.0.1
+docker pull ghcr.io/mqdeck/mqdeck-web:1.0.1
 ```
 
 Never use an unpinned tag in production. The images run as non-root users and
