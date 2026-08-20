@@ -6,13 +6,13 @@ the Windows service; the included script is an auditable convenience wrapper.
 
 ## Download and verify
 
-Download `mqdeck-agent-1.0.1-windows-amd64.zip` and `SHA256SUMS` from the
-[1.0.1 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.1).
+Download `mqdeck-agent-1.0.2-windows-amd64.zip` and `SHA256SUMS` from the
+[1.0.2 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.2).
 
 In PowerShell:
 
 ```powershell
-$Version = "1.0.1"
+$Version = "1.0.2"
 $File = "mqdeck-agent-$Version-windows-amd64.zip"
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/$File" -OutFile $File
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/SHA256SUMS" -OutFile SHA256SUMS
@@ -42,6 +42,12 @@ Restart-Service MQDeckAgent
 The service runs as `LocalService`, starts automatically, and reads
 `C:\ProgramData\MQDeck\agent.yaml`. Review whether that identity has the
 minimum filesystem and local broker permissions required in your environment.
+
+IBM MQ `client` transport requires an IBM MQ Client 9.4 installation with
+`runmqsc.exe` available to the service. If it is not on the system `PATH`, set
+`command.executable` in the host definition to its absolute path. The service
+identity must be able to execute the client and reach the configured
+`SVRCONN` listener. Normal collection does not require the IBM MQ web server.
 
 ## Operate
 

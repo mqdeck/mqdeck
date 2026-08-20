@@ -10,11 +10,13 @@ remote broker endpoints from a network observation point.
 - A least-privilege Elasticsearch identity with write access only to the
   MQDeck host and evidence indices
 - Read-only IBM MQ or RabbitMQ credentials
+- IBM MQ Client 9.4 with `runmqsc` on `PATH` when using IBM MQ `client`
+  transport
 
 ## Download and verify
 
 ```bash
-VERSION=1.0.1
+VERSION=1.0.2
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -49,6 +51,22 @@ sudo journalctl -u mqdeck-agent -f
 
 The installation script does not start the service automatically. Existing
 configuration files are preserved during upgrades.
+
+## IBM MQ client transport
+
+The recommended IBM MQ deployment uses `transport: client`, a dedicated
+read-only `SVRCONN` channel, and an endpoint such as `mq.example.com:1414`.
+The MQDeck executable is static, but IBM MQ's `runmqsc` utility is an external
+runtime dependency. Confirm that the service identity can run it:
+
+```bash
+sudo -u mqdeck env MQSERVER='MQDECK.READONLY/TCP/mq.example.com(1414)' \
+  runmqsc -c -u mqdeck QM1
+```
+
+Enter the password, run `DISPLAY QMGR ALL`, and then `END`. The same path works
+when the IBM MQ web server is disabled. See
+[`examples/ibmmq-svrconn.md`](../examples/ibmmq-svrconn.md).
 
 ## Local broker commands
 

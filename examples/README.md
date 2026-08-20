@@ -9,7 +9,8 @@ environment.
 
 | File | Purpose |
 | --- | --- |
-| `agent.yaml` | Observe a RabbitMQ node through the Management API. |
+| `agent.yaml` | Observe RabbitMQ through the Management API and IBM MQ through a client `SVRCONN`. |
+| `ibmmq-svrconn.md` | Prepare and validate an IBM MQ client connection without `mqweb`. |
 | `test-flight-ibmmq-standalone.yaml` | Put and get one correlated synthetic message on the same queue manager. |
 | `test-flight-ibmmq-no-admin-rest.yaml` | Run a standalone Test Flight without Administrative REST assertions. |
 | `test-flight-ibmmq-single-route.yaml` | Test delivery between two queue managers through a sender channel. |

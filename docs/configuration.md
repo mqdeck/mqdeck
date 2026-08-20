@@ -22,24 +22,33 @@ Each host can define:
   descriptor such as `@every 30s`;
 - frequent `tests` and slower `detail_tests`;
 - `capture.detail_interval` and `capture.max_response_bytes`;
-- HTTP/REST credentials or a local executable configuration;
+- HTTP, IBM MQ client, or local executable credentials and configuration;
 - adapter-specific custom checks that still pass the adapter's read-only
   validation;
 - labels for topology and report behavior.
 
-For IBM MQ, Administrative REST is optional when the Agent runs beside the
-queue manager. Use `transport: command` for bounded read-only `runmqsc DISPLAY`
-collection and set `messaging_endpoint` only if Test Flight should use Messaging
-REST v3. Set `admin_endpoint` only when optional channel-state or dead-letter
-depth assertions are required. Existing `transport: rest` configurations keep
-using `endpoint` as the backward-compatible default for both REST surfaces.
+For IBM MQ, use `transport: client` (the default when transport is omitted) to
+run bounded read-only `runmqsc -c` commands through a `SVRCONN` channel. Set
+`endpoint` to `host:port`, provide `queue_manager` and `channel`, and install the
+IBM MQ client on the Agent host. This path works when `mqweb`, Administrative
+REST, and Messaging REST are disabled. A comma-separated endpoint provides
+multiple IBM MQ connection names.
+
+Use `transport: command` only when running local `runmqsc` against a queue
+manager on the same host. The legacy `transport: rest` remains supported.
+Set `messaging_endpoint` only when Test Flight should use Messaging REST v3,
+and set `admin_endpoint` only when optional channel-state or dead-letter depth
+assertions need Administrative REST. Existing `transport: rest` configurations
+keep using `endpoint` as the fallback for both REST surfaces.
 
 Start with the public [`examples/agent.yaml`](../examples/agent.yaml) and adapt
 its bounded capture, scheduling, and Elasticsearch settings to each broker.
-For IBM MQ Test Flight without Administrative REST, use
+For IBM MQ client preparation, use
+[`examples/ibmmq-svrconn.md`](../examples/ibmmq-svrconn.md). For Test Flight
+without Administrative REST, use
 [`examples/test-flight-ibmmq-no-admin-rest.yaml`](../examples/test-flight-ibmmq-no-admin-rest.yaml)
-with a command-transport host that defines `messaging_endpoint`. Validate every
-change with
+with a client- or command-transport host that defines `messaging_endpoint`.
+Validate every change with
 `mqdeck-agent -config agent.yaml -validate`.
 
 ## API

@@ -13,7 +13,7 @@ read-only broker credentials.
 | Containers with Helm | Kubernetes, AKS, EKS, and OpenShift |
 
 Download every artifact from the
-[1.0.1 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.1) and verify
+[1.0.2 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.2) and verify
 it against `SHA256SUMS` before installation.
 
 ## Minimum production topology
@@ -21,7 +21,8 @@ it against `SHA256SUMS` before installation.
 1. Install API and configure a read-only Elasticsearch identity.
 2. Install Web and set `MQDECK_API_URL` to the API's internal URL.
 3. Install one Agent at a network point that can reach the brokers, or install
-   an Agent beside each broker for local diagnostic commands.
+   an Agent beside each broker. IBM MQ client observation needs `runmqsc` from
+   an IBM MQ client installation and a reachable `SVRCONN` channel.
 4. Give the Agent an Elasticsearch identity restricted to writes on
    `mqdeck-hosts` and `mqdeck-evidence-*`.
 5. Configure broker accounts with inspection permissions only.
