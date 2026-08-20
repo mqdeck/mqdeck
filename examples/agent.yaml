@@ -30,3 +30,22 @@ hosts:
     capture:
       detail_interval: 5m
       max_response_bytes: 2097152
+
+  - id: ibmmq-production-qm1
+    name: IBM MQ production QM1
+    adapter: ibmmq
+    transport: client
+    endpoint: ${IBMMQ_QM1_ENDPOINT}
+    queue_manager: QM1
+    channel: MQDECK.READONLY
+    location: primary-datacenter
+    schedule: "@every 30s"
+    timeout: 20s
+    credentials:
+      username: ${IBMMQ_QM1_USERNAME}
+      password: ${IBMMQ_QM1_PASSWORD}
+    tests: [queue_manager, queue_status, channel_status]
+    detail_tests: [queues, channels, listeners, listener_status]
+    capture:
+      detail_interval: 10m
+      max_response_bytes: 2097152

@@ -67,9 +67,10 @@ Adapters isolate broker-specific transport, validation, and response handling.
 - The RabbitMQ adapter supports the Management HTTP API and local diagnostic
   binaries. HTTP checks use relative `/api/` paths and `GET`; command checks
   are limited to allowlisted diagnostic subcommands.
-- The IBM MQ adapter supports the administrative REST API and local `runmqsc`.
-  REST checks remain under the configured queue manager resource and use
-  `GET`; command checks must be a single `DISPLAY` statement.
+- The IBM MQ adapter uses `runmqsc -c` over a client `SVRCONN` by default, so
+  observation does not require `mqweb`. It also supports the Administrative
+  REST API and local `runmqsc`. REST checks remain under the configured queue
+  manager resource and use `GET`; MQSC checks must be one `DISPLAY` statement.
 
 Both adapters reject known mutating operations before execution and enforce a
 configured response-size limit.
