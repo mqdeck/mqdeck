@@ -39,6 +39,10 @@ spec:
               value: "3000"
             - name: MQDECK_API_URL
               value: {{ default (printf "http://%s-api:%v" (include "mqdeck.fullname" .) .Values.api.service.port) .Values.web.apiURL | quote }}
+            - name: MQDECK_AUTH_USERNAME
+              value: {{ .Values.web.auth.username | quote }}
+            - name: MQDECK_AUTH_DISPLAY_NAME
+              value: {{ .Values.web.auth.displayName | quote }}
             {{- with .Values.web.testRunnerURL }}
             - name: MQDECK_TEST_RUNNER_URL
               value: {{ . | quote }}

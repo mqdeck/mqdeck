@@ -36,6 +36,21 @@ helm upgrade --install mqdeck ./mqdeck-1.0.1.tgz \
   --set global.elasticsearch.existingSecret=mqdeck-elasticsearch
 ```
 
+Create the Web static-login secret as well. Keep the password and signing key
+out of command history and public values files:
+
+```bash
+kubectl -n mqdeck create secret generic mqdeck-web-auth \
+  --from-literal=MQDECK_AUTH_PASSWORD='replace-with-a-strong-password' \
+  --from-literal=MQDECK_AUTH_SESSION_SECRET='replace-with-a-long-random-secret'
+
+helm upgrade --install mqdeck ./mqdeck-1.0.1.tgz \
+  --namespace mqdeck \
+  --set web.existingSecret=mqdeck-web-auth \
+  --set web.auth.username=admin \
+  --set-string web.auth.displayName='MQDeck Operator'
+```
+
 ## Enable the Agent
 
 The Agent is disabled by default because every deployment needs explicit
@@ -78,7 +93,8 @@ Web only, pointing to an external API:
 helm upgrade --install mqdeck-web ./mqdeck-1.0.1.tgz \
   --namespace mqdeck --create-namespace \
   --set agent.enabled=false --set api.enabled=false --set web.enabled=true \
-  --set web.apiURL=https://api.mqdeck.example.com
+  --set web.apiURL=https://api.mqdeck.example.com \
+  --set web.existingSecret=mqdeck-web-auth
 ```
 
 Agent only:
