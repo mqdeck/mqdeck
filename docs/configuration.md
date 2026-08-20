@@ -68,6 +68,18 @@ and evidence indices.
 requests through a selected Agent. Leave both unset when Test Flight is not
 used.
 
+The Web login uses one static operator account configured only on the server:
+
+| Variable | Development default | Purpose |
+| --- | --- | --- |
+| `MQDECK_AUTH_USERNAME` | `admin` | Login username |
+| `MQDECK_AUTH_PASSWORD` | `mqdeck-demo` | Login password |
+| `MQDECK_AUTH_DISPLAY_NAME` | `MQDeck Operator` | Name displayed in the top bar |
+| `MQDECK_AUTH_SESSION_SECRET` | development-only value | Signs the eight-hour HTTP-only session cookie |
+
+Set a strong password and a long random session secret in every non-development
+installation. Web proxy routes reject unauthenticated requests with HTTP 401.
+
 ## Production guidance
 
 - Store secrets in the deployment platform's secret manager and inject them as

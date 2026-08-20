@@ -31,7 +31,17 @@ Example `/etc/mqdeck/web.env`:
 MQDECK_API_URL=http://127.0.0.1:8080
 MQDECK_TEST_RUNNER_URL=http://agent.example.com:8090
 MQDECK_TEST_RUNNER_TOKEN=replace-with-a-secret
+MQDECK_AUTH_USERNAME=admin
+MQDECK_AUTH_PASSWORD=replace-with-a-strong-password
+MQDECK_AUTH_DISPLAY_NAME=MQDeck Operator
+MQDECK_AUTH_SESSION_SECRET=replace-with-a-long-random-secret
 ```
+
+MQDeck Web requires the configured static account before it exposes the
+observation workspace or its same-origin API proxies. The session is signed,
+stored in an HTTP-only cookie, and expires after eight hours. Generate a unique
+session secret for every installation; do not use the development defaults in
+production.
 
 Place a TLS reverse proxy or load balancer in front of port 3000. The browser
 uses same-origin routes; the Web server makes requests to the configured API.
