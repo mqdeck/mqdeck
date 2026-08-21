@@ -1,6 +1,6 @@
 version: 1
 name: IBM MQ Test Flight without Admin REST
-description: Verify a correlated local message using only IBM MQ Messaging REST.
+description: Verify a correlated local message through an IBM MQ client SVRCONN.
 test: ibmmq
 pool: standalone
 timeout_ms: 10000
@@ -16,15 +16,15 @@ to:
 
 message:
   type: mqdeck.test-flight
-  purpose: messaging-rest-only
+  purpose: svrconn-loopback
   queue_manager: QM1
 
-# Channel status and dead-letter depth require Admin REST and are therefore
-# intentionally absent. Put/get, payload integrity, correlation, and duration
-# assertions still run normally.
+# A sender-channel assertion is intentionally absent because this is a local
+# loopback. Dead-letter depth is observed through read-only MQSC over SVRCONN.
 expect:
   max_ms: 1500
   payload:
     type: mqdeck.test-flight
-    purpose: messaging-rest-only
+    purpose: svrconn-loopback
     queue_manager: QM1
+  dead_letter_queue: MQDECK.DEAD.LETTER
