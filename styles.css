@@ -281,14 +281,6 @@ svg {
   text-transform: uppercase;
 }
 
-.eyebrow > span {
-  width: 19px;
-  height: 2px;
-  border-radius: 4px;
-  background: var(--accent);
-  box-shadow: 0 0 12px rgba(22, 135, 255, 0.7);
-}
-
 h1,
 h2,
 h3,
