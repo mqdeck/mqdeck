@@ -56,6 +56,32 @@ with a client-transport host and a dedicated `MQDECK.*` test queue.
 Validate every change with
 `mqdeck-agent -config agent.yaml -validate`.
 
+### Six hour Elasticsearch retention
+
+The agent enables retention by default and will not write a document until it
+has created or updated the configured ILM policy and index template. The
+default policy permanently deletes MQDeck agent presence, host snapshots, and
+evidence indices after six hours. Because Elasticsearch executes the policy,
+expiration continues after all MQDeck processes stop.
+
+```yaml
+elasticsearch:
+  url: ${MQDECK_ELASTICSEARCH_URL}
+  agents_index: mqdeck-agents
+  hosts_index: mqdeck-hosts
+  evidence_index_prefix: mqdeck-evidence
+  retention:
+    enabled: true
+    duration: 6h
+    policy_name: mqdeck-retention-6h
+```
+
+The Elasticsearch bootstrap identity requires `manage_ilm` and
+`manage_index_templates` cluster privileges, plus `manage` and write access to
+the MQDeck index patterns. When a platform team manages retention centrally,
+set `retention.enabled: false` only after an equivalent external policy has
+been applied.
+
 ## API
 
 | Variable | Default |

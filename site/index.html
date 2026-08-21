@@ -51,8 +51,8 @@
           <a href="#architecture">Architecture</a>
           <a href="#install">Install</a>
           <a href="#documentation">Documentation</a>
-          <a class="nav-release" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.3">
-            Download 1.0.3
+          <a class="nav-release" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4">
+            Download 1.0.4
           </a>
         </nav>
       </div>
@@ -72,8 +72,8 @@
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.3">
-                Download MQDeck 1.0.3
+              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4">
+                Download MQDeck 1.0.4
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
               </a>
               <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck/tree/main/docs">
@@ -152,9 +152,9 @@
 
             <article class="feature-card feature-card-accent">
               <div class="release-label"><span></span> Current release</div>
-              <strong class="release-version">1.0.3</strong>
+              <strong class="release-version">1.0.4</strong>
               <p>IBM MQ client observation through SVRCONN, without requiring the IBM MQ web server.</p>
-              <a href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.3">View release notes <span>→</span></a>
+              <a href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4">View release notes <span>→</span></a>
             </article>
           </div>
         </div>
@@ -266,7 +266,7 @@
 
             <div class="install-panel" id="install-linux" role="tabpanel" data-install-panel="linux">
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install Agent on Linux</strong><button type="button" data-copy="#linux-command">Copy</button></div>
-              <pre id="linux-command"><code><span>VERSION</span>=1.0.3
+              <pre id="linux-command"><code><span>VERSION</span>=1.0.4
 <span>ARCH</span>=amd64
 wget https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz
 tar -xzf mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz
@@ -275,7 +275,7 @@ sudo ./mqdeck-agent-${VERSION}-linux-${ARCH}/install.sh</code></pre>
 
             <div class="install-panel" id="install-windows" role="tabpanel" data-install-panel="windows" hidden>
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Download Agent on Windows</strong><button type="button" data-copy="#windows-command">Copy</button></div>
-              <pre id="windows-command"><code><span>$Version</span> = "1.0.3"
+              <pre id="windows-command"><code><span>$Version</span> = "1.0.4"
 <span>$File</span> = "mqdeck-agent-$Version-windows-amd64.zip"
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/$File" -OutFile $File
 Expand-Archive $File -DestinationPath . -Force</code></pre>
@@ -285,7 +285,7 @@ Expand-Archive $File -DestinationPath . -Force</code></pre>
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install API and Web with Helm</strong><button type="button" data-copy="#helm-command">Copy</button></div>
               <pre id="helm-command"><code>helm upgrade --install mqdeck \
   oci://ghcr.io/mqdeck/charts/mqdeck \
-  --version 1.0.3 \
+  --version 1.0.4 \
   --namespace mqdeck --create-namespace \
   --set global.elasticsearch.url=https://elastic.example.com:9200</code></pre>
             </div>
@@ -329,12 +329,12 @@ Expand-Archive $File -DestinationPath . -Force</code></pre>
       <section class="final-cta section">
         <div class="container final-cta-inner">
           <div>
-            <div class="eyebrow">MQDeck 1.0.3 is available</div>
+            <div class="eyebrow">MQDeck 1.0.4 is available</div>
             <h2>Make messaging health visible.</h2>
             <p>Download the release, connect your read only identities, and begin collecting evidence.</p>
           </div>
           <div class="final-actions">
-            <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.3">Download 1.0.3 <span>→</span></a>
+            <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4">Download 1.0.4 <span>→</span></a>
             <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck">View on GitHub</a>
           </div>
         </div>

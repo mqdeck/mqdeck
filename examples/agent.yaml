@@ -12,6 +12,10 @@ elasticsearch:
   evidence_index_prefix: mqdeck-evidence
   timeout: 10s
   api_key: ${MQDECK_ELASTICSEARCH_API_KEY}
+  retention:
+    enabled: true
+    duration: 6h
+    policy_name: mqdeck-retention-6h
 
 hosts:
   - id: rabbitmq-production-01

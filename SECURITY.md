@@ -33,10 +33,14 @@ MQDeck limits broker interaction to read-only operations:
 - Adapter responses are size-bounded before storage.
 - The API exposes query operations only and is not part of evidence ingestion.
 - Credentials are not included in host snapshots or evidence documents.
+- The agent blocks ingestion until the configured Elasticsearch ILM retention
+  policy is enforced. The default permanently removes MQDeck data after six
+  hours, including when agents are offline.
 
 These controls reduce risk but do not replace deployment hardening. Operators
 remain responsible for TLS, identity and access management, network isolation,
-secret storage, Elasticsearch authorization, and evidence retention.
+secret storage, Elasticsearch authorization, and approval of the configured
+evidence retention period.
 
 Verify downloaded artifacts against the release `SHA256SUMS` file and use only
 explicit, immutable versions. Do not expose Agent Test Flight endpoints without
