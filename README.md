@@ -7,6 +7,9 @@ release documentation channel. Implementation repositories are private.
 [![Latest release](https://img.shields.io/github/v/release/mqdeck/mqdeck)](https://github.com/mqdeck/mqdeck/releases/latest)
 [![License](https://img.shields.io/badge/license-MQDeck%20Community%20Binary-blue)](LICENSE.md)
 
+Visit the [MQDeck platform website](https://mqdeck.github.io/mqdeck/) for the
+product overview, architecture, installation options, and release downloads.
+
 ## Download version 1.0.2
 
 All release files and `SHA256SUMS` are on the
