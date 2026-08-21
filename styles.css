@@ -151,42 +151,49 @@ svg {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex: 0 0 auto;
 }
 
 .brand-mark {
   display: grid;
-  width: 39px;
-  height: 39px;
+  width: 34px;
+  height: 34px;
   place-items: center;
-  border: 1px solid rgba(85, 184, 255, 0.56);
-  border-radius: 10px;
-  background: linear-gradient(145deg, #1687ff, #0d5cc6);
-  box-shadow: 0 8px 22px rgba(22, 135, 255, 0.24), inset 0 1px rgba(255, 255, 255, 0.28);
-  color: white;
-  font-size: 20px;
-  font-weight: 850;
+  border: 1px solid #25344a;
+  border-radius: 9px;
+  background: #0b1324;
+  box-shadow: inset 0 0 12px rgba(34, 211, 238, 0.04);
+  color: var(--cyan);
+  font-size: 19px;
+  font-weight: 800;
 }
 
 .brand-copy {
   display: flex;
   flex-direction: column;
-  line-height: 1.05;
+  align-items: flex-start;
+  line-height: 1.1;
 }
 
 .brand-copy strong {
-  letter-spacing: 0.1em;
-  font-size: 16px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 720;
+  letter-spacing: 0.025em;
+}
+
+.brand-copy strong::after {
+  color: var(--cyan);
+  content: ".";
 }
 
 .brand-copy small {
-  margin-top: 5px;
+  margin-top: 4px;
   color: var(--faint);
   font-size: 10px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.015em;
 }
 
 .primary-navigation {
@@ -239,21 +246,27 @@ svg {
 
 .hero {
   overflow: hidden;
-  min-height: 820px;
-  padding-top: 176px;
-  padding-bottom: 110px;
+  min-height: 720px;
+  padding-top: 190px;
+  padding-bottom: 125px;
 }
 
 .hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(590px, 1.14fr);
-  align-items: center;
-  gap: 56px;
+  display: block;
 }
 
 .hero-copy {
   position: relative;
   z-index: 3;
+  max-width: 920px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.hero-copy .eyebrow,
+.hero-actions,
+.hero-notes {
+  justify-content: center;
 }
 
 .eyebrow {
@@ -284,8 +297,10 @@ p {
 }
 
 h1 {
-  max-width: 670px;
-  margin: 24px 0 25px;
+  max-width: 880px;
+  margin-inline: auto;
+  margin-top: 24px;
+  margin-bottom: 25px;
   font-size: clamp(48px, 5.15vw, 76px);
   line-height: 1.01;
   letter-spacing: -0.052em;
@@ -300,8 +315,8 @@ h1 em {
 }
 
 .hero-lede {
-  max-width: 640px;
-  margin-bottom: 33px;
+  max-width: 760px;
+  margin: 0 auto 33px;
   color: var(--muted);
   font-size: 19px;
   line-height: 1.72;
@@ -2029,7 +2044,7 @@ h1 em {
   }
 
   .brand-copy small {
-    display: none;
+    display: block;
   }
 
   .section {
@@ -2051,7 +2066,7 @@ h1 em {
   }
 
   .hero-notes {
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
   }
 
