@@ -103,7 +103,10 @@ receiving telemetry directly from agents or brokers.
 4. Raw adapter responses are serialized into the evidence document's
    `data_json` field, avoiding dynamic mapping conflicts between heterogeneous
    broker payloads.
+5. Before ingestion begins, the agent enforces an Elasticsearch ILM policy that
+   removes MQDeck indices after six hours. The lifecycle remains active when
+   MQDeck processes are offline.
 
 Production deployments should additionally use TLS verification, least-
 privilege service accounts, network segmentation, Elasticsearch access
-controls, and retention policies appropriate to the captured evidence.
+controls, and review of the default six hour retention against local policy.

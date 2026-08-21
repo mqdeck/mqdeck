@@ -2,8 +2,8 @@ apiVersion: v2
 name: mqdeck
 description: Install MQDeck Agent, API, and Web components independently or together.
 type: application
-version: 1.0.3
-appVersion: "1.0.3"
+version: 1.0.4
+appVersion: "1.0.4"
 home: https://github.com/mqdeck/mqdeck
 sources:
   - https://github.com/mqdeck/mqdeck
