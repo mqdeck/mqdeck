@@ -16,7 +16,7 @@ remote broker endpoints from a network observation point.
 ## Download and verify
 
 ```bash
-VERSION=1.0.2
+VERSION=1.0.3
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"

@@ -14,6 +14,7 @@ The main sections are:
 | --- | --- |
 | `agent` | Agent identity, timezone, startup behavior, and global concurrency |
 | `elasticsearch` | Storage URL, index names, credentials, and timeout |
+| `test_runner` | Optional authenticated Test Flight listener and IBM MQ client settings |
 | `hosts` | Broker, adapter, transport, endpoint, schedule, tests, and limits |
 
 Each host can define:
@@ -36,18 +37,22 @@ multiple IBM MQ connection names.
 
 Use `transport: command` only when running local `runmqsc` against a queue
 manager on the same host. The legacy `transport: rest` remains supported.
-Set `messaging_endpoint` only when Test Flight should use Messaging REST v3,
-and set `admin_endpoint` only when optional channel-state or dead-letter depth
-assertions need Administrative REST. Existing `transport: rest` configurations
-keep using `endpoint` as the fallback for both REST surfaces.
+With `transport: client`, Test Flight uses `dmpmqmsg` over `SVRCONN` for the
+exact-correlation put/get and `runmqsc` for optional channel-state or
+dead-letter depth observations. Neither IBM MQ web endpoint is required. Set
+`test_runner.channel` when the active test credential must use a different
+application channel from the read-only collection identity. The legacy
+`transport: rest` keeps using `messaging_endpoint` and `admin_endpoint`, with
+`endpoint` as its fallback.
 
 Start with the public [`examples/agent.yaml`](../examples/agent.yaml) and adapt
 its bounded capture, scheduling, and Elasticsearch settings to each broker.
-For IBM MQ client preparation, use
+For IBM MQ client preparation, including the required `runmqsc` and
+`dmpmqmsg` tools, use
 [`examples/ibmmq-svrconn.md`](../examples/ibmmq-svrconn.md). For Test Flight
 without Administrative REST, use
 [`examples/test-flight-ibmmq-no-admin-rest.yaml`](../examples/test-flight-ibmmq-no-admin-rest.yaml)
-with a client- or command-transport host that defines `messaging_endpoint`.
+with a client-transport host and a dedicated `MQDECK.*` test queue.
 Validate every change with
 `mqdeck-agent -config agent.yaml -validate`.
 

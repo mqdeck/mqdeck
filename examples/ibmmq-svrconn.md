@@ -7,7 +7,7 @@ accepts only one `DISPLAY` statement per check.
 
 ## Requirements
 
-- IBM MQ Client 9.4, including `runmqsc`, on the Agent machine.
+- IBM MQ Client 9.4, including `runmqsc` and `dmpmqmsg`, on the Agent machine.
 - TCP access from the Agent to the queue manager listener.
 - A dedicated `SVRCONN` channel and least-privilege IBM MQ identity.
 - Permission to connect, display the configured object types, and use the IBM
@@ -72,3 +72,9 @@ mqdeck-agent -config mqdeck.yaml -validate
 The Agent supplies `MQSERVER` only to the `runmqsc` child process, passes the
 password through standard input, invokes no shell, bounds output, and rejects
 all MQSC operations that do not begin with `DISPLAY`.
+
+When Test Flight is enabled, the Agent also supplies `MQSERVER` only to the
+`dmpmqmsg` child process and passes its password through standard input. It
+creates one message with a generated correlation ID and consumes only that
+exact ID from an existing `MQDECK.*` test queue. Set `test_runner.channel` when
+this identity uses a different `SVRCONN` channel from the collection identity.
