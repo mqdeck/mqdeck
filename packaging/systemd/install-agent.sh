@@ -18,6 +18,7 @@ if ! id mqdeck >/dev/null 2>&1; then
   useradd --system --home-dir /nonexistent --shell /usr/sbin/nologin mqdeck
 fi
 install -d -o root -g root -m 0755 /opt/mqdeck/agent /etc/mqdeck
+install -d -o mqdeck -g mqdeck -m 0750 /var/lib/mqdeck
 install -o root -g root -m 0755 "$source_dir/mqdeck-agent" /opt/mqdeck/agent/mqdeck-agent
 if [ ! -f /etc/mqdeck/agent.yaml ]; then
   install -o root -g mqdeck -m 0640 "$source_dir/mqdeck.yaml.example" /etc/mqdeck/agent.yaml

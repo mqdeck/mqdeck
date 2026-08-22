@@ -16,7 +16,7 @@ remote broker endpoints from a network observation point.
 ## Download and verify
 
 ```bash
-VERSION=1.0.6
+VERSION=1.0.7
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -33,6 +33,9 @@ sudo editor /etc/mqdeck/agent.yaml
 sudo editor /etc/mqdeck/agent.env
 sudo chmod 600 /etc/mqdeck/agent.env
 ```
+
+For a same-machine proof of concept without Elasticsearch, configure the
+shared file using [Local file mode](local-mode.md) before enabling the Agent.
 
 Validate the configuration before starting the service:
 

@@ -5,6 +5,10 @@ or RabbitMQ endpoint. Follow the complete
 [sequential installation](installation-sequence.md): Elasticsearch, API, Web,
 broker access, and finally the Agent.
 
+For a single-machine demo or proof of concept without Elasticsearch, follow
+[Local file mode](local-mode.md). Production and distributed installations
+should keep the Elasticsearch architecture.
+
 ## Choose an installation model
 
 | Model | Recommended for |
@@ -14,7 +18,7 @@ broker access, and finally the Agent.
 | Containers with Helm | Kubernetes, AKS, EKS, and OpenShift |
 
 Download every artifact from the
-[1.0.6 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.6) and verify
+[1.0.7 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.7) and verify
 it against `SHA256SUMS` before installation.
 
 ## Minimum production topology
@@ -52,6 +56,7 @@ channels, connections, consumers, and findings.
 ## Next steps
 
 - [Follow the sequential installation](installation-sequence.md)
+- [Run a single-machine local file demo](local-mode.md)
 - [Configure the Agent, API, and Web](configuration.md)
 - [Install the Agent on Linux](install-agent-linux.md)
 - [Install the Agent on Windows](install-agent-windows.md)
