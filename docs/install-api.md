@@ -1,12 +1,13 @@
 # Install the API
 
-The MQDeck API is a statically linked, read-only Elasticsearch query service.
-It never receives Agent telemetry.
+The MQDeck API is a statically linked, read-only query service for
+Elasticsearch or the single-machine local file. It never receives Agent
+telemetry.
 
 ## Linux
 
 ```bash
-VERSION=1.0.6
+VERSION=1.0.7
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-api-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -23,9 +24,12 @@ curl --fail http://127.0.0.1:8080/healthz
 Use an Elasticsearch identity that can only read `mqdeck-hosts` and
 `mqdeck-data`.
 
+For a same-machine demo without Elasticsearch, configure the shared data file
+before enabling the service. See [Local file mode](local-mode.md).
+
 ## Windows
 
-Download and verify `mqdeck-api-1.0.6-windows-amd64.zip`, expand it, set the
+Download and verify `mqdeck-api-1.0.7-windows-amd64.zip`, expand it, set the
 required machine-level `MQDECK_*` environment variables, and run the included
 script from an elevated PowerShell prompt:
 
@@ -40,6 +44,10 @@ Invoke-RestMethod http://127.0.0.1:8080/healthz
 | Variable | Default |
 | --- | --- |
 | `MQDECK_API_ADDRESS` | `:8080` |
+| `MQDECK_STORAGE_MODE` | `elasticsearch` |
+| `MQDECK_LOCAL_DATA_PATH` | `./mqdeck-local-data.json` |
+| `MQDECK_LOCAL_MAX_FILE_BYTES` | `67108864` |
+| `MQDECK_LOCAL_RETENTION` | `6h` |
 | `MQDECK_ELASTICSEARCH_URL` | `http://localhost:9200` |
 | `MQDECK_HOSTS_INDEX` | `mqdeck-hosts` |
 | `MQDECK_DATA_INDEX` | `mqdeck-data` |

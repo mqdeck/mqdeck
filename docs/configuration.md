@@ -13,6 +13,7 @@ The main sections are:
 | Section | Purpose |
 | --- | --- |
 | `agent` | Agent identity, timezone, startup behavior, and global concurrency |
+| `storage` | Selects Elasticsearch or the bounded single-machine local file |
 | `elasticsearch` | Storage URL, index names, credentials, and timeout |
 | `test_runner` | Optional authenticated Test Flight listener and IBM MQ client settings |
 | `hosts` | Broker, adapter, transport, endpoint, schedule, tests, and limits |
@@ -56,6 +57,10 @@ with a client-transport host and a dedicated `MQDECK.*` test queue.
 Validate every change with
 `mqdeck-agent -config agent.yaml -validate`.
 
+For local demonstrations, `storage.mode: local` selects the shared file and
+the Elasticsearch section is ignored. See [Local file mode](local-mode.md) for
+the complete three-component configuration and limitations.
+
 ### Six hour Elasticsearch retention
 
 The agent enables retention by default and will not write a document until it
@@ -87,6 +92,10 @@ been applied.
 | Variable | Default |
 | --- | --- |
 | `MQDECK_API_ADDRESS` | `:8080` |
+| `MQDECK_STORAGE_MODE` | `elasticsearch` |
+| `MQDECK_LOCAL_DATA_PATH` | `./mqdeck-local-data.json` |
+| `MQDECK_LOCAL_MAX_FILE_BYTES` | `67108864` |
+| `MQDECK_LOCAL_RETENTION` | `6h` |
 | `MQDECK_ELASTICSEARCH_URL` | `http://localhost:9200` |
 | `MQDECK_HOSTS_INDEX` | `mqdeck-hosts` |
 | `MQDECK_DATA_INDEX` | `mqdeck-data` |
@@ -103,6 +112,9 @@ and `mqdeck-data`.
 
 `MQDECK_API_URL` configures the server-side API target and defaults to
 `http://localhost:8080`. The browser calls only same-origin proxy routes.
+
+Set `MQDECK_STORAGE_MODE=local` when API and Agent use local file mode. Web
+still communicates only with API and never reads the file directly.
 
 `MQDECK_TEST_RUNNER_URL` and `MQDECK_TEST_RUNNER_TOKEN` enable real Test Flight
 requests through a selected Agent. Leave both unset when Test Flight is not

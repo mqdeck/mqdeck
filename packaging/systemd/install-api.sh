@@ -18,6 +18,7 @@ if ! id mqdeck >/dev/null 2>&1; then
   useradd --system --home-dir /nonexistent --shell /usr/sbin/nologin mqdeck
 fi
 install -d -o root -g root -m 0755 /opt/mqdeck/api /etc/mqdeck
+install -d -o mqdeck -g mqdeck -m 0750 /var/lib/mqdeck
 install -o root -g root -m 0755 "$source_dir/mqdeck-api" /opt/mqdeck/api/mqdeck-api
 if [ ! -f /etc/mqdeck/api.env ]; then
   install -o root -g mqdeck -m 0640 "$source_dir/api.env.example" /etc/mqdeck/api.env

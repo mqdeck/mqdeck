@@ -10,17 +10,17 @@ release documentation channel. Implementation repositories are private.
 Visit the [MQDeck platform website](https://mqdeck.github.io/mqdeck/) for the
 product overview, architecture, installation options, and release downloads.
 
-## Download version 1.0.6
+## Download version 1.0.7
 
 All release files and `SHA256SUMS` are on the
-[MQDeck 1.0.6 release page](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.6).
+[MQDeck 1.0.7 release page](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.7).
 
 | Component | Linux amd64 | Linux arm64 | Windows amd64 |
 | --- | --- | --- | --- |
-| Agent | `mqdeck-agent-1.0.6-linux-amd64.tar.gz` | `mqdeck-agent-1.0.6-linux-arm64.tar.gz` | `mqdeck-agent-1.0.6-windows-amd64.zip` |
-| API | `mqdeck-api-1.0.6-linux-amd64.tar.gz` | `mqdeck-api-1.0.6-linux-arm64.tar.gz` | `mqdeck-api-1.0.6-windows-amd64.zip` |
-| Web | `mqdeck-web-1.0.6-linux-amd64.tar.gz` | `mqdeck-web-1.0.6-linux-arm64.tar.gz` | Not available |
-| Helm | `mqdeck-1.0.6.tgz` | platform independent | platform independent |
+| Agent | `mqdeck-agent-1.0.7-linux-amd64.tar.gz` | `mqdeck-agent-1.0.7-linux-arm64.tar.gz` | `mqdeck-agent-1.0.7-windows-amd64.zip` |
+| API | `mqdeck-api-1.0.7-linux-amd64.tar.gz` | `mqdeck-api-1.0.7-linux-arm64.tar.gz` | `mqdeck-api-1.0.7-windows-amd64.zip` |
+| Web | `mqdeck-web-1.0.7-linux-amd64.tar.gz` | `mqdeck-web-1.0.7-linux-arm64.tar.gz` | Not available |
+| Helm | `mqdeck-1.0.7.tgz` | platform independent | platform independent |
 
 ## Quick install
 
@@ -31,7 +31,7 @@ access, and install the Agent last.
 Install with Helm after downloading the chart:
 
 ```bash
-helm upgrade --install mqdeck ./mqdeck-1.0.6.tgz \
+helm upgrade --install mqdeck ./mqdeck-1.0.7.tgz \
   --namespace mqdeck --create-namespace \
   --set global.elasticsearch.url=https://elasticsearch.example.com:9200
 ```
@@ -47,6 +47,7 @@ image containing the IBM MQ client because MQDeck does not redistribute it.
 ## Installation guides
 
 - [Sequential installation](docs/installation-sequence.md)
+- [Local file mode](docs/local-mode.md)
 - [Agent on Linux](docs/install-agent-linux.md)
 - [Agent on Windows](docs/install-agent-windows.md)
 - [API on Linux or Windows](docs/install-api.md)
@@ -71,9 +72,9 @@ Flight that does not require Administrative REST.
 Official multi-architecture images use immutable version tags:
 
 ```bash
-docker pull ghcr.io/mqdeck/mqdeck-agent:1.0.6
-docker pull ghcr.io/mqdeck/mqdeck-api:1.0.6
-docker pull ghcr.io/mqdeck/mqdeck-web:1.0.6
+docker pull ghcr.io/mqdeck/mqdeck-agent:1.0.7
+docker pull ghcr.io/mqdeck/mqdeck-api:1.0.7
+docker pull ghcr.io/mqdeck/mqdeck-web:1.0.7
 ```
 
 Never use an unpinned tag in production. The images run as non-root users and
@@ -92,6 +93,11 @@ flowchart LR
 
 The API is never in the telemetry ingestion path. The Agent writes bounded
 observations directly to Elasticsearch; the API and Web components only query them.
+
+For a single-machine demo, [Local file mode](docs/local-mode.md) replaces
+Elasticsearch with one bounded shared file between Agent and API. Web still
+uses API, and switching the mode back to `elasticsearch` restores this normal
+architecture.
 
 ## License and source availability
 

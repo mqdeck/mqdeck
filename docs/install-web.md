@@ -12,7 +12,7 @@ compiler, or `npm install` step is required.
 ## Download and install
 
 ```bash
-VERSION=1.0.6
+VERSION=1.0.7
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-web-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -29,6 +29,7 @@ Example `/etc/mqdeck/web.env`:
 
 ```dotenv
 MQDECK_API_URL=http://127.0.0.1:8080
+MQDECK_STORAGE_MODE=elasticsearch
 MQDECK_TEST_RUNNER_URL=http://agent.example.com:8090
 MQDECK_TEST_RUNNER_TOKEN=replace-with-a-secret
 MQDECK_AUTH_USERNAME=admin
@@ -36,6 +37,9 @@ MQDECK_AUTH_PASSWORD=replace-with-a-strong-password
 MQDECK_AUTH_DISPLAY_NAME=MQDeck Operator
 MQDECK_AUTH_SESSION_SECRET=replace-with-a-long-random-secret
 ```
+
+Set `MQDECK_STORAGE_MODE=local` when API and Agent use the same-machine local
+file described in [Local file mode](local-mode.md). Web still reads only API.
 
 MQDeck Web requires the configured static account before it exposes the
 observation workspace or its same-origin API proxies. The session is signed,
