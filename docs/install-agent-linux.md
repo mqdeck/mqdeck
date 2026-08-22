@@ -8,7 +8,7 @@ remote broker endpoints from a network observation point.
 - A supported `amd64` or `arm64` Linux host
 - Network access to Elasticsearch and configured broker endpoints
 - A least-privilege Elasticsearch identity with write access only to the
-  MQDeck host and evidence indices
+  MQDeck host and data indices
 - Read-only IBM MQ or RabbitMQ credentials
 - IBM MQ Client 9.4 with `runmqsc` on `PATH` when using IBM MQ `client`
   transport
@@ -16,7 +16,7 @@ remote broker endpoints from a network observation point.
 ## Download and verify
 
 ```bash
-VERSION=1.0.4
+VERSION=1.0.5
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"

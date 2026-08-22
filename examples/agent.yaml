@@ -9,7 +9,7 @@ agent:
 elasticsearch:
   url: ${MQDECK_ELASTICSEARCH_URL}
   hosts_index: mqdeck-hosts
-  evidence_index_prefix: mqdeck-evidence
+  data_index: mqdeck-data
   timeout: 10s
   api_key: ${MQDECK_ELASTICSEARCH_API_KEY}
   retention:
