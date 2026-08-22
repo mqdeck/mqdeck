@@ -6,16 +6,22 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 if ! command -v node >/dev/null 2>&1; then
-  echo "Node.js 22 or newer is required." >&2
+  echo "Node.js 20.20 or newer is required." >&2
   exit 1
 fi
-node_major=$(node -p 'Number(process.versions.node.split(".")[0])')
-if [ "$node_major" -lt 22 ]; then
-  echo "Node.js 22 or newer is required." >&2
+if ! node -e 'const [major, minor] = process.versions.node.split(".").map(Number); process.exit(major > 20 || (major === 20 && minor >= 20) ? 0 : 1)'; then
+  echo "Node.js 20.20 or newer is required." >&2
   exit 1
 fi
 
 source_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+service_name=mqdeck-web
+was_active=false
+if systemctl is-active --quiet "$service_name" 2>/dev/null; then
+  was_active=true
+  systemctl stop "$service_name"
+fi
+
 if ! id mqdeck >/dev/null 2>&1; then
   useradd --system --home-dir /nonexistent --shell /usr/sbin/nologin mqdeck
 fi
@@ -34,4 +40,7 @@ if [ ! -f /etc/mqdeck/web.env ]; then
 fi
 install -o root -g root -m 0644 "$source_dir/mqdeck-web.service" /etc/systemd/system/mqdeck-web.service
 systemctl daemon-reload
-echo "Installed MQDeck Web. Edit /etc/mqdeck/web.env, then enable the service."
+if [ "$was_active" = true ]; then
+  systemctl start "$service_name"
+fi
+echo "Installed or upgraded MQDeck Web. Existing configuration was preserved and the previous application directory remains at /opt/mqdeck/web.previous."

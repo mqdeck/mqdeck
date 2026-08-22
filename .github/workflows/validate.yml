@@ -24,3 +24,8 @@ jobs:
             --set agent.enabled=true --set-file agent.config=examples/agent.yaml >/dev/null
           helm template mqdeck charts/mqdeck --namespace mqdeck \
             -f charts/mqdeck/examples/values-openshift.yaml >/dev/null
+      - name: Validate package scripts
+        run: |
+          for script in packaging/systemd/*.sh; do
+            sh -n "$script"
+          done

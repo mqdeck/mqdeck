@@ -51,8 +51,8 @@
           <a href="#architecture">Architecture</a>
           <a href="#install">Install</a>
           <a href="#documentation">Documentation</a>
-          <a class="nav-release" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5">
-            Download 1.0.5
+          <a class="nav-release" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.6">
+            Download 1.0.6
           </a>
         </nav>
       </div>
@@ -72,8 +72,8 @@
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5">
-                Download MQDeck 1.0.5
+              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.6">
+                Download MQDeck 1.0.6
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
               </a>
               <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck/tree/main/docs">
@@ -152,9 +152,9 @@
 
             <article class="feature-card feature-card-accent">
               <div class="release-label"><span></span> Current release</div>
-              <strong class="release-version">1.0.5</strong>
+              <strong class="release-version">1.0.6</strong>
               <p>IBM MQ client observation through SVRCONN, without requiring the IBM MQ web server.</p>
-              <a href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5">View release notes <span>→</span></a>
+              <a href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.6">View release notes <span>→</span></a>
             </article>
           </div>
         </div>
@@ -247,8 +247,8 @@
             <div class="eyebrow">Deploy your way</div>
             <h2>Start with prebuilt artifacts.</h2>
             <p>
-              Source code is not distributed. Download signed release artifacts, verify SHA256 checksums, and install each
-              component where it fits your network.
+              Prepare Elasticsearch, install API and Web, configure read only broker access, and install the Agent last.
+              Verify every release artifact with its SHA256 checksum.
             </p>
             <div class="install-facts">
               <div><strong>3</strong><span>Independent components</span></div>
@@ -265,27 +265,37 @@
             </div>
 
             <div class="install-panel" id="install-linux" role="tabpanel" data-install-panel="linux">
-              <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install Agent on Linux</strong><button type="button" data-copy="#linux-command">Copy</button></div>
-              <pre id="linux-command"><code><span>VERSION</span>=1.0.5
-<span>ARCH</span>=amd64
-wget https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz
-tar -xzf mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz
-sudo ./mqdeck-agent-${VERSION}-linux-${ARCH}/install.sh</code></pre>
+              <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install in sequence on Linux</strong><button type="button" data-copy="#linux-command">Copy</button></div>
+              <pre id="linux-command"><code><span># 1.</span> Prepare secured Elasticsearch
+<span># 2.</span> Install and verify MQDeck API
+sudo ./mqdeck-api-1.0.6-linux-amd64/install.sh
+curl --fail http://127.0.0.1:8080/healthz
+
+<span># 3.</span> Install Web with Node.js 20.20+
+node --version
+sudo ./mqdeck-web-1.0.6-linux-amd64/install.sh
+
+<span># 4.</span> Install and enable Agent last
+sudo ./mqdeck-agent-1.0.6-linux-amd64/install.sh</code></pre>
             </div>
 
             <div class="install-panel" id="install-windows" role="tabpanel" data-install-panel="windows" hidden>
-              <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Download Agent on Windows</strong><button type="button" data-copy="#windows-command">Copy</button></div>
-              <pre id="windows-command"><code><span>$Version</span> = "1.0.5"
-<span>$File</span> = "mqdeck-agent-$Version-windows-amd64.zip"
-Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/$File" -OutFile $File
-Expand-Archive $File -DestinationPath . -Force</code></pre>
+              <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install API before Agent on Windows</strong><button type="button" data-copy="#windows-command">Copy</button></div>
+              <pre id="windows-command"><code><span>$Version</span> = "1.0.6"
+<span># 1.</span> Install API and verify health
+.\install-api-service.ps1
+Invoke-RestMethod http://127.0.0.1:8080/healthz
+
+<span># 2.</span> Configure broker access
+<span># 3.</span> Install Agent last
+.\install-agent-service.ps1</code></pre>
             </div>
 
             <div class="install-panel" id="install-helm" role="tabpanel" data-install-panel="helm" hidden>
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install API and Web with Helm</strong><button type="button" data-copy="#helm-command">Copy</button></div>
               <pre id="helm-command"><code>helm upgrade --install mqdeck \
   oci://ghcr.io/mqdeck/charts/mqdeck \
-  --version 1.0.5 \
+  --version 1.0.6 \
   --namespace mqdeck --create-namespace \
   --set global.elasticsearch.url=https://elastic.example.com:9200</code></pre>
             </div>
@@ -305,22 +315,31 @@ Expand-Archive $File -DestinationPath . -Force</code></pre>
 
           <div class="docs-grid">
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md">
-              <span class="doc-number">01</span><div><strong>Getting started</strong><small>Choose a deployment model and verify the first observation.</small></div><i>→</i>
+              <span class="doc-number">01</span><div><strong>Getting started</strong><small>Choose a deployment model and prepare the platform.</small></div><i>→</i>
+            </a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/installation-sequence.md">
+              <span class="doc-number">02</span><div><strong>Sequential installation</strong><small>Install Elasticsearch, API, Web, and the Agent in the correct order.</small></div><i>→</i>
             </a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md">
-              <span class="doc-number">02</span><div><strong>Configuration</strong><small>Define schedules, endpoints, credentials, and capture limits.</small></div><i>→</i>
+              <span class="doc-number">03</span><div><strong>Configuration</strong><small>Define schedules, endpoints, credentials, and capture limits.</small></div><i>→</i>
             </a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-agent-linux.md">
-              <span class="doc-number">03</span><div><strong>Linux & systemd</strong><small>Install the Agent, API, and Web as native services.</small></div><i>→</i>
+              <span class="doc-number">04</span><div><strong>Linux & systemd</strong><small>Install, upgrade, and remove native services.</small></div><i>→</i>
             </a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-agent-windows.md">
-              <span class="doc-number">04</span><div><strong>Windows services</strong><small>Install executables and create reviewed Windows services.</small></div><i>→</i>
+              <span class="doc-number">05</span><div><strong>Windows services</strong><small>Install, upgrade, and remove reviewed Windows services.</small></div><i>→</i>
             </a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-helm.md">
-              <span class="doc-number">05</span><div><strong>Kubernetes & OpenShift</strong><small>Use one Helm chart for AKS, EKS, Kubernetes, and OpenShift.</small></div><i>→</i>
+              <span class="doc-number">06</span><div><strong>Kubernetes & OpenShift</strong><small>Use one Helm chart for AKS, EKS, Kubernetes, and OpenShift.</small></div><i>→</i>
+            </a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/upgrade.md">
+              <span class="doc-number">07</span><div><strong>Upgrade and rollback</strong><small>Upgrade API and Web first, then upgrade the Agent.</small></div><i>→</i>
+            </a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/uninstall.md">
+              <span class="doc-number">08</span><div><strong>Safe removal</strong><small>Remove services while retaining or explicitly purging configuration.</small></div><i>→</i>
             </a>
             <a href="https://github.com/mqdeck/mqdeck/tree/main/examples">
-              <span class="doc-number">06</span><div><strong>Public examples</strong><small>Start from safe Agent and Test Flight definitions.</small></div><i>→</i>
+              <span class="doc-number">09</span><div><strong>Public examples</strong><small>Start from safe Agent and Test Flight definitions.</small></div><i>→</i>
             </a>
           </div>
         </div>
@@ -329,12 +348,12 @@ Expand-Archive $File -DestinationPath . -Force</code></pre>
       <section class="final-cta section">
         <div class="container final-cta-inner">
           <div>
-            <div class="eyebrow">MQDeck 1.0.5 is available</div>
+            <div class="eyebrow">MQDeck 1.0.6 is available</div>
             <h2>Make messaging health visible.</h2>
             <p>Download the release, connect your read only identities, and begin collecting data.</p>
           </div>
           <div class="final-actions">
-            <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5">Download 1.0.5 <span>→</span></a>
+            <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.6">Download 1.0.6 <span>→</span></a>
             <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck">View on GitHub</a>
           </div>
         </div>

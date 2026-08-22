@@ -16,7 +16,7 @@ remote broker endpoints from a network observation point.
 ## Download and verify
 
 ```bash
-VERSION=1.0.5
+VERSION=1.0.6
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -76,13 +76,25 @@ MQSC commands. RabbitMQ local checks accept only diagnostic allowlisted
 subcommands. Grant the service account only the operating-system permissions
 needed to run those read-only tools.
 
+## Upgrade
+
+Download and verify the new Agent artifact, extract it, and rerun:
+
+```bash
+sudo ./install.sh
+```
+
+The installer stops an active Agent, preserves `/etc/mqdeck/agent.yaml` and
+`/etc/mqdeck/agent.env`, replaces the executable, and restarts the service.
+Validate the preserved configuration against the new version after every
+upgrade.
+
 ## Uninstall
 
 ```bash
-sudo systemctl disable --now mqdeck-agent
-sudo rm /etc/systemd/system/mqdeck-agent.service
-sudo rm -rf /opt/mqdeck/agent
-sudo systemctl daemon-reload
+sudo ./uninstall.sh
 ```
 
-Configuration under `/etc/mqdeck` is intentionally retained.
+Configuration under `/etc/mqdeck` is retained. Use
+`sudo ./uninstall.sh --purge` only when the Agent configuration must also be
+removed.

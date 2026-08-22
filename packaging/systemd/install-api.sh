@@ -7,6 +7,13 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 source_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+service_name=mqdeck-api
+was_active=false
+if systemctl is-active --quiet "$service_name" 2>/dev/null; then
+  was_active=true
+  systemctl stop "$service_name"
+fi
+
 if ! id mqdeck >/dev/null 2>&1; then
   useradd --system --home-dir /nonexistent --shell /usr/sbin/nologin mqdeck
 fi
@@ -17,4 +24,7 @@ if [ ! -f /etc/mqdeck/api.env ]; then
 fi
 install -o root -g root -m 0644 "$source_dir/mqdeck-api.service" /etc/systemd/system/mqdeck-api.service
 systemctl daemon-reload
-echo "Installed MQDeck API. Edit /etc/mqdeck/api.env, then enable the service."
+if [ "$was_active" = true ]; then
+  systemctl start "$service_name"
+fi
+echo "Installed or upgraded MQDeck API. Existing configuration was preserved."

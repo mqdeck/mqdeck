@@ -6,13 +6,13 @@ the Windows service; the included script is an auditable convenience wrapper.
 
 ## Download and verify
 
-Download `mqdeck-agent-1.0.5-windows-amd64.zip` and `SHA256SUMS` from the
-[1.0.5 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5).
+Download `mqdeck-agent-1.0.6-windows-amd64.zip` and `SHA256SUMS` from the
+[1.0.6 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.6).
 
 In PowerShell:
 
 ```powershell
-$Version = "1.0.5"
+$Version = "1.0.6"
 $File = "mqdeck-agent-$Version-windows-amd64.zip"
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/$File" -OutFile $File
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/SHA256SUMS" -OutFile SHA256SUMS
@@ -69,3 +69,22 @@ service output.
 
 The removal script retains binaries and configuration so they can be backed up
 or reused.
+
+Remove the installed executable or configuration only when explicitly needed:
+
+```powershell
+.\uninstall-agent-service.ps1 -PurgeBinaries
+.\uninstall-agent-service.ps1 -PurgeBinaries -PurgeConfiguration
+```
+
+## Upgrade
+
+Download and verify the new ZIP, extract it to a temporary directory, and rerun
+the installer from an elevated PowerShell prompt:
+
+```powershell
+.\install-agent-service.ps1
+```
+
+The installer stops the existing service before replacing the executable,
+preserves `C:\ProgramData\MQDeck\agent.yaml`, and starts the service again.

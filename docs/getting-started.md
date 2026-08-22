@@ -1,8 +1,9 @@
 # Getting started
 
 MQDeck requires an existing Elasticsearch deployment and at least one IBM MQ
-or RabbitMQ endpoint. Start with API and Web, then add an Agent after preparing
-read-only broker credentials.
+or RabbitMQ endpoint. Follow the complete
+[sequential installation](installation-sequence.md): Elasticsearch, API, Web,
+broker access, and finally the Agent.
 
 ## Choose an installation model
 
@@ -13,20 +14,19 @@ read-only broker credentials.
 | Containers with Helm | Kubernetes, AKS, EKS, and OpenShift |
 
 Download every artifact from the
-[1.0.5 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5) and verify
+[1.0.6 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.6) and verify
 it against `SHA256SUMS` before installation.
 
 ## Minimum production topology
 
-1. Install API and configure a read-only Elasticsearch identity.
-2. Install Web and set `MQDECK_API_URL` to the API's internal URL.
-3. Install one Agent at a network point that can reach the brokers, or install
-   an Agent beside each broker. IBM MQ client observation needs `runmqsc` from
-   an IBM MQ client installation and a reachable `SVRCONN` channel.
-4. Give the Agent an Elasticsearch identity restricted to writes on
+1. Prepare Elasticsearch and separate API and Agent identities.
+2. Install API and configure its read-only Elasticsearch identity.
+3. Install Web and set `MQDECK_API_URL` to the API's internal URL.
+4. Prepare inspection-only broker credentials. IBM MQ client observation needs
+   `runmqsc` and a reachable `SVRCONN` channel.
+5. Give the Agent an Elasticsearch identity restricted to writes on
    `mqdeck-hosts` and `mqdeck-data`.
-5. Configure broker accounts with inspection permissions only.
-6. Validate Agent YAML before enabling its service.
+6. Install the Agent last, validate its YAML, and then enable its service.
 7. Place Web behind a TLS reverse proxy or ingress.
 
 ## Verify the deployment
@@ -51,9 +51,12 @@ channels, connections, consumers, and findings.
 
 ## Next steps
 
+- [Follow the sequential installation](installation-sequence.md)
 - [Configure the Agent, API, and Web](configuration.md)
 - [Install the Agent on Linux](install-agent-linux.md)
 - [Install the Agent on Windows](install-agent-windows.md)
 - [Install API](install-api.md)
 - [Install Web](install-web.md)
 - [Install with Helm](install-helm.md)
+- [Upgrade or roll back](upgrade.md)
+- [Remove MQDeck](uninstall.md)
