@@ -6,12 +6,12 @@
     <meta name="theme-color" content="#0b0e14" />
     <meta
       name="description"
-      content="MQDeck is a read only observability platform for IBM MQ and RabbitMQ, with bounded evidence collection and no API in the telemetry ingestion path."
+      content="MQDeck is a read only observability platform for IBM MQ and RabbitMQ, with bounded data collection and no API in the telemetry ingestion path."
     />
     <meta property="og:title" content="MQDeck | Messaging observability you can prove" />
     <meta
       property="og:description"
-      content="Observe IBM MQ and RabbitMQ health, queues, channels, connections, topology, and synthetic evidence from one focused workspace."
+      content="Observe IBM MQ and RabbitMQ health, queues, channels, connections, topology, and synthetic results from one focused workspace."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mqdeck.github.io/mqdeck/" />
@@ -51,8 +51,8 @@
           <a href="#architecture">Architecture</a>
           <a href="#install">Install</a>
           <a href="#documentation">Documentation</a>
-          <a class="nav-release" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4">
-            Download 1.0.4
+          <a class="nav-release" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5">
+            Download 1.0.5
           </a>
         </nav>
       </div>
@@ -67,13 +67,13 @@
             <div class="eyebrow">Read only messaging observability</div>
             <h1>Messaging health you can <em>see and prove.</em></h1>
             <p class="hero-lede">
-              MQDeck turns IBM MQ and RabbitMQ runtime evidence into a clear operational view of hosts,
+              MQDeck turns IBM MQ and RabbitMQ runtime observations into a clear operational view of hosts,
               queues, channels, clients, message flow, and dependency topology.
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4">
-                Download MQDeck 1.0.4
+              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5">
+                Download MQDeck 1.0.5
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
               </a>
               <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck/tree/main/docs">
@@ -109,7 +109,7 @@
             <div class="eyebrow">One focused operational view</div>
             <h2>Everything needed to understand what is happening.</h2>
             <p>
-              MQDeck collects small, frequent health checks and slower detailed evidence so operators can
+              MQDeck collects small, frequent health checks and slower detailed data so operators can
               investigate deeply without turning observation into broker load.
             </p>
           </div>
@@ -131,30 +131,30 @@
 
             <article class="feature-card">
               <div class="feature-icon pulse-icon" aria-hidden="true"><span></span></div>
-              <small>HEALTH EVIDENCE</small>
+              <small>HEALTH DATA</small>
               <h3>Understand why a host is healthy.</h3>
-              <p>Open any host to inspect the exact queue, channel, connection, listener, and broker evidence behind its status.</p>
+              <p>Open any host to inspect the exact queue, channel, connection, listener, and broker data behind its status.</p>
             </article>
 
             <article class="feature-card">
               <div class="feature-icon flight-icon" aria-hidden="true">↗</div>
               <small>TEST FLIGHT</small>
               <h3>Prove message delivery end to end.</h3>
-              <p>Run optional correlated synthetic tests against dedicated queues and retain structured evidence for every assertion.</p>
+              <p>Run optional correlated synthetic tests against dedicated queues and retain structured results for every assertion.</p>
             </article>
 
             <article class="feature-card">
               <div class="feature-icon shield-icon" aria-hidden="true">✓</div>
               <small>READ ONLY BY DESIGN</small>
               <h3>Keep the query path out of ingestion.</h3>
-              <p>The Agent writes bounded evidence directly to Elasticsearch. API and Web only query what has already been collected.</p>
+              <p>The Agent writes bounded data directly to Elasticsearch. API and Web only query what has already been collected.</p>
             </article>
 
             <article class="feature-card feature-card-accent">
               <div class="release-label"><span></span> Current release</div>
-              <strong class="release-version">1.0.4</strong>
+              <strong class="release-version">1.0.5</strong>
               <p>IBM MQ client observation through SVRCONN, without requiring the IBM MQ web server.</p>
-              <a href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4">View release notes <span>→</span></a>
+              <a href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5">View release notes <span>→</span></a>
             </article>
           </div>
         </div>
@@ -173,7 +173,7 @@
               <li><span>✓</span> Per host schedules with overlap protection</li>
               <li><span>✓</span> Core and detailed capture tiers</li>
               <li><span>✓</span> Hard response size and concurrency limits</li>
-              <li><span>✓</span> Immutable evidence plus current snapshots</li>
+              <li><span>✓</span> Immutable observations plus current snapshots</li>
             </ul>
             <a class="text-link" href="https://github.com/mqdeck/mqdeck/blob/main/docs/architecture.md">Explore the architecture <span>→</span></a>
           </div>
@@ -184,7 +184,7 @@
               <div class="diagram-node"><i class="vendor-mark ibm">I</i><span><strong>IBM MQ</strong><small>SVRCONN · DISPLAY</small></span></div>
               <div class="diagram-node"><i class="vendor-mark rabbit">R</i><span><strong>RabbitMQ</strong><small>Management API · GET</small></span></div>
             </div>
-            <div class="diagram-arrow"><span>bounded evidence</span><i>→</i></div>
+            <div class="diagram-arrow"><span>bounded data</span><i>→</i></div>
             <div class="diagram-column agent-column">
               <small>COLLECTION</small>
               <div class="diagram-node primary-node"><i>M</i><span><strong>MQDeck Agent</strong><small>Schedule · normalize · write</small></span></div>
@@ -192,7 +192,7 @@
             <div class="diagram-arrow"><span>direct writes</span><i>→</i></div>
             <div class="diagram-column query-column">
               <small>STORAGE & QUERY</small>
-              <div class="diagram-node"><i class="vendor-mark elastic">E</i><span><strong>Elasticsearch</strong><small>Snapshots · evidence</small></span></div>
+              <div class="diagram-node"><i class="vendor-mark elastic">E</i><span><strong>Elasticsearch</strong><small>Snapshots · observations</small></span></div>
               <div class="query-stack"><span>Web</span><i>→</i><span>API</span><i>→</i><span>ES</span></div>
             </div>
           </div>
@@ -203,7 +203,7 @@
         <div class="container">
           <div class="section-heading split-heading">
             <div>
-              <div class="eyebrow">Broker aware evidence</div>
+              <div class="eyebrow">Broker aware data</div>
               <h2>Native detail for both platforms.</h2>
             </div>
             <p>Each adapter understands the objects, runtime states, and client relationships that matter for its broker.</p>
@@ -266,7 +266,7 @@
 
             <div class="install-panel" id="install-linux" role="tabpanel" data-install-panel="linux">
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install Agent on Linux</strong><button type="button" data-copy="#linux-command">Copy</button></div>
-              <pre id="linux-command"><code><span>VERSION</span>=1.0.4
+              <pre id="linux-command"><code><span>VERSION</span>=1.0.5
 <span>ARCH</span>=amd64
 wget https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz
 tar -xzf mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz
@@ -275,7 +275,7 @@ sudo ./mqdeck-agent-${VERSION}-linux-${ARCH}/install.sh</code></pre>
 
             <div class="install-panel" id="install-windows" role="tabpanel" data-install-panel="windows" hidden>
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Download Agent on Windows</strong><button type="button" data-copy="#windows-command">Copy</button></div>
-              <pre id="windows-command"><code><span>$Version</span> = "1.0.4"
+              <pre id="windows-command"><code><span>$Version</span> = "1.0.5"
 <span>$File</span> = "mqdeck-agent-$Version-windows-amd64.zip"
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$Version/$File" -OutFile $File
 Expand-Archive $File -DestinationPath . -Force</code></pre>
@@ -285,7 +285,7 @@ Expand-Archive $File -DestinationPath . -Force</code></pre>
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install API and Web with Helm</strong><button type="button" data-copy="#helm-command">Copy</button></div>
               <pre id="helm-command"><code>helm upgrade --install mqdeck \
   oci://ghcr.io/mqdeck/charts/mqdeck \
-  --version 1.0.4 \
+  --version 1.0.5 \
   --namespace mqdeck --create-namespace \
   --set global.elasticsearch.url=https://elastic.example.com:9200</code></pre>
             </div>
@@ -298,7 +298,7 @@ Expand-Archive $File -DestinationPath . -Force</code></pre>
       <section class="section docs-section" id="documentation">
         <div class="container">
           <div class="section-heading narrow-heading">
-            <div class="eyebrow">From download to evidence</div>
+            <div class="eyebrow">From download to insight</div>
             <h2>Clear guidance for every component.</h2>
             <p>Install individually, deploy the full platform, or begin with the public examples.</p>
           </div>
@@ -329,12 +329,12 @@ Expand-Archive $File -DestinationPath . -Force</code></pre>
       <section class="final-cta section">
         <div class="container final-cta-inner">
           <div>
-            <div class="eyebrow">MQDeck 1.0.4 is available</div>
+            <div class="eyebrow">MQDeck 1.0.5 is available</div>
             <h2>Make messaging health visible.</h2>
-            <p>Download the release, connect your read only identities, and begin collecting evidence.</p>
+            <p>Download the release, connect your read only identities, and begin collecting data.</p>
           </div>
           <div class="final-actions">
-            <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4">Download 1.0.4 <span>→</span></a>
+            <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5">Download 1.0.5 <span>→</span></a>
             <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck">View on GitHub</a>
           </div>
         </div>
