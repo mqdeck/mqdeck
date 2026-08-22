@@ -6,7 +6,7 @@ It never receives Agent telemetry.
 ## Linux
 
 ```bash
-VERSION=1.0.5
+VERSION=1.0.6
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-api-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -25,7 +25,7 @@ Use an Elasticsearch identity that can only read `mqdeck-hosts` and
 
 ## Windows
 
-Download and verify `mqdeck-api-1.0.5-windows-amd64.zip`, expand it, set the
+Download and verify `mqdeck-api-1.0.6-windows-amd64.zip`, expand it, set the
 required machine-level `MQDECK_*` environment variables, and run the included
 script from an elevated PowerShell prompt:
 
@@ -48,3 +48,19 @@ Invoke-RestMethod http://127.0.0.1:8080/healthz
 | `MQDECK_ELASTICSEARCH_USERNAME` | empty |
 | `MQDECK_ELASTICSEARCH_PASSWORD` | empty |
 | `MQDECK_ELASTICSEARCH_API_KEY` | empty |
+
+## Upgrade and remove
+
+On Linux, extract the new verified artifact and rerun `sudo ./install.sh`. The
+installer stops an active API, preserves `/etc/mqdeck/api.env`, replaces the
+binary, and restarts the service. Remove it while retaining configuration with:
+
+```bash
+sudo ./uninstall.sh
+```
+
+Use `sudo ./uninstall.sh --purge` to remove the API configuration as well.
+
+On Windows, rerun `install-api-service.ps1` to upgrade. Remove only the service
+with `uninstall-api-service.ps1`, or add `-PurgeBinaries` to remove the installed
+executable directory.

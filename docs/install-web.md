@@ -6,13 +6,13 @@ compiler, or `npm install` step is required.
 ## Requirements
 
 - `amd64` or `arm64` Linux
-- Node.js 22 LTS
+- Node.js 20.20 or newer
 - Network access from the Web server to MQDeck API
 
 ## Download and install
 
 ```bash
-VERSION=1.0.5
+VERSION=1.0.6
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-web-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -48,3 +48,23 @@ uses same-origin routes; the Web server makes requests to the configured API.
 
 The JavaScript and CSS delivered to browsers are necessarily visible to users.
 They remain covered by the MQDeck Community Binary License.
+
+## Upgrade
+
+Download and verify the new Web artifact, extract it, and rerun:
+
+```bash
+sudo ./install.sh
+```
+
+The installer stops an active service, preserves `/etc/mqdeck/web.env`, keeps
+the previous application at `/opt/mqdeck/web.previous`, and restarts the service.
+
+## Remove
+
+```bash
+sudo ./uninstall.sh
+```
+
+This retains `/etc/mqdeck/web.env`. Use `sudo ./uninstall.sh --purge` only when
+the configuration must also be removed.
