@@ -1,6 +1,6 @@
 # Architecture
 
-MQDeck separates evidence collection from the operator query path. This keeps
+MQDeck separates data collection from the operator query path. This keeps
 broker access narrow, makes collection independent of UI availability, and
 allows the API to remain read-only.
 
@@ -21,7 +21,7 @@ flowchart TB
 
     subgraph Storage
         HS[("mqdeck-hosts")]
-        EV[("mqdeck-evidence-YYYY.MM.DD")]
+        EV[("mqdeck-data")]
     end
 
     subgraph Query
@@ -39,7 +39,7 @@ flowchart TB
 ```
 
 The API is never part of ingestion. If the API or web interface is unavailable,
-the agent can continue collecting evidence as long as Elasticsearch is
+the agent can continue collecting observations as long as Elasticsearch is
 available.
 
 ## Component responsibilities
@@ -50,7 +50,7 @@ The agent loads a strict YAML configuration, expands environment variables,
 schedules checks, invokes the selected adapter, and writes two document types:
 
 - current host snapshots in `mqdeck-hosts`;
-- immutable evidence in daily `mqdeck-evidence-YYYY.MM.DD` indices.
+- immutable check data in the single `mqdeck-data` index.
 
 Executions for the same job do not overlap. Global concurrency, request
 timeouts, and maximum response sizes bound resource use.
@@ -79,7 +79,7 @@ configured response-size limit.
 
 The API queries Elasticsearch with HTTP `GET`, including the supported
 `GET /{index}/_search` form with a JSON request body. It exposes health, host,
-evidence, and normalized report endpoints. It does not expose create, update,
+check data and normalized report endpoints. It does not expose create, update,
 delete, or ingestion endpoints.
 
 The report layer combines the latest lightweight status with the latest detail
@@ -100,7 +100,7 @@ receiving telemetry directly from agents or brokers.
    privileges required only by the agent.
 3. The browser communicates with the web application, not directly with
    Elasticsearch or brokers.
-4. Raw adapter responses are serialized into the evidence document's
+4. Raw adapter responses are serialized into the check document's
    `data_json` field, avoiding dynamic mapping conflicts between heterogeneous
    broker payloads.
 5. Before ingestion begins, the agent enforces an Elasticsearch ILM policy that

@@ -61,7 +61,7 @@ Validate every change with
 The agent enables retention by default and will not write a document until it
 has created or updated the configured ILM policy and index template. The
 default policy permanently deletes MQDeck agent presence, host snapshots, and
-evidence indices after six hours. Because Elasticsearch executes the policy,
+collected data after six hours. Because Elasticsearch executes the policy,
 expiration continues after all MQDeck processes stop.
 
 ```yaml
@@ -69,7 +69,7 @@ elasticsearch:
   url: ${MQDECK_ELASTICSEARCH_URL}
   agents_index: mqdeck-agents
   hosts_index: mqdeck-hosts
-  evidence_index_prefix: mqdeck-evidence
+  data_index: mqdeck-data
   retention:
     enabled: true
     duration: 6h
@@ -89,15 +89,15 @@ been applied.
 | `MQDECK_API_ADDRESS` | `:8080` |
 | `MQDECK_ELASTICSEARCH_URL` | `http://localhost:9200` |
 | `MQDECK_HOSTS_INDEX` | `mqdeck-hosts` |
-| `MQDECK_EVIDENCE_INDEX_PREFIX` | `mqdeck-evidence` |
+| `MQDECK_DATA_INDEX` | `mqdeck-data` |
 | `MQDECK_ELASTICSEARCH_TIMEOUT` | `10s` |
 | `MQDECK_CORS_ORIGINS` | `http://localhost:3000` |
 | `MQDECK_ELASTICSEARCH_USERNAME` | empty |
 | `MQDECK_ELASTICSEARCH_PASSWORD` | empty |
 | `MQDECK_ELASTICSEARCH_API_KEY` | empty |
 
-Use a least-privilege Elasticsearch identity that can read only the MQDeck host
-and evidence indices.
+Use a least-privilege Elasticsearch identity that can read only `mqdeck-hosts`
+and `mqdeck-data`.
 
 ## Web interface
 
@@ -132,4 +132,4 @@ installation. Web proxy routes reject unauthenticated requests with HTTP 401.
   only to those indices.
 - Restrict network paths between brokers, agents, Elasticsearch, the API, and
   the web application.
-- Define retention and access policies for evidence before enabling collection.
+- Define retention and access policies for collected data before enabling collection.

@@ -39,8 +39,8 @@ spec:
               value: {{ .Values.global.elasticsearch.url | quote }}
             - name: MQDECK_HOSTS_INDEX
               value: {{ .Values.global.elasticsearch.hostsIndex | quote }}
-            - name: MQDECK_EVIDENCE_INDEX_PREFIX
-              value: {{ .Values.global.elasticsearch.evidenceIndexPrefix | quote }}
+            - name: MQDECK_DATA_INDEX
+              value: {{ .Values.global.elasticsearch.dataIndex | quote }}
             - name: MQDECK_ELASTICSEARCH_TIMEOUT
               value: {{ .Values.global.elasticsearch.timeout | quote }}
             - name: MQDECK_CORS_ORIGINS

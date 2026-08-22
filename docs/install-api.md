@@ -6,7 +6,7 @@ It never receives Agent telemetry.
 ## Linux
 
 ```bash
-VERSION=1.0.4
+VERSION=1.0.5
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-api-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -21,11 +21,11 @@ curl --fail http://127.0.0.1:8080/healthz
 ```
 
 Use an Elasticsearch identity that can only read `mqdeck-hosts` and
-`mqdeck-evidence-*`.
+`mqdeck-data`.
 
 ## Windows
 
-Download and verify `mqdeck-api-1.0.4-windows-amd64.zip`, expand it, set the
+Download and verify `mqdeck-api-1.0.5-windows-amd64.zip`, expand it, set the
 required machine-level `MQDECK_*` environment variables, and run the included
 script from an elevated PowerShell prompt:
 
@@ -42,7 +42,7 @@ Invoke-RestMethod http://127.0.0.1:8080/healthz
 | `MQDECK_API_ADDRESS` | `:8080` |
 | `MQDECK_ELASTICSEARCH_URL` | `http://localhost:9200` |
 | `MQDECK_HOSTS_INDEX` | `mqdeck-hosts` |
-| `MQDECK_EVIDENCE_INDEX_PREFIX` | `mqdeck-evidence` |
+| `MQDECK_DATA_INDEX` | `mqdeck-data` |
 | `MQDECK_ELASTICSEARCH_TIMEOUT` | `10s` |
 | `MQDECK_CORS_ORIGINS` | `http://localhost:3000` |
 | `MQDECK_ELASTICSEARCH_USERNAME` | empty |

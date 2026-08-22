@@ -21,7 +21,7 @@ Include:
 - whether the issue is already public or being actively exploited.
 
 Please avoid including real credentials, broker payloads, or sensitive
-production evidence in the report.
+production data in the report.
 
 ## Security model
 
@@ -31,8 +31,8 @@ MQDeck limits broker interaction to read-only operations:
   subcommands.
 - IBM MQ REST checks use `GET`, and local MQSC checks must begin with `DISPLAY`.
 - Adapter responses are size-bounded before storage.
-- The API exposes query operations only and is not part of evidence ingestion.
-- Credentials are not included in host snapshots or evidence documents.
+- The API exposes query operations only and is not part of data ingestion.
+- Credentials are not included in host snapshots or check documents.
 - The agent blocks ingestion until the configured Elasticsearch ILM retention
   policy is enforced. The default permanently removes MQDeck data after six
   hours, including when agents are offline.
@@ -40,7 +40,7 @@ MQDeck limits broker interaction to read-only operations:
 These controls reduce risk but do not replace deployment hardening. Operators
 remain responsible for TLS, identity and access management, network isolation,
 secret storage, Elasticsearch authorization, and approval of the configured
-evidence retention period.
+data retention period.
 
 Verify downloaded artifacts against the release `SHA256SUMS` file and use only
 explicit, immutable versions. Do not expose Agent Test Flight endpoints without

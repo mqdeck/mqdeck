@@ -13,7 +13,7 @@ read-only broker credentials.
 | Containers with Helm | Kubernetes, AKS, EKS, and OpenShift |
 
 Download every artifact from the
-[1.0.4 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.4) and verify
+[1.0.5 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.5) and verify
 it against `SHA256SUMS` before installation.
 
 ## Minimum production topology
@@ -24,7 +24,7 @@ it against `SHA256SUMS` before installation.
    an Agent beside each broker. IBM MQ client observation needs `runmqsc` from
    an IBM MQ client installation and a reachable `SVRCONN` channel.
 4. Give the Agent an Elasticsearch identity restricted to writes on
-   `mqdeck-hosts` and `mqdeck-evidence-*`.
+   `mqdeck-hosts` and `mqdeck-data`.
 5. Configure broker accounts with inspection permissions only.
 6. Validate Agent YAML before enabling its service.
 7. Place Web behind a TLS reverse proxy or ingress.
