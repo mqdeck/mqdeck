@@ -10,17 +10,21 @@ release documentation channel. Implementation repositories are private.
 Visit the [MQDeck platform website](https://mqdeck.github.io/mqdeck/) for the
 product overview, architecture, installation options, and release downloads.
 
-## Download version 1.0.7
+## Download version 1.0.8
 
 All release files and `SHA256SUMS` are on the
-[MQDeck 1.0.7 release page](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.7).
+[MQDeck 1.0.8 release page](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.8).
 
 | Component | Linux amd64 | Linux arm64 | Windows amd64 |
 | --- | --- | --- | --- |
-| Agent | `mqdeck-agent-1.0.7-linux-amd64.tar.gz` | `mqdeck-agent-1.0.7-linux-arm64.tar.gz` | `mqdeck-agent-1.0.7-windows-amd64.zip` |
-| API | `mqdeck-api-1.0.7-linux-amd64.tar.gz` | `mqdeck-api-1.0.7-linux-arm64.tar.gz` | `mqdeck-api-1.0.7-windows-amd64.zip` |
-| Web | `mqdeck-web-1.0.7-linux-amd64.tar.gz` | `mqdeck-web-1.0.7-linux-arm64.tar.gz` | Not available |
-| Helm | `mqdeck-1.0.7.tgz` | platform independent | platform independent |
+| Agent | `mqdeck-agent-1.0.8-linux-amd64.tar.gz` | `mqdeck-agent-1.0.8-linux-arm64.tar.gz` | `mqdeck-agent-1.0.8-windows-amd64.zip` |
+| API | `mqdeck-api-1.0.8-linux-amd64.tar.gz` | `mqdeck-api-1.0.8-linux-arm64.tar.gz` | `mqdeck-api-1.0.8-windows-amd64.zip` |
+| Web | `mqdeck-web-1.0.8-linux-amd64.tar.gz` | `mqdeck-web-1.0.8-linux-arm64.tar.gz` | Not available |
+| Helm | `mqdeck-1.0.8.tgz` | platform independent | platform independent |
+
+Version 1.0.8 introduces dedicated broker detail pages, bounded recent client
+activity with disconnect timing, IBM MQ queue manager CCSID visibility, and
+alias queue target details.
 
 ## Quick install
 
@@ -31,7 +35,7 @@ access, and install the Agent last.
 Install with Helm after downloading the chart:
 
 ```bash
-helm upgrade --install mqdeck ./mqdeck-1.0.7.tgz \
+helm upgrade --install mqdeck ./mqdeck-1.0.8.tgz \
   --namespace mqdeck --create-namespace \
   --set global.elasticsearch.url=https://elasticsearch.example.com:9200
 ```
@@ -72,9 +76,9 @@ Flight that does not require Administrative REST.
 Official multi-architecture images use immutable version tags:
 
 ```bash
-docker pull ghcr.io/mqdeck/mqdeck-agent:1.0.7
-docker pull ghcr.io/mqdeck/mqdeck-api:1.0.7
-docker pull ghcr.io/mqdeck/mqdeck-web:1.0.7
+docker pull ghcr.io/mqdeck/mqdeck-agent:1.0.8
+docker pull ghcr.io/mqdeck/mqdeck-api:1.0.8
+docker pull ghcr.io/mqdeck/mqdeck-web:1.0.8
 ```
 
 Never use an unpinned tag in production. The images run as non-root users and

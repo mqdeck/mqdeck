@@ -51,8 +51,8 @@
           <a href="#architecture">Architecture</a>
           <a href="#install">Install</a>
           <a href="#documentation">Documentation</a>
-          <a class="nav-release" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.7">
-            Download 1.0.7
+          <a class="nav-release" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.8">
+            Download 1.0.8
           </a>
         </nav>
       </div>
@@ -72,8 +72,8 @@
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.7">
-                Download MQDeck 1.0.7
+              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.8">
+                Download MQDeck 1.0.8
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
               </a>
               <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck/tree/main/docs">
@@ -152,9 +152,9 @@
 
             <article class="feature-card feature-card-accent">
               <div class="release-label"><span></span> Current release</div>
-              <strong class="release-version">1.0.7</strong>
+              <strong class="release-version">1.0.8</strong>
               <p>IBM MQ client observation through SVRCONN, without requiring the IBM MQ web server.</p>
-              <a href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.7">View release notes <span>→</span></a>
+              <a href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.8">View release notes <span>→</span></a>
             </article>
           </div>
         </div>
@@ -268,20 +268,20 @@
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install in sequence on Linux</strong><button type="button" data-copy="#linux-command">Copy</button></div>
               <pre id="linux-command"><code><span># 1.</span> Prepare secured Elasticsearch
 <span># 2.</span> Install and verify MQDeck API
-sudo ./mqdeck-api-1.0.7-linux-amd64/install.sh
+sudo ./mqdeck-api-1.0.8-linux-amd64/install.sh
 curl --fail http://127.0.0.1:8080/healthz
 
 <span># 3.</span> Install Web with Node.js 20.20+
 node --version
-sudo ./mqdeck-web-1.0.7-linux-amd64/install.sh
+sudo ./mqdeck-web-1.0.8-linux-amd64/install.sh
 
 <span># 4.</span> Install and enable Agent last
-sudo ./mqdeck-agent-1.0.7-linux-amd64/install.sh</code></pre>
+sudo ./mqdeck-agent-1.0.8-linux-amd64/install.sh</code></pre>
             </div>
 
             <div class="install-panel" id="install-windows" role="tabpanel" data-install-panel="windows" hidden>
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install API before Agent on Windows</strong><button type="button" data-copy="#windows-command">Copy</button></div>
-              <pre id="windows-command"><code><span>$Version</span> = "1.0.7"
+              <pre id="windows-command"><code><span>$Version</span> = "1.0.8"
 <span># 1.</span> Install API and verify health
 .\install-api-service.ps1
 Invoke-RestMethod http://127.0.0.1:8080/healthz
@@ -295,7 +295,7 @@ Invoke-RestMethod http://127.0.0.1:8080/healthz
               <div class="code-heading"><span><i></i><i></i><i></i></span><strong>Install API and Web with Helm</strong><button type="button" data-copy="#helm-command">Copy</button></div>
               <pre id="helm-command"><code>helm upgrade --install mqdeck \
   oci://ghcr.io/mqdeck/charts/mqdeck \
-  --version 1.0.7 \
+  --version 1.0.8 \
   --namespace mqdeck --create-namespace \
   --set global.elasticsearch.url=https://elastic.example.com:9200</code></pre>
             </div>
@@ -351,12 +351,12 @@ Invoke-RestMethod http://127.0.0.1:8080/healthz
       <section class="final-cta section">
         <div class="container final-cta-inner">
           <div>
-            <div class="eyebrow">MQDeck 1.0.7 is available</div>
+            <div class="eyebrow">MQDeck 1.0.8 is available</div>
             <h2>Make messaging health visible.</h2>
             <p>Download the release, connect your read only identities, and begin collecting data.</p>
           </div>
           <div class="final-actions">
-            <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.7">Download 1.0.7 <span>→</span></a>
+            <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.8">Download 1.0.8 <span>→</span></a>
             <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck">View on GitHub</a>
           </div>
         </div>

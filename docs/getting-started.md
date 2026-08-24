@@ -18,7 +18,7 @@ should keep the Elasticsearch architecture.
 | Containers with Helm | Kubernetes, AKS, EKS, and OpenShift |
 
 Download every artifact from the
-[1.0.7 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.7) and verify
+[1.0.8 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.8) and verify
 it against `SHA256SUMS` before installation.
 
 ## Minimum production topology
@@ -51,7 +51,10 @@ sudo -u mqdeck /opt/mqdeck/agent/mqdeck-agent \
 
 After the Agent's first successful collection, open Web and confirm the host
 appears in Observe. Open its report and review collection health, queues,
-channels, connections, consumers, and findings.
+channels, connections, consumers, and findings. IBM MQ reports also show the
+queue manager CCSID and the target of every observed alias queue. The recent
+client activity view retains publishers and consumers for up to one hour after
+they disconnect.
 
 ## Next steps
 
