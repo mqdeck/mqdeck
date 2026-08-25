@@ -34,7 +34,7 @@ Download the API package for the server architecture, verify its checksum, and
 run the installer:
 
 ```bash
-VERSION=1.0.8
+VERSION=1.0.9
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-api-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -56,7 +56,7 @@ not require `npm install`.
 
 ```bash
 node --version
-VERSION=1.0.8
+VERSION=1.0.9
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-web-${VERSION}-linux-${ARCH}.tar.gz"
 grep "mqdeck-web-${VERSION}-linux-${ARCH}.tar.gz" SHA256SUMS | sha256sum -c -
@@ -84,7 +84,7 @@ The Agent writes directly to Elasticsearch, so install it only after storage,
 API, Web, and broker credentials are ready.
 
 ```bash
-VERSION=1.0.8
+VERSION=1.0.9
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
 grep "mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz" SHA256SUMS | sha256sum -c -

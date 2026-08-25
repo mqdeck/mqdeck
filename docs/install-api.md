@@ -7,7 +7,7 @@ telemetry.
 ## Linux
 
 ```bash
-VERSION=1.0.8
+VERSION=1.0.9
 ARCH=amd64
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-api-${VERSION}-linux-${ARCH}.tar.gz"
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
@@ -29,7 +29,7 @@ before enabling the service. See [Local file mode](local-mode.md).
 
 ## Windows
 
-Download and verify `mqdeck-api-1.0.8-windows-amd64.zip`, expand it, set the
+Download and verify `mqdeck-api-1.0.9-windows-amd64.zip`, expand it, set the
 required machine-level `MQDECK_*` environment variables, and run the included
 script from an elevated PowerShell prompt:
 
