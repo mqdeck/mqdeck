@@ -48,6 +48,11 @@ application channel from the read-only collection identity. The legacy
 
 Start with the public [`examples/agent.yaml`](../examples/agent.yaml) and adapt
 its bounded capture, scheduling, and Elasticsearch settings to each broker.
+The IBM MQ example uses a 30 second core schedule and a two minute detailed
+interval. Core status updates remain lightweight, while queue definitions and
+application handles become visible within approximately two minutes. Increase
+the detailed interval on very large queue managers after observing actual
+collection duration and response size.
 For IBM MQ client preparation, including the required `runmqsc` and
 `dmpmqmsg` tools, use
 [`examples/ibmmq-svrconn.md`](../examples/ibmmq-svrconn.md). For Test Flight

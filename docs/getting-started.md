@@ -18,7 +18,7 @@ should keep the Elasticsearch architecture.
 | Containers with Helm | Kubernetes, AKS, EKS, and OpenShift |
 
 Download every artifact from the
-[1.0.8 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.8) and verify
+[1.0.9 release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.9) and verify
 it against `SHA256SUMS` before installation.
 
 ## Minimum production topology

@@ -36,7 +36,7 @@ records depend on the enabled checks and local security policy.
   tests: [queue_manager, queue_status, channel_status]
   detail_tests: [queues, channels, listeners, listener_status]
   capture:
-    detail_interval: 10m
+    detail_interval: 2m
     max_response_bytes: 2097152
 ```
 
@@ -72,6 +72,11 @@ mqdeck-agent -config mqdeck.yaml -validate
 The Agent supplies `MQSERVER` only to the `runmqsc` child process, passes the
 password through standard input, invokes no shell, bounds output, and rejects
 all MQSC operations that do not begin with `DISPLAY`.
+
+For client applications, IBM MQ exposes `CONNAME` when the handle belongs to a
+channel. MQDeck displays that value as the application origin alongside the
+channel name. Bindings-mode applications run inside the queue manager host and
+do not have a remote IP address, so they are identified as local processes.
 
 When Test Flight is enabled, the Agent also supplies `MQSERVER` only to the
 `dmpmqmsg` child process and passes its password through standard input. It
