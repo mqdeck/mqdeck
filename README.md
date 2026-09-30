@@ -26,22 +26,22 @@ Version 1.0.9 refines the broker detail experience with consistent operational
 workspaces, segment-aware message flow animation, clearer queue and channel
 expansion states, and improved publisher and consumer activity reporting.
 
-## MQ CLI 0.1.0
+## MQ CLI 0.1.1
 
-The standalone, read-only IBM MQ CLI is available from the
-[MQ CLI 0.1.0 release page](https://github.com/mqdeck/mqdeck/releases/tag/mq-cli-v0.1.0).
+The self-contained, read-only IBM MQ CLI is available from the
+[MQ CLI 0.1.1 release page](https://github.com/mqdeck/mqdeck/releases/tag/mq-cli-v0.1.1).
 It provides inventory listings, structured diagnostics, queue inspection, and
 live queue-depth monitoring without accepting user-supplied MQSC statements.
 
 | Platform | Download |
 | --- | --- |
-| Linux amd64 | `mq-cli-0.1.0-linux-amd64` |
-| Linux arm64 | `mq-cli-0.1.0-linux-arm64` |
-| Windows amd64 | `mq-cli-0.1.0-windows-amd64.exe` |
+| Linux amd64 | `mq-cli-0.1.1-linux-amd64.tar.gz` |
+| Windows amd64 | `mq-cli-0.1.1-windows-amd64.zip` |
 
-Use the release `SHA256SUMS` file to verify each download. Full remote
-diagnostics and queue operations require the IBM MQ Client runtime with
-`runmqsc`; inventory commands are contained entirely in the executable.
+Use the release `SHA256SUMS` file to verify each download. Each archive includes
+the IBM MQ Redistributable Client runtime and requires no system-wide IBM MQ
+installation. Linux arm64 is not provided because IBM does not publish a native
+MQ C Redistributable Client runtime for that architecture.
 
 ## Quick install
 
