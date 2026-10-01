@@ -15,7 +15,10 @@ sudo ./install-agent.sh
 Use `linux_arm64` for ARM64. `wget` can be used instead of `curl -fLO` with the
 same URL.
 
-Review `/etc/mqdeck/agent.yaml` and `/etc/mqdeck/agent.env`, then run:
+The installed environment points to the local API at
+`http://127.0.0.1:8080`. Change `MQDECK_API_URL` in
+`/etc/mqdeck/agent.env` only when the API runs on another machine. Review the
+Agent token and configuration, then run:
 
 ```bash
 sudo -u mqdeck bash -c 'set -a; . /etc/mqdeck/agent.env; set +a; /opt/mqdeck/agent/mqdeck-agent -config /etc/mqdeck/agent.yaml -validate'

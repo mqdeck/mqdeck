@@ -21,4 +21,6 @@ Get-Service MQDeckAgent
 Review `%ProgramData%\MQDeck\agent.yaml`, validate with
 `mqdeck-agent.exe -config <path> -validate`, and restart the service after
 changing configuration. Permit outbound TLS to the API and broker endpoints;
-do not create an inbound Agent firewall rule.
+do not create an inbound Agent firewall rule. The installer defaults
+`MQDECK_API_URL` to `http://127.0.0.1:8080`; replace it only when the API runs
+on another machine.

@@ -18,6 +18,9 @@ Copy-Item (Join-Path $sourceDirectory "mqdeck-agent.exe") $InstallDirectory -For
 if (-not (Test-Path $configPath)) {
     Copy-Item (Join-Path $sourceDirectory "agent.example.yaml") $configPath
 }
+if (-not [Environment]::GetEnvironmentVariable("MQDECK_API_URL", "Machine")) {
+    [Environment]::SetEnvironmentVariable("MQDECK_API_URL", "http://127.0.0.1:8080", "Machine")
+}
 
 $binaryPath = '"{0}" -config "{1}"' -f (Join-Path $InstallDirectory "mqdeck-agent.exe"), $configPath
 if ($existingService) {
@@ -26,4 +29,4 @@ if ($existingService) {
     sc.exe create $ServiceName binPath= $binaryPath start= auto obj= "NT AUTHORITY\LocalService" DisplayName= "MQDeck Agent" | Out-Null
 }
 sc.exe description $ServiceName "MQDeck read-only on-demand messaging agent" | Out-Null
-Write-Host "MQDeck Agent service is created. Review $configPath and the machine-level token, then run Start-Service $ServiceName."
+Write-Host "MQDeck Agent service is created for the local API at http://127.0.0.1:8080. Review $configPath and the machine-level token, then run Start-Service $ServiceName."

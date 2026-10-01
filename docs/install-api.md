@@ -41,7 +41,7 @@ and run PowerShell as Administrator:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("MQDECK_AGENT_TOKEN", "replace-with-a-long-random-secret", "Machine")
-[Environment]::SetEnvironmentVariable("MQDECK_CORS_ORIGINS", "https://mqdeck.example.com", "Machine")
+[Environment]::SetEnvironmentVariable("MQDECK_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000", "Machine")
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-api-service.ps1
 notepad "$env:ProgramData\MQDeck\inventory.yaml"

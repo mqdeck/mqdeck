@@ -44,6 +44,19 @@ metadata in YAML. Cluster and repository roles are read live from IBM MQ.
 
 ## Agent
 
+When API, Agent, and Web are installed on the same machine, the component
+packages use the following local communication defaults:
+
+| Connection | Default |
+| --- | --- |
+| Web to API | `http://127.0.0.1:8080` |
+| Agent to API | `http://127.0.0.1:8080` |
+| Browser to Web | `http://127.0.0.1:3000` |
+
+Only replace these addresses when a component runs on another machine. Broker
+addresses remain those declared in `inventory.yaml`; they are not assumed to
+be local.
+
 ```yaml
 version: 1
 agent:
@@ -53,7 +66,7 @@ agent:
   timezone: America/Sao_Paulo
   max_concurrency: 4
 control_plane:
-  url: https://mqdeck.example.com
+  url: ${MQDECK_API_URL}
   token: ${MQDECK_AGENT_TOKEN}
   reconnect_delay: 5s
   insecure_skip_verify: false
@@ -66,7 +79,7 @@ in the control panel. Use TLS in every non-local deployment.
 
 | Variable | Purpose |
 | --- | --- |
-| `MQDECK_API_URL` | API base URL |
+| `MQDECK_API_URL` | API base URL; defaults to `http://127.0.0.1:8080` in the service package |
 | `MQDECK_AUTH_USERNAME` | Static operator username |
 | `MQDECK_AUTH_PASSWORD` | Static operator password |
 | `MQDECK_AUTH_DISPLAY_NAME` | Display name |

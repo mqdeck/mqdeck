@@ -21,8 +21,10 @@ sudo systemctl status mqdeck-web --no-pager
 curl --fail http://127.0.0.1:3000/login
 ```
 
-The browser uses same-origin Web proxy routes. Only Web needs operator login
-credentials; it never connects directly to brokers or Agents.
+The browser uses same-origin Web proxy routes. The service package points Web
+to the local API at `http://127.0.0.1:8080`; change `MQDECK_API_URL` only when
+the API runs on another machine. Only Web needs operator login credentials; it
+never connects directly to brokers or Agents.
 
 ## Windows Server
 
@@ -33,7 +35,6 @@ $url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.10/mqdeck-web_1.
 Invoke-WebRequest $url -OutFile mqdeck-web.zip
 Expand-Archive .\mqdeck-web.zip -DestinationPath .\mqdeck-web
 Set-Location .\mqdeck-web\mqdeck-web_1.0.10_standalone
-[Environment]::SetEnvironmentVariable("MQDECK_API_URL", "https://api.mqdeck.example.com", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_USERNAME", "admin", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_PASSWORD", "replace-with-a-strong-password", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_SESSION_SECRET", "replace-with-a-long-random-secret", "Machine")
@@ -42,3 +43,6 @@ Set-ExecutionPolicy -Scope Process Bypass
 Start-Service MQDeckWeb
 Get-Service MQDeckWeb
 ```
+
+The Windows installer also defaults `MQDECK_API_URL` to
+`http://127.0.0.1:8080` when the variable has not already been configured.
