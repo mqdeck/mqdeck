@@ -9,7 +9,7 @@ The commands below install the x86-64 build. Replace `linux_amd64` with
 `linux_arm64` on ARM64 hosts.
 
 ```bash
-curl -fLO https://github.com/mqdeck/mqdeck-api/releases/latest/download/mqdeck-api_1.0.10_linux_amd64.tar.gz
+curl -fLO https://mqdeck.github.io/mqdeck/downloads/1.0.10/mqdeck-api_1.0.10_linux_amd64.tar.gz
 tar -xzf mqdeck-api_1.0.10_linux_amd64.tar.gz
 cd mqdeck-api_1.0.10_linux_amd64
 sudo ./install-api.sh
@@ -18,7 +18,7 @@ sudo ./install-api.sh
 With `wget`, replace the first command with:
 
 ```bash
-wget https://github.com/mqdeck/mqdeck-api/releases/latest/download/mqdeck-api_1.0.10_linux_amd64.tar.gz
+wget https://mqdeck.github.io/mqdeck/downloads/1.0.10/mqdeck-api_1.0.10_linux_amd64.tar.gz
 ```
 
 Review `/etc/mqdeck/inventory.yaml` and `/etc/mqdeck/api.env`. Then validate and

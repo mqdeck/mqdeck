@@ -34,11 +34,9 @@ Complete example files are distributed with the API and Agent:
 - `mqdeck-api/inventory.example.yaml`
 - `mqdeck-agent/mqdeck.on-demand.example.yaml`
 
-Each component is released independently; there is no combined binary bundle:
-
-- [MQDeck API releases](https://github.com/mqdeck/mqdeck-api/releases)
-- [MQDeck Agent releases](https://github.com/mqdeck/mqdeck-agent/releases)
-- [MQDeck Web releases](https://github.com/mqdeck/mqdeck-web/releases)
+Each component is released independently; there is no combined binary bundle.
+Public, versioned component downloads are available under
+[`mqdeck.github.io/mqdeck/downloads`](https://mqdeck.github.io/mqdeck/downloads/1.0.10/).
 
 Linux packages include a `systemd` unit and installer for RHEL-family systems.
 Windows packages include a PowerShell service installer. Start with the
