@@ -31,7 +31,7 @@
         <nav class="primary-navigation" id="primary-navigation" aria-label="Primary navigation" data-navigation>
           <a href="#platform">Platform</a>
           <a href="#architecture">Architecture</a>
-          <a href="#install">Run locally</a>
+          <a href="#install">Install</a>
           <a href="#documentation">Documentation</a>
           <a class="nav-release" href="https://github.com/mqdeck/mqdeck">View on GitHub</a>
         </nav>
@@ -55,7 +55,7 @@
                 Get started
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
               </a>
-              <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck/blob/main/docs/architecture.md">Explore the architecture</a>
+              <a class="button button-secondary" href="#install">Install components</a>
             </div>
             <div class="hero-notes" aria-label="Platform qualities">
               <span><i class="status-dot"></i> No Elasticsearch</span>
@@ -148,24 +148,24 @@
 
       <section class="section install-section" id="install">
         <div class="container install-shell">
-          <div class="install-copy"><div class="eyebrow">Validate the complete path</div><h2>Start locally with one command.</h2><p>The workspace launcher starts brokers, API, Agent, and Web, then performs a real on-demand diagnosis before reporting success.</p><div class="install-facts"><div><strong>0</strong><span>Datastores</span></div><div><strong>1</strong><span>Outbound Agent channel</span></div><div><strong>1</strong><span>Command to validate</span></div></div></div>
+          <div class="install-copy"><div class="eyebrow">Independent component packages</div><h2>Install each service where it belongs.</h2><p>API, Agent, and Web have separate releases, configuration, checksums, and service lifecycles. There is no monolithic download.</p><div class="install-facts"><div><strong>3</strong><span>Component releases</span></div><div><strong>0</strong><span>Datastores</span></div><div><strong>1</strong><span>Outbound Agent channel</span></div></div></div>
           <div class="installer" data-installer>
-            <div class="install-tabs" role="tablist" aria-label="Run option"><button type="button" role="tab" aria-selected="true" aria-controls="install-local" data-install-tab="local">Local</button><button type="button" role="tab" aria-selected="false" aria-controls="install-linux" data-install-tab="linux">Linux</button><button type="button" role="tab" aria-selected="false" aria-controls="install-windows" data-install-tab="windows">Windows</button></div>
-            <div class="install-panel" id="install-local" role="tabpanel" data-install-panel="local"><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Workspace validation</strong><button type="button" data-copy="#local-command">Copy</button></div><pre id="local-command"><code><span># Start and validate everything</span>
-./start.sh
-
-<span># Optional message traffic</span>
-MQDECK_START_SIMULATOR=true ./start.sh
-
-<span># Stop cleanly</span>
-./stop.sh</code></pre></div>
-            <div class="install-panel" id="install-linux" role="tabpanel" data-install-panel="linux" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Validate native configuration</strong><button type="button" data-copy="#linux-command">Copy</button></div><pre id="linux-command"><code>export MQDECK_INVENTORY_PATH=/etc/mqdeck/inventory.yaml
-export MQDECK_AGENT_TOKEN='replace-with-a-secret'
-mqdeck-api -validate
-mqdeck-agent -config /etc/mqdeck/agent.yaml -validate</code></pre></div>
-            <div class="install-panel" id="install-windows" role="tabpanel" data-install-panel="windows" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Validate on Windows</strong><button type="button" data-copy="#windows-command">Copy</button></div><pre id="windows-command"><code>$env:MQDECK_AGENT_TOKEN = "replace-with-a-secret"
-.\mqdeck-api.exe -validate
-.\mqdeck-agent.exe -config .\agent.yaml -validate</code></pre></div>
+            <div class="install-tabs" role="tablist" aria-label="Component"><button type="button" role="tab" aria-selected="true" aria-controls="install-api" data-install-tab="api">API</button><button type="button" role="tab" aria-selected="false" aria-controls="install-agent" data-install-tab="agent">Agent</button><button type="button" role="tab" aria-selected="false" aria-controls="install-web" data-install-tab="web">Web</button></div>
+            <div class="install-panel" id="install-api" role="tabpanel" data-install-panel="api"><div class="code-heading"><span><i></i><i></i><i></i></span><strong>API on RHEL</strong><button type="button" data-copy="#api-command">Copy</button></div><pre id="api-command"><code>curl -fLO https://github.com/mqdeck/mqdeck-api/releases/latest/download/mqdeck-api_1.0.10_linux_amd64.tar.gz
+tar -xzf mqdeck-api_1.0.10_linux_amd64.tar.gz
+cd mqdeck-api_1.0.10_linux_amd64
+sudo ./install-api.sh
+sudo systemctl enable --now mqdeck-api</code></pre></div>
+            <div class="install-panel" id="install-agent" role="tabpanel" data-install-panel="agent" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Agent on RHEL</strong><button type="button" data-copy="#agent-command">Copy</button></div><pre id="agent-command"><code>curl -fLO https://github.com/mqdeck/mqdeck-agent/releases/latest/download/mqdeck-agent_1.0.10_linux_amd64.tar.gz
+tar -xzf mqdeck-agent_1.0.10_linux_amd64.tar.gz
+cd mqdeck-agent_1.0.10_linux_amd64
+sudo ./install-agent.sh
+sudo systemctl enable --now mqdeck-agent</code></pre></div>
+            <div class="install-panel" id="install-web" role="tabpanel" data-install-panel="web" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Web on RHEL</strong><button type="button" data-copy="#web-command">Copy</button></div><pre id="web-command"><code>curl -fLO https://github.com/mqdeck/mqdeck-web/releases/latest/download/mqdeck-web_1.0.10_standalone.tar.gz
+tar -xzf mqdeck-web_1.0.10_standalone.tar.gz
+cd mqdeck-web_1.0.10_standalone
+sudo ./install-web.sh
+sudo systemctl enable --now mqdeck-web</code></pre></div>
             <div class="copy-status" aria-live="polite" data-copy-status></div>
           </div>
         </div>
@@ -175,12 +175,12 @@ mqdeck-agent -config /etc/mqdeck/agent.yaml -validate</code></pre></div>
         <div class="container">
           <div class="section-heading narrow-heading"><div class="eyebrow">Small system, clear guidance</div><h2>From inventory to first diagnosis.</h2><p>Use the focused guides for architecture, configuration, installation, and safe operations.</p></div>
           <div class="docs-grid">
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md"><span class="doc-number">01</span><div><strong>Getting started</strong><small>Run and validate the local platform.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md"><span class="doc-number">01</span><div><strong>Getting started</strong><small>Install the three independent services.</small></div><i>→</i></a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/architecture.md"><span class="doc-number">02</span><div><strong>Architecture</strong><small>Understand inventory, routing, and ephemeral results.</small></div><i>→</i></a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md"><span class="doc-number">03</span><div><strong>Configuration</strong><small>Define minimal broker connections and Agent routing.</small></div><i>→</i></a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/installation-sequence.md"><span class="doc-number">04</span><div><strong>Installation sequence</strong><small>Install API, Web, and outbound Agents.</small></div><i>→</i></a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-agent-linux.md"><span class="doc-number">05</span><div><strong>Linux Agent</strong><small>Install and validate a native Agent.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-agent-windows.md"><span class="doc-number">06</span><div><strong>Windows Agent</strong><small>Configure the outbound Windows service.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-agent-windows.md"><span class="doc-number">06</span><div><strong>Windows services</strong><small>Create API, Agent, and Web services.</small></div><i>→</i></a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/SECURITY.md"><span class="doc-number">07</span><div><strong>Security</strong><small>Review trust boundaries and deployment controls.</small></div><i>→</i></a>
             <a href="https://github.com/mqdeck/mqdeck/tree/main/examples"><span class="doc-number">08</span><div><strong>Examples</strong><small>Start from inventory and Agent templates.</small></div><i>→</i></a>
           </div>
