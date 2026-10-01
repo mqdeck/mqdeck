@@ -46,3 +46,6 @@ Get-Service MQDeckWeb
 
 The Windows installer also defaults `MQDECK_API_URL` to
 `http://127.0.0.1:8080` when the variable has not already been configured.
+
+For an existing Web service, follow the [upgrade and rollback
+guide](upgrade.md). Authentication and API settings are preserved.

@@ -29,3 +29,6 @@ sudo journalctl -u mqdeck-agent -n 100 --no-pager
 
 The Agent opens an outbound HTTPS/WebSocket connection and listens on no
 inbound port.
+
+For an existing Agent, use the [upgrade and rollback guide](upgrade.md) so the
+configuration is preserved and Agents are upgraded one network zone at a time.

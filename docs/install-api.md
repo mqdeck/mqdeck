@@ -51,3 +51,6 @@ Get-Service MQDeckAPI
 
 Validate the executable before starting, and restart `MQDeckAPI` after changing
 the inventory or machine-level environment variables.
+
+To replace an existing API without overwriting its inventory or environment,
+follow the [upgrade and rollback guide](upgrade.md).

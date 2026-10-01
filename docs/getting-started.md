@@ -23,4 +23,5 @@ Install in this order:
 
 See the [installation sequence](installation-sequence.md) for the verification
 path and the [configuration reference](configuration.md) for all supported
-settings.
+settings. Existing installations should follow the component-by-component
+[upgrade and rollback guide](upgrade.md).

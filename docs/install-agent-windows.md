@@ -24,3 +24,7 @@ changing configuration. Permit outbound TLS to the API and broker endpoints;
 do not create an inbound Agent firewall rule. The installer defaults
 `MQDECK_API_URL` to `http://127.0.0.1:8080`; replace it only when the API runs
 on another machine.
+
+For an existing Windows service, follow the [upgrade and rollback
+guide](upgrade.md). The installer stops the service and leaves it stopped until
+the new binary has been validated.

@@ -40,7 +40,9 @@ Public, versioned component downloads are available under
 
 Linux packages include a `systemd` unit and installer for RHEL-family systems.
 Windows packages include a PowerShell service installer. Start with the
-[component installation sequence](docs/installation-sequence.md).
+[component installation sequence](docs/installation-sequence.md). For an
+existing installation, use the production [upgrade and rollback
+guide](docs/upgrade.md).
 
 The architecture and security decisions are documented in
 [`docs/on-demand-architecture.md`](docs/on-demand-architecture.md).
