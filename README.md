@@ -20,9 +20,15 @@ flowchart LR
     AGENT -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
 ```
 
-The API chooses the Agent named in the inventory, a configured default Agent,
+The API chooses the `agent_id` named in the inventory, its
+`default_agent_id`,
 or an Agent selected in the broker detail page. Results are correlated in
 memory, returned with their individual check evidence, and discarded.
+
+Inventory entries can carry searchable tags and identify IBM MQ as
+`distributed` or `zos`. Mainframe queue managers use the same IBM MQ client
+transport, with optional CCDT and TLS key-repository settings for secured
+enterprise channels.
 
 ## Components
 

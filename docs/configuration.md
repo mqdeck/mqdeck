@@ -15,15 +15,17 @@ manager and RabbitMQ node that must appear in the overview, using final literal
 values. The API does not expand environment variables and rejects `${...}`
 placeholders. Protect the file with restricted filesystem permissions because
 it contains the read-only broker credentials. Collection tests, transport,
-timeouts, commands, labels, and response limits are platform policy and are
+timeouts, commands, and response limits are platform policy and are
 therefore rejected if added to the inventory.
 
 ```yaml
 version: 1
-default_agent: network-zone-a
+default_agent_id: network-zone-a
 hosts:
   - id: payments-qm
     adapter: ibmmq
+    platform: distributed
+    tags: [production, payments]
     endpoint: mq01.example.net(1414)
     queue_manager: QM01
     channel: MQDECK.READONLY
@@ -32,15 +34,55 @@ hosts:
       password: replace-with-the-read-only-password
 ```
 
-`id`, `adapter`, and `endpoint` are always required. IBM MQ also requires
-`queue_manager` and `channel`. `credentials` is needed when the broker requires
-authentication. `name` is optional (IBM MQ defaults to the queue-manager name),
-and `agent` is needed only to override `default_agent` for that entry.
+`id` and `adapter` are always required. IBM MQ also requires `queue_manager`,
+`channel`, and either a direct `endpoint` or `ccdt_url`. `credentials` is
+needed when the broker requires authentication. `name` is optional (IBM MQ
+defaults to the queue-manager name), and `agent_id` is needed only to override
+`default_agent_id` for that entry. Existing `default_agent` and `agent` keys
+remain accepted as compatibility aliases.
+
+`tags` is an optional list of short, literal identifiers such as `production`,
+`payments`, or `mainframe`. Tags are returned by the API, displayed in the
+inventory, and included in text search. `platform` accepts `distributed`
+(default) or `zos` for IBM MQ.
+
+### IBM MQ for z/OS and secure client connections
+
+The Agent uses IBM MQ client mode (`runmqsc -c`) for both distributed and z/OS
+queue managers. A direct mainframe connection needs only the listener endpoint,
+queue-manager name, read-only `SVRCONN`, and credentials. For TLS or other
+enterprise client policies, use a CCDT:
+
+```yaml
+version: 1
+default_agent_id: mainframe-network-agent
+hosts:
+  - id: zos-payments
+    name: Mainframe payments MQ
+    adapter: ibmmq
+    platform: zos
+    tags: [production, mainframe, payments]
+    ccdt_url: file:///etc/mqdeck/zos-payments-ccdt.json
+    queue_manager: CSQ1
+    channel: MQDECK.READONLY
+    credentials:
+      username: MQDECK
+      password: replace-with-the-read-only-password
+    tls:
+      key_repository: /etc/mqdeck/tls/mqdeck
+```
+
+The CCDT file and key repository must exist on the selected Agent. For a GSKit
+repository, `key_repository` can omit the `.kdb` suffix. `endpoint` and
+`ccdt_url` are mutually exclusive so the active connection path remains clear.
+The Agent removes inherited IBM MQ connection variables and sets `MQCCDTURL`
+and optional `MQSSLKEYR` only for the read-only command process.
 
 The API derives `client` transport and the complete read-only IBM MQ view, or
-HTTP transport and the complete RabbitMQ view. The endpoint host is used as the
-machine label, so several queue managers can share a machine without repeating
-metadata in YAML. Cluster and repository roles are read live from IBM MQ.
+HTTP transport and the complete RabbitMQ view. The direct endpoint host is used
+as the machine label, so several queue managers can share a machine without
+repeating metadata in YAML. CCDT entries are labeled `CCDT`. Cluster and
+repository roles are read live from IBM MQ.
 
 For IBM MQ, the configured `channel` is also returned as the access channel in
 every report. Object inventories are authority-scoped: missing channels,

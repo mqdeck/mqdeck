@@ -45,7 +45,8 @@ sequenceDiagram
 The inventory overview never contacts a broker. Inside an IBM MQ detail page,
 the Overview tab runs only the lightweight queue-manager check; queue and
 channel inventories are not requested until their tabs are opened. Each request
-uses the agent named on the inventory entry, the configured default agent, or
+uses the `agent_id` named on the inventory entry, the configured
+`default_agent_id`, or
 an agent selected by the operator. If none is specified, the API selects an
 available connected agent.
 
@@ -79,6 +80,8 @@ selectable.
 ## State and persistence
 
 - `inventory.yaml` is the source of truth for broker metadata and routing.
+- Inventory tags and IBM MQ platform (`distributed` or `zos`) are static
+  metadata; cluster roles and operational state still come from the broker.
 - Agent presence, outstanding requests, and diagnostic results exist in memory.
 - Results are returned to the requesting browser and are not retained.
 - Queue Watch samples and session totals are not retained.
@@ -94,6 +97,8 @@ selectable.
 - The Agent revalidates every received target before execution.
 - Existing adapter allowlists still restrict IBM MQ to `DISPLAY` operations and
   RabbitMQ to read-only HTTP/diagnostic operations.
+- IBM MQ TLS and enterprise client policies use a CCDT on the selected Agent;
+  MQDeck passes only `MQCCDTURL` and optional `MQSSLKEYR` to `runmqsc`.
 - Arbitrary shell strings, MQSC mutations, publishing, consuming, and Test
   Flight operations are not part of the control protocol.
 - Queue names are validated, bounded, and never interpolated into arbitrary

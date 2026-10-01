@@ -13,6 +13,9 @@ accepts only one `DISPLAY` statement per check.
 - Permission to connect, display the configured object types, and use the IBM
   MQ remote MQSC command/reply queues.
 
+The target queue manager can run on a distributed platform or IBM MQ for z/OS.
+Client mode does not require a local queue manager on the Agent host.
+
 Ask the IBM MQ administrator to create the channel and map the authenticated
 identity according to the site's TLS, CONNAUTH, and CHLAUTH standards. Do not
 use an administrative principal for production observation. The exact OAM
@@ -34,6 +37,8 @@ every system object; normal IBM MQ authority rules still apply.
 ```yaml
 - id: ibmmq-production-qm1
   adapter: ibmmq
+  platform: distributed
+  tags: [production, payments]
   endpoint: mq1.example.com:1414
   queue_manager: QM1
   channel: MQDECK.READONLY
@@ -47,9 +52,31 @@ timeout, output limit, and `runmqsc` client transport. Those operational fields
 are intentionally not configurable in the inventory.
 
 Use `mq-a.example.com:1414,mq-b.example.com:1414` when the client should try
-multiple IBM MQ connection names. For TLS ciphers, certificate labels, channel
-exits, or other advanced client settings, configure a CCDT in the IBM MQ client
-runtime instead of relying only on `MQSERVER`.
+multiple IBM MQ connection names.
+
+For an IBM MQ for z/OS queue manager that uses TLS or enterprise client
+policies, declare the CCDT and key repository in the inventory:
+
+```yaml
+- id: ibmmq-zos-csq1
+  name: Mainframe payments MQ
+  adapter: ibmmq
+  platform: zos
+  tags: [production, mainframe, payments]
+  agent_id: mainframe-network-agent
+  ccdt_url: file:///etc/mqdeck/zos-payments-ccdt.json
+  queue_manager: CSQ1
+  channel: MQDECK.READONLY
+  credentials:
+    username: MQDECK
+    password: replace-with-the-read-only-password
+  tls:
+    key_repository: /etc/mqdeck/tls/mqdeck
+```
+
+The files must be readable by the Agent service account. Omit `endpoint` when
+using `ccdt_url`; the CCDT owns connection names, TLS CipherSpecs, and client
+channel policy.
 
 ## Validate the connection
 
@@ -76,9 +103,15 @@ mqdeck-api -validate
 mqdeck-agent -config agent.yaml -validate
 ```
 
-The Agent supplies `MQSERVER` only to the `runmqsc` child process, passes the
-password through standard input, invokes no shell, bounds output, and rejects
-all MQSC operations that do not begin with `DISPLAY`.
+For CCDT/TLS validation, clear `MQSERVER`, set `MQCCDTURL` and `MQSSLKEYR` to
+the inventory values, and run the same `runmqsc -c` command. The key repository
+value can omit its `.kdb` suffix.
+
+For direct connections, the Agent supplies `MQSERVER` only to the `runmqsc`
+child process. For CCDT connections, it clears `MQSERVER` and supplies
+`MQCCDTURL` plus optional `MQSSLKEYR`. It passes the password through standard
+input, invokes no shell, bounds output, and rejects all MQSC operations that do
+not begin with `DISPLAY`.
 
 For client applications, IBM MQ exposes `CONNAME` when the handle belongs to a
 channel. MQDeck displays that value as the application origin alongside the

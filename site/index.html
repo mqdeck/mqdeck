@@ -87,7 +87,7 @@
           <div class="feature-grid">
             <article class="feature-card feature-card-wide">
               <div class="feature-icon topology-icon" aria-hidden="true"><span></span><span></span><span></span></div>
-              <div><small>MINIMAL YAML INVENTORY</small><h3>Only what the Agent needs to connect.</h3><p>Register the adapter, endpoint, credentials, and optional preferred Agent. MQDeck owns the safe collection profile and discovers runtime topology live.</p></div>
+              <div><small>MINIMAL YAML INVENTORY</small><h3>Only what the Agent needs to connect.</h3><p>Register connection data, searchable tags, and a default Agent ID. Direct or CCDT-based IBM MQ connections can reach distributed and z/OS queue managers.</p></div>
               <div class="mini-topology" aria-hidden="true"><div><i>Y</i><span>Inventory</span></div><b></b><div class="center"><i>A</i><span>API</span></div><b></b><div><i>W</i><span>Web</span></div></div>
             </article>
             <article class="feature-card">
@@ -140,7 +140,7 @@
         <div class="container">
           <div class="section-heading split-heading"><div><div class="eyebrow">Broker-aware reports</div><h2>Native detail for both platforms.</h2></div><p>Adapters normalize the runtime objects that matter without turning MQDeck into a broker administrator.</p></div>
           <div class="broker-grid">
-            <article class="broker-card"><div class="broker-card-header"><i class="vendor-mark ibm large">I</i><div><small>QUEUE MANAGERS</small><h3>IBM MQ</h3></div><span>SVRCONN</span></div><p>Inspect queue-manager state through the IBM MQ client, including the access channel and explicit authority-scope warnings.</p><div class="capability-list"><span>All queues</span><span>Live Queue Watch</span><span>Channel definitions</span><span>Channel runtime</span><span>Authority scope</span><span>Applications</span></div><a href="https://github.com/mqdeck/mqdeck/blob/main/examples/ibmmq-svrconn.md">Configure IBM MQ <span>→</span></a></article>
+            <article class="broker-card"><div class="broker-card-header"><i class="vendor-mark ibm large">I</i><div><small>QUEUE MANAGERS</small><h3>IBM MQ</h3></div><span>SVRCONN</span></div><p>Inspect distributed and z/OS queue managers through the IBM MQ client, using direct endpoints or secured CCDT/TLS profiles.</p><div class="capability-list"><span>All queues</span><span>Live Queue Watch</span><span>Channel definitions</span><span>Channel runtime</span><span>z/OS</span><span>CCDT / TLS</span></div><a href="https://github.com/mqdeck/mqdeck/blob/main/examples/ibmmq-svrconn.md">Configure IBM MQ <span>→</span></a></article>
             <article class="broker-card"><div class="broker-card-header"><i class="vendor-mark rabbit large">R</i><div><small>BROKER CLUSTERS</small><h3>RabbitMQ</h3></div><span>HTTP GET</span></div><p>Inspect current node and cluster state through bounded Management API requests.</p><div class="capability-list"><span>Nodes & alarms</span><span>Queues & rates</span><span>Connections</span><span>Channels</span><span>Consumers</span><span>Bindings</span></div><a href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md">Configure RabbitMQ <span>→</span></a></article>
           </div>
         </div>
