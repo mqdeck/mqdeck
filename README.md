@@ -1,9 +1,10 @@
 # MQDeck
 
 MQDeck is a lightweight, read-only diagnostic console for IBM MQ and RabbitMQ.
-Its overview comes from a local YAML inventory and never probes brokers in the
-background. Opening a broker detail page asks a connected Agent to collect a
-fresh, bounded diagnostic snapshot and returns it directly to the operator.
+Its inventory overview comes from a local YAML file and never probes brokers in
+the background. An IBM MQ detail page uses three scoped tabs: Overview reads
+only queue-manager status, while Queues and Channels request their respective
+fresh, bounded data through a connected Agent.
 
 The simplified architecture does not require Elasticsearch, scheduled
 telemetry ingestion, retained observations, or Test Flight.

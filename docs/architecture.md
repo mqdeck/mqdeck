@@ -11,9 +11,9 @@ sequenceDiagram
     Agent->>API: authenticated outbound WebSocket
     Web->>API: list inventory
     API-->>Web: YAML metadata only
-    Web->>API: request host report
-    API->>Agent: diagnose(request_id, target)
-    Agent->>Broker: allowlisted read-only checks
+    Web->>API: request scoped host view
+    API->>Agent: diagnose(request_id, target, view scope)
+    Agent->>Broker: checks required by Overview, Queues, or Channels
     Broker-->>Agent: current state
     Agent-->>API: correlated result
     API-->>Web: normalized ephemeral report
@@ -27,8 +27,10 @@ sequenceDiagram
 ```
 
 The API keeps connected Agents and pending requests in memory. It stores no
-broker observations. Opening a detail page chooses the Agent explicitly named
-by the inventory, the inventory default, a UI override, or the first available
+broker observations. IBM MQ detail uses Overview, Queues, and Channels tabs;
+each tab requests only the checks needed for that view. Overview performs only
+the queue-manager status check. A request chooses the Agent explicitly named by
+the inventory, the inventory default, a UI override, or the first available
 Agent.
 
 Queue Watch uses SSE from API to Web because the UI only receives telemetry.

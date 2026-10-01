@@ -4,7 +4,9 @@
 
 MQDeck is a read-only, on-demand diagnostic console for IBM MQ and RabbitMQ.
 It keeps a small local YAML inventory and contacts a broker only when an
-operator opens its detail page or explicitly requests a refresh.
+operator opens a broker tab or explicitly requests a refresh. IBM MQ collection
+is scoped by tab: Overview reads only queue-manager state, Queues reads queue
+definitions and status, and Channels reads channel definitions and status.
 
 MQDeck is no longer a telemetry, time-series, or synthetic-transaction
 platform. Elasticsearch, scheduled broker collection, retained observations,
@@ -22,9 +24,9 @@ sequenceDiagram
     UI->>API: GET /api/v1/hosts
     API-->>UI: Static YAML inventory
     A->>API: Outbound authenticated WebSocket
-    UI->>API: GET /api/v1/hosts/{id}/report
-    API->>A: Correlated read-only diagnostic request
-    A->>MQ: Allowlisted read-only checks
+    UI->>API: GET /api/v1/hosts/{id}/report?view=overview|queues|channels
+    API->>A: Correlated, view-scoped read-only request
+    A->>MQ: Only the allowlisted checks required by the selected tab
     MQ-->>A: Current broker data
     A-->>API: Correlated ephemeral result
     API-->>UI: Normalized report + check results
@@ -40,9 +42,12 @@ sequenceDiagram
     end
 ```
 
-The overview never contacts a broker. A detail request uses the agent named on
-the inventory entry, the configured default agent, or an agent selected by the
-operator. If none is specified, the API selects an available connected agent.
+The inventory overview never contacts a broker. Inside an IBM MQ detail page,
+the Overview tab runs only the lightweight queue-manager check; queue and
+channel inventories are not requested until their tabs are opened. Each request
+uses the agent named on the inventory entry, the configured default agent, or
+an agent selected by the operator. If none is specified, the API selects an
+available connected agent.
 
 Queue Watch is the first, collapsed section in queue details. It is deliberately
 opt-in and expands only after the operator enables it; it exists only while its
