@@ -44,7 +44,7 @@ Complete example files are distributed with the API and Agent:
 
 Each component is released independently; there is no combined binary bundle.
 Public, versioned component downloads are available under
-[`github.com/mqdeck/mqdeck/releases/tag/v1.0.17`](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.17).
+[`github.com/mqdeck/mqdeck/releases/tag/v1.0.18`](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.18).
 
 Linux packages include a `systemd` unit and installer for RHEL-family systems.
 Windows packages include a PowerShell service installer. Start with the
