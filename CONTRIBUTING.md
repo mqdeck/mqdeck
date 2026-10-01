@@ -14,7 +14,7 @@ Open a public issue with:
 - expected and observed behavior;
 - sanitized logs and configuration excerpts.
 
-Never include credentials, broker payloads, Elasticsearch data, or production
+Never include credentials, broker payloads, diagnostic results, or production
 host names. Report suspected vulnerabilities privately through
 [SECURITY.md](SECURITY.md).
 

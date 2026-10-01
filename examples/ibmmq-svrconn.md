@@ -18,27 +18,22 @@ identity according to the site's TLS, CONNAUTH, and CHLAUTH standards. Do not
 use an administrative principal for production observation. The exact OAM
 records depend on the enabled checks and local security policy.
 
-## Agent definition
+## Inventory definition
 
 ```yaml
 - id: ibmmq-production-qm1
-  name: IBM MQ production QM1
   adapter: ibmmq
-  transport: client
   endpoint: mq1.example.com:1414
   queue_manager: QM1
   channel: MQDECK.READONLY
-  schedule: "@every 30s"
-  timeout: 20s
   credentials:
-    username: ${IBMMQ_QM1_USERNAME}
-    password: ${IBMMQ_QM1_PASSWORD}
-  tests: [queue_manager, queue_status, channel_status]
-  detail_tests: [queues, channels, listeners, listener_status]
-  capture:
-    detail_interval: 2m
-    max_response_bytes: 2097152
+    username: mqdeck_readonly
+    password: replace-with-the-read-only-password
 ```
+
+MQDeck automatically applies the fixed read-only IBM MQ collection profile,
+timeout, output limit, and `runmqsc` client transport. Those operational fields
+are intentionally not configurable in the inventory.
 
 Use `mq-a.example.com:1414,mq-b.example.com:1414` when the client should try
 multiple IBM MQ connection names. For TLS ciphers, certificate labels, channel
@@ -62,11 +57,12 @@ runmqsc.exe -c -u $env:IBMMQ_QM1_USERNAME QM1
 ```
 
 Enter the password, issue `DISPLAY QMGR ALL`, and then `END`. A successful
-response proves the same client path used by MQDeck. Finally validate the full
-Agent configuration:
+response proves the same client path used by MQDeck. Finally validate the API
+inventory and Agent configuration:
 
 ```bash
-mqdeck-agent -config mqdeck.yaml -validate
+mqdeck-api -validate
+mqdeck-agent -config agent.yaml -validate
 ```
 
 The Agent supplies `MQSERVER` only to the `runmqsc` child process, passes the
@@ -77,9 +73,3 @@ For client applications, IBM MQ exposes `CONNAME` when the handle belongs to a
 channel. MQDeck displays that value as the application origin alongside the
 channel name. Bindings-mode applications run inside the queue manager host and
 do not have a remote IP address, so they are identified as local processes.
-
-When Test Flight is enabled, the Agent also supplies `MQSERVER` only to the
-`dmpmqmsg` child process and passes its password through standard input. It
-creates one message with a generated correlation ID and consumes only that
-exact ID from an existing `MQDECK.*` test queue. Set `test_runner.channel` when
-this identity uses a different `SVRCONN` channel from the collection identity.

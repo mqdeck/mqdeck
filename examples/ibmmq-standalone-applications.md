@@ -18,8 +18,8 @@ amqsput (publisher) -> QM1 -> MQDECK.DEMO.LOCAL -> amqsget (consumer)
 - `QM1` is running.
 - The operating-system identity running the samples is authorized to connect,
   put, and get messages.
-- The MQDeck Agent uses an IBM MQ host definition with `queues` in
-  `detail_tests`.
+- The MQDeck Agent can reach the queue manager defined in the API inventory.
+  Queue and application-handle collection is included automatically.
 
 The queue is an environment prerequisite. Creating it is an administrative
 setup action performed outside MQDeck:

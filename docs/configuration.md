@@ -1,152 +1,75 @@
-# Configuration
-
-MQDeck keeps deployment-specific endpoints and secrets outside binaries and
-container images.
-
-## Agent
-
-The agent reads a YAML file, `mqdeck.yaml` by default. Environment-variable
-references are expanded before strict decoding.
-
-The main sections are:
-
-| Section | Purpose |
-| --- | --- |
-| `agent` | Agent identity, timezone, startup behavior, and global concurrency |
-| `storage` | Selects Elasticsearch or the bounded single-machine local file |
-| `elasticsearch` | Storage URL, index names, credentials, and timeout |
-| `test_runner` | Optional authenticated Test Flight listener and IBM MQ client settings |
-| `hosts` | Broker, adapter, transport, endpoint, schedule, tests, and limits |
-
-Each host can define:
-
-- a standard five-field cron expression, an optional seconds field, or a
-  descriptor such as `@every 30s`;
-- frequent `tests` and slower `detail_tests`;
-- `capture.detail_interval` and `capture.max_response_bytes`;
-- HTTP, IBM MQ client, or local executable credentials and configuration;
-- adapter-specific custom checks that still pass the adapter's read-only
-  validation;
-- labels for topology and report behavior.
-
-For IBM MQ, use `transport: client` (the default when transport is omitted) to
-run bounded read-only `runmqsc -c` commands through a `SVRCONN` channel. Set
-`endpoint` to `host:port`, provide `queue_manager` and `channel`, and install the
-IBM MQ client on the Agent host. This path works when `mqweb`, Administrative
-REST, and Messaging REST are disabled. A comma-separated endpoint provides
-multiple IBM MQ connection names.
-
-Use `transport: command` only when running local `runmqsc` against a queue
-manager on the same host. The legacy `transport: rest` remains supported.
-With `transport: client`, Test Flight uses `dmpmqmsg` over `SVRCONN` for the
-exact-correlation put/get and `runmqsc` for optional channel-state or
-dead-letter depth observations. Neither IBM MQ web endpoint is required. Set
-`test_runner.channel` when the active test credential must use a different
-application channel from the read-only collection identity. The legacy
-`transport: rest` keeps using `messaging_endpoint` and `admin_endpoint`, with
-`endpoint` as its fallback.
-
-Start with the public [`examples/agent.yaml`](../examples/agent.yaml) and adapt
-its bounded capture, scheduling, and Elasticsearch settings to each broker.
-The IBM MQ example uses a 30 second core schedule and a two minute detailed
-interval. Core status updates remain lightweight, while queue definitions and
-application handles become visible within approximately two minutes. Increase
-the detailed interval on very large queue managers after observing actual
-collection duration and response size.
-For IBM MQ client preparation, including the required `runmqsc` and
-`dmpmqmsg` tools, use
-[`examples/ibmmq-svrconn.md`](../examples/ibmmq-svrconn.md). For Test Flight
-without Administrative REST, use
-[`examples/test-flight-ibmmq-no-admin-rest.yaml`](../examples/test-flight-ibmmq-no-admin-rest.yaml)
-with a client-transport host and a dedicated `MQDECK.*` test queue.
-Validate every change with
-`mqdeck-agent -config agent.yaml -validate`.
-
-For local demonstrations, `storage.mode: local` selects the shared file and
-the Elasticsearch section is ignored. See [Local file mode](local-mode.md) for
-the complete three-component configuration and limitations.
-
-### Six hour Elasticsearch retention
-
-The agent enables retention by default and will not write a document until it
-has created or updated the configured ILM policy and index template. The
-default policy permanently deletes MQDeck agent presence, host snapshots, and
-collected data after six hours. Because Elasticsearch executes the policy,
-expiration continues after all MQDeck processes stop.
-
-```yaml
-elasticsearch:
-  url: ${MQDECK_ELASTICSEARCH_URL}
-  agents_index: mqdeck-agents
-  hosts_index: mqdeck-hosts
-  data_index: mqdeck-data
-  retention:
-    enabled: true
-    duration: 6h
-    policy_name: mqdeck-retention-6h
-```
-
-The Elasticsearch bootstrap identity requires `manage_ilm` and
-`manage_index_templates` cluster privileges, plus `manage` and write access to
-the MQDeck index patterns. When a platform team manages retention centrally,
-set `retention.enabled: false` only after an equivalent external policy has
-been applied.
+# Configuration reference
 
 ## API
 
-| Variable | Default |
-| --- | --- |
-| `MQDECK_API_ADDRESS` | `:8080` |
-| `MQDECK_STORAGE_MODE` | `elasticsearch` |
-| `MQDECK_LOCAL_DATA_PATH` | `./mqdeck-local-data.json` |
-| `MQDECK_LOCAL_MAX_FILE_BYTES` | `67108864` |
-| `MQDECK_LOCAL_RETENTION` | `6h` |
-| `MQDECK_ELASTICSEARCH_URL` | `http://localhost:9200` |
-| `MQDECK_HOSTS_INDEX` | `mqdeck-hosts` |
-| `MQDECK_DATA_INDEX` | `mqdeck-data` |
-| `MQDECK_ELASTICSEARCH_TIMEOUT` | `10s` |
-| `MQDECK_CORS_ORIGINS` | `http://localhost:3000` |
-| `MQDECK_ELASTICSEARCH_USERNAME` | empty |
-| `MQDECK_ELASTICSEARCH_PASSWORD` | empty |
-| `MQDECK_ELASTICSEARCH_API_KEY` | empty |
-
-Use a least-privilege Elasticsearch identity that can read only `mqdeck-hosts`
-and `mqdeck-data`.
-
-## Web interface
-
-`MQDECK_API_URL` configures the server-side API target and defaults to
-`http://localhost:8080`. The browser calls only same-origin proxy routes.
-
-Set `MQDECK_STORAGE_MODE=local` when API and Agent use local file mode. Web
-still communicates only with API and never reads the file directly.
-
-`MQDECK_TEST_RUNNER_URL` and `MQDECK_TEST_RUNNER_TOKEN` enable real Test Flight
-requests through a selected Agent. Leave both unset when Test Flight is not
-used.
-
-The Web login uses one static operator account configured only on the server:
-
-| Variable | Development default | Purpose |
+| Variable | Default | Purpose |
 | --- | --- | --- |
-| `MQDECK_AUTH_USERNAME` | `admin` | Login username |
-| `MQDECK_AUTH_PASSWORD` | `mqdeck-demo` | Login password |
-| `MQDECK_AUTH_DISPLAY_NAME` | `MQDeck Operator` | Name displayed in the top bar |
-| `MQDECK_AUTH_SESSION_SECRET` | development-only value | Signs the eight-hour HTTP-only session cookie |
+| `MQDECK_API_ADDRESS` | `:8080` | HTTP and WebSocket listener |
+| `MQDECK_INVENTORY_PATH` | `./inventory.yaml` | Static broker inventory |
+| `MQDECK_AGENT_TOKEN` | required | Bearer token shared with Agents |
+| `MQDECK_DIAGNOSTIC_TIMEOUT` | `45s` | Maximum correlated request duration |
+| `MQDECK_CORS_ORIGINS` | `http://localhost:3000` | Allowed Web origins |
 
-Set a strong password and a long random session secret in every non-development
-installation. Web proxy routes reject unauthenticated requests with HTTP 401.
+The inventory is one static, self-contained YAML file. List every IBM MQ queue
+manager and RabbitMQ node that must appear in the overview, using final literal
+values. The API does not expand environment variables and rejects `${...}`
+placeholders. Protect the file with restricted filesystem permissions because
+it contains the read-only broker credentials. Collection tests, transport,
+timeouts, commands, labels, and response limits are platform policy and are
+therefore rejected if added to the inventory.
 
-## Production guidance
+```yaml
+version: 1
+default_agent: network-zone-a
+hosts:
+  - id: payments-qm
+    adapter: ibmmq
+    endpoint: mq01.example.net(1414)
+    queue_manager: QM01
+    channel: MQDECK.READONLY
+    credentials:
+      username: mqdeck_readonly
+      password: replace-with-the-read-only-password
+```
 
-- Store secrets in the deployment platform's secret manager and inject them as
-  environment variables.
-- Require certificate verification and trusted certificates for broker and
-  Elasticsearch connections.
-- Give the agent only the broker inspection permissions required by configured
-  checks.
-- Give the agent write access only to MQDeck indices and the API read access
-  only to those indices.
-- Restrict network paths between brokers, agents, Elasticsearch, the API, and
-  the web application.
-- Define retention and access policies for collected data before enabling collection.
+`id`, `adapter`, and `endpoint` are always required. IBM MQ also requires
+`queue_manager` and `channel`. `credentials` is needed when the broker requires
+authentication. `name` is optional (IBM MQ defaults to the queue-manager name),
+and `agent` is needed only to override `default_agent` for that entry.
+
+The API derives `client` transport and the complete read-only IBM MQ view, or
+HTTP transport and the complete RabbitMQ view. The endpoint host is used as the
+machine label, so several queue managers can share a machine without repeating
+metadata in YAML. Cluster and repository roles are read live from IBM MQ.
+
+## Agent
+
+```yaml
+version: 1
+agent:
+  id: network-zone-a
+  name: Agent Sao Paulo
+  location: sa-east-1
+  timezone: America/Sao_Paulo
+  max_concurrency: 4
+control_plane:
+  url: https://mqdeck.example.com
+  token: ${MQDECK_AGENT_TOKEN}
+  reconnect_delay: 5s
+  insecure_skip_verify: false
+```
+
+`agent.id` is the stable routing key. `agent.name` is the friendly name shown
+in the control panel. Use TLS in every non-local deployment.
+
+## Web
+
+| Variable | Purpose |
+| --- | --- |
+| `MQDECK_API_URL` | API base URL |
+| `MQDECK_AUTH_USERNAME` | Static operator username |
+| `MQDECK_AUTH_PASSWORD` | Static operator password |
+| `MQDECK_AUTH_DISPLAY_NAME` | Display name |
+| `MQDECK_AUTH_SESSION_SECRET` | Signed session secret |
+
+There are no Elasticsearch, storage-mode, schedule, or Test Flight settings.

@@ -1,74 +1,17 @@
-# Install the API
+# Install API
 
-The MQDeck API is a statically linked, read-only query service for
-Elasticsearch or the single-machine local file. It never receives Agent
-telemetry.
-
-## Linux
+Install the `mqdeck-api` binary and the complete, reviewed inventory file on
+the same host. The inventory must contain every broker entry and final literal
+connection value; it is not a template and receives no environment expansion.
 
 ```bash
-VERSION=1.0.9
-ARCH=amd64
-wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-api-${VERSION}-linux-${ARCH}.tar.gz"
-wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
-grep "mqdeck-api-${VERSION}-linux-${ARCH}.tar.gz" SHA256SUMS | sha256sum -c -
-tar -xzf "mqdeck-api-${VERSION}-linux-${ARCH}.tar.gz"
-cd "mqdeck-api-${VERSION}-linux-${ARCH}"
-sudo ./install.sh
-sudo editor /etc/mqdeck/api.env
-sudo chmod 600 /etc/mqdeck/api.env
-sudo systemctl enable --now mqdeck-api
-curl --fail http://127.0.0.1:8080/healthz
+install -m 0755 mqdeck-api /usr/local/bin/mqdeck-api
+install -d -m 0750 /etc/mqdeck
+install -m 0640 inventory.yaml /etc/mqdeck/inventory.yaml
 ```
 
-Use an Elasticsearch identity that can only read `mqdeck-hosts` and
-`mqdeck-data`.
+Configure `MQDECK_INVENTORY_PATH`, `MQDECK_AGENT_TOKEN`, and optionally
+`MQDECK_DIAGNOSTIC_TIMEOUT`. Run `mqdeck-api -validate` before every restart.
+The API listener must support WebSocket upgrades at `/api/v1/agents/connect`.
 
-For a same-machine demo without Elasticsearch, configure the shared data file
-before enabling the service. See [Local file mode](local-mode.md).
-
-## Windows
-
-Download and verify `mqdeck-api-1.0.9-windows-amd64.zip`, expand it, set the
-required machine-level `MQDECK_*` environment variables, and run the included
-script from an elevated PowerShell prompt:
-
-```powershell
-.\install-api-service.ps1
-Restart-Service MQDeckAPI
-Invoke-RestMethod http://127.0.0.1:8080/healthz
-```
-
-## Environment
-
-| Variable | Default |
-| --- | --- |
-| `MQDECK_API_ADDRESS` | `:8080` |
-| `MQDECK_STORAGE_MODE` | `elasticsearch` |
-| `MQDECK_LOCAL_DATA_PATH` | `./mqdeck-local-data.json` |
-| `MQDECK_LOCAL_MAX_FILE_BYTES` | `67108864` |
-| `MQDECK_LOCAL_RETENTION` | `6h` |
-| `MQDECK_ELASTICSEARCH_URL` | `http://localhost:9200` |
-| `MQDECK_HOSTS_INDEX` | `mqdeck-hosts` |
-| `MQDECK_DATA_INDEX` | `mqdeck-data` |
-| `MQDECK_ELASTICSEARCH_TIMEOUT` | `10s` |
-| `MQDECK_CORS_ORIGINS` | `http://localhost:3000` |
-| `MQDECK_ELASTICSEARCH_USERNAME` | empty |
-| `MQDECK_ELASTICSEARCH_PASSWORD` | empty |
-| `MQDECK_ELASTICSEARCH_API_KEY` | empty |
-
-## Upgrade and remove
-
-On Linux, extract the new verified artifact and rerun `sudo ./install.sh`. The
-installer stops an active API, preserves `/etc/mqdeck/api.env`, replaces the
-binary, and restarts the service. Remove it while retaining configuration with:
-
-```bash
-sudo ./uninstall.sh
-```
-
-Use `sudo ./uninstall.sh --purge` to remove the API configuration as well.
-
-On Windows, rerun `install-api-service.ps1` to upgrade. Remove only the service
-with `uninstall-api-service.ps1`, or add `-PurgeBinaries` to remove the installed
-executable directory.
+The API does not require a database or Elasticsearch.

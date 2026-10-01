@@ -1,0 +1,96 @@
+# MQDeck on-demand architecture
+
+## Product definition
+
+MQDeck is a read-only, on-demand diagnostic console for IBM MQ and RabbitMQ.
+It keeps a small local YAML inventory and contacts a broker only when an
+operator opens its detail page or explicitly requests a refresh.
+
+MQDeck is no longer a telemetry, time-series, or synthetic-transaction
+platform. Elasticsearch, scheduled broker collection, retained observations,
+and Test Flight are outside the simplified product.
+
+## Runtime flow
+
+```mermaid
+sequenceDiagram
+    participant UI as MQDeck Web
+    participant API as MQDeck API
+    participant A as Connected Agent
+    participant MQ as IBM MQ or RabbitMQ
+
+    UI->>API: GET /api/v1/hosts
+    API-->>UI: Static YAML inventory
+    A->>API: Outbound authenticated WebSocket
+    UI->>API: GET /api/v1/hosts/{id}/report
+    API->>A: Correlated read-only diagnostic request
+    A->>MQ: Allowlisted read-only checks
+    MQ-->>A: Current broker data
+    A-->>API: Correlated ephemeral result
+    API-->>UI: Normalized report + check results
+```
+
+The overview never contacts a broker. A detail request uses the agent named on
+the inventory entry, the configured default agent, or an agent selected by the
+operator. If none is specified, the API selects an available connected agent.
+
+## Why WebSocket instead of gRPC
+
+The Agent needs a long-lived, bidirectional connection initiated from inside
+the network. WebSocket over HTTPS provides that channel through common reverse
+proxies and firewalls, uses the API's existing port, and has a small operational
+surface. gRPC streaming would also work, but adds HTTP/2 proxy requirements,
+protobuf contracts, code generation, and another deployment concern without a
+clear benefit at the expected command volume.
+
+Each message has a type and request ID. The API correlates responses in memory
+and applies a bounded timeout. Reconnect is automatic. Only live agents are
+selectable.
+
+## State and persistence
+
+- `inventory.yaml` is the source of truth for broker metadata and routing.
+- Agent presence, outstanding requests, and diagnostic results exist in memory.
+- Results are returned to the requesting browser and are not retained.
+- The inventory is self-contained and does not expand environment variables.
+  Restrict its filesystem permissions because it contains the credentials the
+  Agent needs for read-only diagnostics.
+
+## Security boundary
+
+- Agents initiate the connection; no inbound Agent port is needed.
+- The WebSocket handshake requires a bearer token and must use TLS outside a
+  trusted development machine.
+- The Agent revalidates every received target before execution.
+- Existing adapter allowlists still restrict IBM MQ to `DISPLAY` operations and
+  RabbitMQ to read-only HTTP/diagnostic operations.
+- Arbitrary shell strings, MQSC mutations, publishing, consuming, and Test
+  Flight operations are not part of the control protocol.
+
+## Configuration
+
+API:
+
+```dotenv
+MQDECK_INVENTORY_PATH=/etc/mqdeck/inventory.yaml
+MQDECK_AGENT_TOKEN=replace-with-a-long-random-secret
+MQDECK_DIAGNOSTIC_TIMEOUT=45s
+```
+
+Agent:
+
+```yaml
+version: 1
+agent:
+  id: network-zone-a
+  name: Agent Sao Paulo
+  location: sa-east-1
+  max_concurrency: 4
+control_plane:
+  url: https://mqdeck.example.com
+  token: ${MQDECK_AGENT_TOKEN}
+  reconnect_delay: 5s
+```
+
+See `mqdeck-api/inventory.example.yaml` and
+`mqdeck-agent/mqdeck.on-demand.example.yaml` for complete examples.

@@ -1,103 +1,20 @@
-# Install the Agent on Linux
+# Install Agent on Linux
 
-The Agent is a statically linked executable. It can observe local brokers or
-remote broker endpoints from a network observation point.
+Requirements:
 
-## Requirements
+- Outbound HTTPS/WebSocket access to the MQDeck API.
+- Network access to assigned brokers.
+- IBM MQ client tools including `runmqsc` for IBM MQ client transport.
 
-- A supported `amd64` or `arm64` Linux host
-- Network access to Elasticsearch and configured broker endpoints
-- A least-privilege Elasticsearch identity with write access only to the
-  MQDeck host and data indices
-- Read-only IBM MQ or RabbitMQ credentials
-- IBM MQ Client 9.4 with `runmqsc` on `PATH` when using IBM MQ `client`
-  transport
-
-## Download and verify
+Install the binary and configuration:
 
 ```bash
-VERSION=1.0.9
-ARCH=amd64
-wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
-wget "https://github.com/mqdeck/mqdeck/releases/download/v${VERSION}/SHA256SUMS"
-grep "mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz" SHA256SUMS | sha256sum -c -
-tar -xzf "mqdeck-agent-${VERSION}-linux-${ARCH}.tar.gz"
-cd "mqdeck-agent-${VERSION}-linux-${ARCH}"
+install -m 0755 mqdeck-agent /usr/local/bin/mqdeck-agent
+install -d -m 0750 /etc/mqdeck
+install -m 0640 agent.yaml /etc/mqdeck/agent.yaml
+mqdeck-agent -config /etc/mqdeck/agent.yaml -validate
 ```
 
-## Install
-
-```bash
-sudo ./install.sh
-sudo editor /etc/mqdeck/agent.yaml
-sudo editor /etc/mqdeck/agent.env
-sudo chmod 600 /etc/mqdeck/agent.env
-```
-
-For a same-machine proof of concept without Elasticsearch, configure the
-shared file using [Local file mode](local-mode.md) before enabling the Agent.
-
-Validate the configuration before starting the service:
-
-```bash
-sudo -u mqdeck /opt/mqdeck/agent/mqdeck-agent \
-  -config /etc/mqdeck/agent.yaml -validate
-```
-
-Enable and start it only after validation succeeds:
-
-```bash
-sudo systemctl enable --now mqdeck-agent
-sudo systemctl status mqdeck-agent
-sudo journalctl -u mqdeck-agent -f
-```
-
-The installation script does not start the service automatically. Existing
-configuration files are preserved during upgrades.
-
-## IBM MQ client transport
-
-The recommended IBM MQ deployment uses `transport: client`, a dedicated
-read-only `SVRCONN` channel, and an endpoint such as `mq.example.com:1414`.
-The MQDeck executable is static, but IBM MQ's `runmqsc` utility is an external
-runtime dependency. Confirm that the service identity can run it:
-
-```bash
-sudo -u mqdeck env MQSERVER='MQDECK.READONLY/TCP/mq.example.com(1414)' \
-  runmqsc -c -u mqdeck QM1
-```
-
-Enter the password, run `DISPLAY QMGR ALL`, and then `END`. The same path works
-when the IBM MQ web server is disabled. See
-[`examples/ibmmq-svrconn.md`](../examples/ibmmq-svrconn.md).
-
-## Local broker commands
-
-For local transport, set the adapter executable to an absolute path available
-to the `mqdeck` service account. IBM MQ local checks accept only `DISPLAY`
-MQSC commands. RabbitMQ local checks accept only diagnostic allowlisted
-subcommands. Grant the service account only the operating-system permissions
-needed to run those read-only tools.
-
-## Upgrade
-
-Download and verify the new Agent artifact, extract it, and rerun:
-
-```bash
-sudo ./install.sh
-```
-
-The installer stops an active Agent, preserves `/etc/mqdeck/agent.yaml` and
-`/etc/mqdeck/agent.env`, replaces the executable, and restarts the service.
-Validate the preserved configuration against the new version after every
-upgrade.
-
-## Uninstall
-
-```bash
-sudo ./uninstall.sh
-```
-
-Configuration under `/etc/mqdeck` is retained. Use
-`sudo ./uninstall.sh --purge` only when the Agent configuration must also be
-removed.
+Run it under systemd using the packaged service file. Put
+`MQDECK_AGENT_TOKEN` in the protected environment file. No inbound Agent port
+or local datastore is required.

@@ -1,63 +1,12 @@
 version: 1
-
 agent:
-  id: mqdeck-observer-01
+  id: network-zone-a
+  name: Primary datacenter Agent
+  location: primary-datacenter
   timezone: UTC
-  run_on_start: true
-  max_concurrency: 2
-
-storage:
-  # Use local only for a single-machine demo or proof of concept.
-  mode: ${MQDECK_STORAGE_MODE}
-  local_path: ${MQDECK_LOCAL_DATA_PATH}
-  retention: ${MQDECK_LOCAL_RETENTION}
-  max_records: 10000
-  max_file_bytes: 67108864
-
-elasticsearch:
-  url: ${MQDECK_ELASTICSEARCH_URL}
-  hosts_index: mqdeck-hosts
-  data_index: mqdeck-data
-  timeout: 10s
-  api_key: ${MQDECK_ELASTICSEARCH_API_KEY}
-  retention:
-    enabled: true
-    duration: 6h
-    policy_name: mqdeck-retention-6h
-
-hosts:
-  - id: rabbitmq-production-01
-    name: RabbitMQ production node 01
-    adapter: rabbitmq
-    transport: http
-    endpoint: ${RABBITMQ_URL}
-    location: primary-datacenter
-    schedule: "@every 30s"
-    timeout: 10s
-    credentials:
-      username: ${RABBITMQ_USERNAME}
-      password: ${RABBITMQ_PASSWORD}
-    tests: [overview, health]
-    detail_tests: [nodes, queues, connections, channels, consumers, exchanges, bindings, vhosts]
-    capture:
-      detail_interval: 5m
-      max_response_bytes: 2097152
-
-  - id: ibmmq-production-qm1
-    name: IBM MQ production QM1
-    adapter: ibmmq
-    transport: client
-    endpoint: ${IBMMQ_QM1_ENDPOINT}
-    queue_manager: QM1
-    channel: MQDECK.READONLY
-    location: primary-datacenter
-    schedule: "@every 30s"
-    timeout: 20s
-    credentials:
-      username: ${IBMMQ_QM1_USERNAME}
-      password: ${IBMMQ_QM1_PASSWORD}
-    tests: [queue_manager, queue_status, channel_status]
-    detail_tests: [queues, channels, listeners, listener_status]
-    capture:
-      detail_interval: 2m
-      max_response_bytes: 2097152
+  max_concurrency: 4
+control_plane:
+  url: ${MQDECK_API_URL}
+  token: ${MQDECK_AGENT_TOKEN}
+  reconnect_delay: 5s
+  insecure_skip_verify: false
