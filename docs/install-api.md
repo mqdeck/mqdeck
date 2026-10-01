@@ -9,16 +9,16 @@ The commands below install the x86-64 build. Replace `linux_amd64` with
 `linux_arm64` on ARM64 hosts.
 
 ```bash
-curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/mqdeck-api_1.0.12_linux_amd64.tar.gz
-tar -xzf mqdeck-api_1.0.12_linux_amd64.tar.gz
-cd mqdeck-api_1.0.12_linux_amd64
+curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.13/mqdeck-api_1.0.13_linux_amd64.tar.gz
+tar -xzf mqdeck-api_1.0.13_linux_amd64.tar.gz
+cd mqdeck-api_1.0.13_linux_amd64
 sudo ./install-api.sh
 ```
 
 With `wget`, replace the first command with:
 
 ```bash
-wget https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/mqdeck-api_1.0.12_linux_amd64.tar.gz
+wget https://github.com/mqdeck/mqdeck/releases/download/v1.0.13/mqdeck-api_1.0.13_linux_amd64.tar.gz
 ```
 
 Review `/etc/mqdeck/inventory.yaml` and `/etc/mqdeck/api.env`. Then validate and
@@ -39,7 +39,7 @@ appropriate for an operator-controlled session. The API sets
 
 ## Windows Server
 
-Download `mqdeck-api_1.0.12_windows_amd64.zip`, verify its checksum, extract it,
+Download `mqdeck-api_1.0.13_windows_amd64.zip`, verify its checksum, extract it,
 and run PowerShell as Administrator:
 
 ```powershell

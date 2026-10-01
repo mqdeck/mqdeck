@@ -44,12 +44,15 @@ The overview never contacts a broker. A detail request uses the agent named on
 the inventory entry, the configured default agent, or an agent selected by the
 operator. If none is specified, the API selects an available connected agent.
 
-Queue Watch is deliberately opt-in and exists only while its queue detail
-accordion remains open. The browser receives one-way Server-Sent Events (SSE),
+Queue Watch is the first, collapsed section in queue details. It is deliberately
+opt-in and expands only after the operator enables it; it exists only while its
+queue detail accordion remains open. The browser receives one-way Server-Sent Events (SSE),
 which is simpler than another bidirectional browser socket for telemetry. API
 to Agent traffic continues over the existing authenticated WebSocket. Each
 sample runs only the allowlisted queue-status check; closing the accordion or
-disabling the switch cancels the stream.
+disabling the switch cancels the stream. Navigating away or expanding another
+queue also unmounts the active watch, closes its EventSource, propagates the
+request cancellation through Web, and releases the API watch slot.
 
 Incoming and outgoing values represent net depth movement between samples.
 Simultaneous puts and gets can offset one another, so Queue Watch is an
