@@ -18,6 +18,17 @@ identity according to the site's TLS, CONNAUTH, and CHLAUTH standards. Do not
 use an administrative principal for production observation. The exact OAM
 records depend on the enabled checks and local security policy.
 
+MQDeck always identifies the configured SVRCONN channel used for the current
+collection. Queue, channel, listener, and status lists still reflect the
+`DISPLAY`/`INQUIRE` authority granted to the connected identity. An empty list
+therefore does not prove that an object type is absent. When IBM MQ reports an
+authority failure, the broker view is marked as **Visibility limited** and
+explains that the snapshot is partial.
+
+System queues (`SYSTEM.*` and `AMQ.*`) are collected and displayed alongside
+application queues. Their presence does not imply that the identity can see
+every system object; normal IBM MQ authority rules still apply.
+
 ## Inventory definition
 
 ```yaml

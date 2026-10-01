@@ -15,7 +15,10 @@ production reverse proxy.
 
 Grant only read authorities. IBM MQ uses a dedicated `SVRCONN` channel and
 allowlisted `DISPLAY` commands. RabbitMQ uses HTTP `GET` against the Management
-API.
+API. Confirm the identity can display every object type the operator expects to
+observe. MQDeck identifies the access channel and warns when IBM MQ explicitly
+rejects a collection for insufficient authority; objects hidden by authority
+must not be interpreted as nonexistent.
 
 ## 4. Agent components
 

@@ -42,6 +42,13 @@ HTTP transport and the complete RabbitMQ view. The endpoint host is used as the
 machine label, so several queue managers can share a machine without repeating
 metadata in YAML. Cluster and repository roles are read live from IBM MQ.
 
+For IBM MQ, the configured `channel` is also returned as the access channel in
+every report. Object inventories are authority-scoped: missing channels,
+queues, or listeners may indicate insufficient `DISPLAY`/`INQUIRE` authority
+rather than absence. MQDeck reports recognized authorization failures as a
+partial-visibility warning. System queues are included in the queue view by
+default.
+
 ## Agent
 
 When API, Agent, and Web are installed on the same machine, the component

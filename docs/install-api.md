@@ -9,16 +9,16 @@ The commands below install the x86-64 build. Replace `linux_amd64` with
 `linux_arm64` on ARM64 hosts.
 
 ```bash
-curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.10/mqdeck-api_1.0.10_linux_amd64.tar.gz
-tar -xzf mqdeck-api_1.0.10_linux_amd64.tar.gz
-cd mqdeck-api_1.0.10_linux_amd64
+curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/mqdeck-api_1.0.11_linux_amd64.tar.gz
+tar -xzf mqdeck-api_1.0.11_linux_amd64.tar.gz
+cd mqdeck-api_1.0.11_linux_amd64
 sudo ./install-api.sh
 ```
 
 With `wget`, replace the first command with:
 
 ```bash
-wget https://github.com/mqdeck/mqdeck/releases/download/v1.0.10/mqdeck-api_1.0.10_linux_amd64.tar.gz
+wget https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/mqdeck-api_1.0.11_linux_amd64.tar.gz
 ```
 
 Review `/etc/mqdeck/inventory.yaml` and `/etc/mqdeck/api.env`. Then validate and
@@ -36,7 +36,7 @@ The API needs no database or Elasticsearch.
 
 ## Windows Server
 
-Download `mqdeck-api_1.0.10_windows_amd64.zip`, verify its checksum, extract it,
+Download `mqdeck-api_1.0.11_windows_amd64.zip`, verify its checksum, extract it,
 and run PowerShell as Administrator:
 
 ```powershell
