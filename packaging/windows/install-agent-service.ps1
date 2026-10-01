@@ -16,7 +16,7 @@ if ($existingService) {
 New-Item -ItemType Directory -Force -Path $InstallDirectory, $DataDirectory | Out-Null
 Copy-Item (Join-Path $sourceDirectory "mqdeck-agent.exe") $InstallDirectory -Force
 if (-not (Test-Path $configPath)) {
-    Copy-Item (Join-Path $sourceDirectory "mqdeck.yaml.example") $configPath
+    Copy-Item (Join-Path $sourceDirectory "agent.example.yaml") $configPath
 }
 
 $binaryPath = '"{0}" -config "{1}"' -f (Join-Path $InstallDirectory "mqdeck-agent.exe"), $configPath
@@ -25,6 +25,5 @@ if ($existingService) {
 } else {
     sc.exe create $ServiceName binPath= $binaryPath start= auto obj= "NT AUTHORITY\LocalService" DisplayName= "MQDeck Agent" | Out-Null
 }
-sc.exe description $ServiceName "MQDeck read-only messaging observability agent" | Out-Null
-Start-Service -Name $ServiceName
-Write-Host "MQDeck Agent is installed or upgraded. Existing configuration was preserved at $configPath"
+sc.exe description $ServiceName "MQDeck read-only on-demand messaging agent" | Out-Null
+Write-Host "MQDeck Agent service is created. Review $configPath and the machine-level token, then run Start-Service $ServiceName."

@@ -20,6 +20,9 @@ fi
 install -d -o root -g root -m 0755 /opt/mqdeck/api /etc/mqdeck
 install -d -o mqdeck -g mqdeck -m 0750 /var/lib/mqdeck
 install -o root -g root -m 0755 "$source_dir/mqdeck-api" /opt/mqdeck/api/mqdeck-api
+if [ ! -f /etc/mqdeck/inventory.yaml ]; then
+  install -o root -g mqdeck -m 0640 "$source_dir/inventory.example.yaml" /etc/mqdeck/inventory.yaml
+fi
 if [ ! -f /etc/mqdeck/api.env ]; then
   install -o root -g mqdeck -m 0640 "$source_dir/api.env.example" /etc/mqdeck/api.env
 fi
@@ -28,4 +31,4 @@ systemctl daemon-reload
 if [ "$was_active" = true ]; then
   systemctl start "$service_name"
 fi
-echo "Installed or upgraded MQDeck API. Existing configuration was preserved."
+echo "Installed MQDeck API. Review /etc/mqdeck/inventory.yaml and /etc/mqdeck/api.env, validate, then enable the service."

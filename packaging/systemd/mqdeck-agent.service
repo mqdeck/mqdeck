@@ -1,5 +1,5 @@
 [Unit]
-Description=MQDeck read-only collection agent
+Description=MQDeck read-only on-demand agent
 Documentation=https://github.com/mqdeck/mqdeck
 Wants=network-online.target
 After=network-online.target
@@ -16,7 +16,6 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectHome=true
 ProtectSystem=strict
-ReadWritePaths=/var/lib/mqdeck
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true

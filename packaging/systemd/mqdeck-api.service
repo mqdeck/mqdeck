@@ -1,5 +1,5 @@
 [Unit]
-Description=MQDeck read-only API
+Description=MQDeck inventory and Agent control plane
 Documentation=https://github.com/mqdeck/mqdeck
 Wants=network-online.target
 After=network-online.target

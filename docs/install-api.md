@@ -1,17 +1,53 @@
 # Install API
 
-Install the `mqdeck-api` binary and the complete, reviewed inventory file on
-the same host. The inventory must contain every broker entry and final literal
-connection value; it is not a template and receives no environment expansion.
+The API package contains only `mqdeck-api`, a minimal inventory example, its
+environment template, installer, and service definition.
+
+## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
+
+The commands below install the x86-64 build. Replace `linux_amd64` with
+`linux_arm64` on ARM64 hosts.
 
 ```bash
-install -m 0755 mqdeck-api /usr/local/bin/mqdeck-api
-install -d -m 0750 /etc/mqdeck
-install -m 0640 inventory.yaml /etc/mqdeck/inventory.yaml
+curl -fLO https://github.com/mqdeck/mqdeck-api/releases/latest/download/mqdeck-api_1.0.10_linux_amd64.tar.gz
+tar -xzf mqdeck-api_1.0.10_linux_amd64.tar.gz
+cd mqdeck-api_1.0.10_linux_amd64
+sudo ./install-api.sh
 ```
 
-Configure `MQDECK_INVENTORY_PATH`, `MQDECK_AGENT_TOKEN`, and optionally
-`MQDECK_DIAGNOSTIC_TIMEOUT`. Run `mqdeck-api -validate` before every restart.
-The API listener must support WebSocket upgrades at `/api/v1/agents/connect`.
+With `wget`, replace the first command with:
 
-The API does not require a database or Elasticsearch.
+```bash
+wget https://github.com/mqdeck/mqdeck-api/releases/latest/download/mqdeck-api_1.0.10_linux_amd64.tar.gz
+```
+
+Review `/etc/mqdeck/inventory.yaml` and `/etc/mqdeck/api.env`. Then validate and
+start the component:
+
+```bash
+sudo -u mqdeck bash -c 'set -a; . /etc/mqdeck/api.env; set +a; /opt/mqdeck/api/mqdeck-api -validate'
+sudo systemctl enable --now mqdeck-api
+sudo systemctl status mqdeck-api --no-pager
+curl --fail http://127.0.0.1:8080/healthz
+```
+
+Allow WebSocket upgrades for `/api/v1/agents/connect` in the reverse proxy.
+The API needs no database or Elasticsearch.
+
+## Windows Server
+
+Download `mqdeck-api_1.0.10_windows_amd64.zip`, verify its checksum, extract it,
+and run PowerShell as Administrator:
+
+```powershell
+[Environment]::SetEnvironmentVariable("MQDECK_AGENT_TOKEN", "replace-with-a-long-random-secret", "Machine")
+[Environment]::SetEnvironmentVariable("MQDECK_CORS_ORIGINS", "https://mqdeck.example.com", "Machine")
+Set-ExecutionPolicy -Scope Process Bypass
+.\install-api-service.ps1
+notepad "$env:ProgramData\MQDeck\inventory.yaml"
+Start-Service MQDeckAPI
+Get-Service MQDeckAPI
+```
+
+Validate the executable before starting, and restart `MQDeckAPI` after changing
+the inventory or machine-level environment variables.

@@ -21,7 +21,7 @@ install -d -o root -g root -m 0755 /opt/mqdeck/agent /etc/mqdeck
 install -d -o mqdeck -g mqdeck -m 0750 /var/lib/mqdeck
 install -o root -g root -m 0755 "$source_dir/mqdeck-agent" /opt/mqdeck/agent/mqdeck-agent
 if [ ! -f /etc/mqdeck/agent.yaml ]; then
-  install -o root -g mqdeck -m 0640 "$source_dir/mqdeck.yaml.example" /etc/mqdeck/agent.yaml
+  install -o root -g mqdeck -m 0640 "$source_dir/agent.example.yaml" /etc/mqdeck/agent.yaml
 fi
 if [ ! -f /etc/mqdeck/agent.env ]; then
   install -o root -g mqdeck -m 0640 "$source_dir/agent.env.example" /etc/mqdeck/agent.env
@@ -31,4 +31,4 @@ systemctl daemon-reload
 if [ "$was_active" = true ]; then
   systemctl start "$service_name"
 fi
-echo "Installed or upgraded MQDeck Agent. Existing configuration was preserved. Validate the configuration before enabling a new service."
+echo "Installed MQDeck Agent. Review /etc/mqdeck/agent.yaml and /etc/mqdeck/agent.env, validate, then enable the service."

@@ -1,20 +1,28 @@
 # Install Agent on Linux
 
-Requirements:
+Install an Agent at every network point that must reach brokers. IBM MQ targets
+also require IBM MQ Client 9.4 with `runmqsc` available in `PATH`.
 
-- Outbound HTTPS/WebSocket access to the MQDeck API.
-- Network access to assigned brokers.
-- IBM MQ client tools including `runmqsc` for IBM MQ client transport.
-
-Install the binary and configuration:
+## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-install -m 0755 mqdeck-agent /usr/local/bin/mqdeck-agent
-install -d -m 0750 /etc/mqdeck
-install -m 0640 agent.yaml /etc/mqdeck/agent.yaml
-mqdeck-agent -config /etc/mqdeck/agent.yaml -validate
+curl -fLO https://github.com/mqdeck/mqdeck-agent/releases/latest/download/mqdeck-agent_1.0.10_linux_amd64.tar.gz
+tar -xzf mqdeck-agent_1.0.10_linux_amd64.tar.gz
+cd mqdeck-agent_1.0.10_linux_amd64
+sudo ./install-agent.sh
 ```
 
-Run it under systemd using the packaged service file. Put
-`MQDECK_AGENT_TOKEN` in the protected environment file. No inbound Agent port
-or local datastore is required.
+Use `linux_arm64` for ARM64. `wget` can be used instead of `curl -fLO` with the
+same URL.
+
+Review `/etc/mqdeck/agent.yaml` and `/etc/mqdeck/agent.env`, then run:
+
+```bash
+sudo -u mqdeck bash -c 'set -a; . /etc/mqdeck/agent.env; set +a; /opt/mqdeck/agent/mqdeck-agent -config /etc/mqdeck/agent.yaml -validate'
+sudo systemctl enable --now mqdeck-agent
+sudo systemctl status mqdeck-agent --no-pager
+sudo journalctl -u mqdeck-agent -n 100 --no-pager
+```
+
+The Agent opens an outbound HTTPS/WebSocket connection and listens on no
+inbound port.

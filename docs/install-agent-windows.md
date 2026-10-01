@@ -1,13 +1,24 @@
-# Install Agent on Windows
+# Install Agent on Windows Server
 
-Install IBM MQ client tools when observing IBM MQ, place `mqdeck-agent.exe` and
-`agent.yaml` in the chosen program directory, and set the Agent token as a
-machine or service-scoped environment variable.
+Install IBM MQ Client 9.4 when the Agent observes IBM MQ, and ensure
+`runmqsc.exe` is available to the service account.
+
+Run PowerShell as Administrator:
 
 ```powershell
-$env:MQDECK_AGENT_TOKEN = "replace-with-the-api-token"
-& .\mqdeck-agent.exe -config .\agent.yaml -validate
+$url = "https://github.com/mqdeck/mqdeck-agent/releases/latest/download/mqdeck-agent_1.0.10_windows_amd64.zip"
+Invoke-WebRequest $url -OutFile mqdeck-agent.zip
+Expand-Archive .\mqdeck-agent.zip -DestinationPath .\mqdeck-agent
+Set-Location .\mqdeck-agent\mqdeck-agent_1.0.10_windows_amd64
+[Environment]::SetEnvironmentVariable("MQDECK_AGENT_TOKEN", "replace-with-the-same-api-token", "Machine")
+Set-ExecutionPolicy -Scope Process Bypass
+.\install-agent-service.ps1
+notepad "$env:ProgramData\MQDeck\agent.yaml"
+Start-Service MQDeckAgent
+Get-Service MQDeckAgent
 ```
 
-Use the packaged PowerShell service installer after validation. Permit outbound
-TLS to the API and broker endpoints; do not expose an inbound Agent port.
+Review `%ProgramData%\MQDeck\agent.yaml`, validate with
+`mqdeck-agent.exe -config <path> -validate`, and restart the service after
+changing configuration. Permit outbound TLS to the API and broker endpoints;
+do not create an inbound Agent firewall rule.

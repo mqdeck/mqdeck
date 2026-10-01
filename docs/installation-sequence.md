@@ -1,43 +1,28 @@
 # Installation sequence
 
-## 1. Install API
+## 1. API component
 
-Place `inventory.yaml` on the API host and configure:
+Download the API release for the target operating system, install its service,
+and review the static inventory. Confirm `GET /healthz` before continuing.
 
-```dotenv
-MQDECK_INVENTORY_PATH=/etc/mqdeck/inventory.yaml
-MQDECK_AGENT_TOKEN=replace-with-a-long-random-secret
-MQDECK_DIAGNOSTIC_TIMEOUT=45s
-```
+## 2. Web component
 
-Validate before starting:
+Install the Web standalone release as its own service. Configure the API URL,
+operator credentials, and session secret. Confirm the login page through the
+production reverse proxy.
 
-```bash
-mqdeck-api -validate
-mqdeck-api
-curl --fail http://127.0.0.1:8080/healthz
-```
+## 3. Broker identities
 
-## 2. Install Web
+Grant only read authorities. IBM MQ uses a dedicated `SVRCONN` channel and
+allowlisted `DISPLAY` commands. RabbitMQ uses HTTP `GET` against the Management
+API.
 
-Set `MQDECK_API_URL`, static login credentials, and the session secret. Verify
-that the login page and authenticated inventory proxy are reachable.
+## 4. Agent components
 
-## 3. Prepare broker identities
+Install one Agent service per required network zone. Its ID must match an
+inventory `agent` value or `default_agent`. Confirm it appears in
+`GET /api/v1/agents`, then open a broker detail page and verify the current
+queue, channel, publisher, and consumer view.
 
-Grant only the read authorities needed by the configured adapter checks. IBM MQ
-client observation uses `SVRCONN` and `DISPLAY` commands. RabbitMQ uses HTTP
-`GET` requests against the Management API.
-
-## 4. Install Agents
-
-Install each Agent at a network point that can reach its assigned brokers. The
-Agent opens the connection to the API, so it needs no inbound listener.
-
-```bash
-mqdeck-agent -config /etc/mqdeck/agent.yaml -validate
-mqdeck-agent -config /etc/mqdeck/agent.yaml
-```
-
-Confirm registration with `GET /api/v1/agents`, then open a broker detail page
-to execute the first diagnosis.
+Each component is downloaded, configured, started, stopped, upgraded, and
+rolled back independently through the operating-system service manager.

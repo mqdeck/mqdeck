@@ -1,28 +1,26 @@
 # Getting started
 
-MQDeck is a read-only, on-demand diagnostic console for IBM MQ and RabbitMQ.
-It needs three components and no external datastore:
+MQDeck is distributed as three independent components. Install only the
+components required on each machine:
 
-1. API with a local `inventory.yaml`.
-2. One or more Agents with outbound HTTPS access to the API and network access to brokers.
-3. Web connected to the API.
+1. `mqdeck-api`: inventory and Agent control plane.
+2. `mqdeck-agent`: outbound executor placed in each broker network zone.
+3. `mqdeck-web`: operator interface and authenticated API proxy.
 
-For local development from the workspace root:
+There is no public monolithic package. Each component has its own release,
+checksum, configuration, operating-system service, and upgrade lifecycle.
 
-```bash
-./start.sh
-```
+For RHEL-family Linux distributions, download the component package with
+`curl` or `wget`, run its installer as root, review the generated files under
+`/etc/mqdeck`, validate, and enable it with `systemctl`. Windows packages carry
+a PowerShell installer that creates the corresponding Windows service.
 
-The launcher starts local brokers, API, Agent, and Web; validates each process;
-then executes one real diagnostic through the complete path. Open
-<http://localhost:3000> and sign in with the local credentials from `.env`.
+Install in this order:
 
-Stop everything with:
+1. [API](install-api.md)
+2. [Web](install-web.md)
+3. [Agent on Linux](install-agent-linux.md) or [Agent on Windows](install-agent-windows.md)
 
-```bash
-./stop.sh
-```
-
-For a deployed environment, continue with the
-[installation sequence](installation-sequence.md) and
-[configuration reference](configuration.md).
+See the [installation sequence](installation-sequence.md) for the verification
+path and the [configuration reference](configuration.md) for all supported
+settings.
