@@ -6,9 +6,9 @@ MQDeck Web is an independent standalone Node.js component. Install Node.js
 ## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.13/mqdeck-web_1.0.13_standalone.tar.gz
-tar -xzf mqdeck-web_1.0.13_standalone.tar.gz
-cd mqdeck-web_1.0.13_standalone
+curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.14/mqdeck-web_1.0.14_standalone.tar.gz
+tar -xzf mqdeck-web_1.0.14_standalone.tar.gz
+cd mqdeck-web_1.0.14_standalone
 sudo ./install-web.sh
 ```
 
@@ -31,10 +31,10 @@ never connects directly to brokers or Agents.
 After installing Node.js 20.20 or newer, run PowerShell as Administrator:
 
 ```powershell
-$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.13/mqdeck-web_1.0.13_standalone.zip"
+$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.14/mqdeck-web_1.0.14_standalone.zip"
 Invoke-WebRequest $url -OutFile mqdeck-web.zip
 Expand-Archive .\mqdeck-web.zip -DestinationPath .\mqdeck-web
-Set-Location .\mqdeck-web\mqdeck-web_1.0.13_standalone
+Set-Location .\mqdeck-web\mqdeck-web_1.0.14_standalone
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_USERNAME", "admin", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_PASSWORD", "replace-with-a-strong-password", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_SESSION_SECRET", "replace-with-a-long-random-secret", "Machine")
