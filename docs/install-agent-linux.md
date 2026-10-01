@@ -30,5 +30,31 @@ sudo journalctl -u mqdeck-agent -n 100 --no-pager
 The Agent opens an outbound HTTPS/WebSocket connection and listens on no
 inbound port.
 
+## View Agent logs
+
+Follow the structured Agent log in real time with systemd:
+
+```bash
+sudo journalctl -u mqdeck-agent -f
+```
+
+Useful production queries include:
+
+```bash
+# Last 100 entries
+sudo journalctl -u mqdeck-agent -n 100 --no-pager
+
+# Entries from the last hour
+sudo journalctl -u mqdeck-agent --since "1 hour ago" --no-pager
+
+# Warnings and errors from the current boot
+sudo journalctl -u mqdeck-agent -b -p warning --no-pager
+```
+
+Look for `connected to control plane`, `collection started`, and
+`collection completed`. A repeated `control plane connection ended; retrying`
+entry means that the Agent cannot maintain its outbound API connection. A
+collection failure includes the broker ID and the read-only check that failed.
+
 For an existing Agent, use the [upgrade and rollback guide](upgrade.md) so the
 configuration is preserved and Agents are upgraded one network zone at a time.

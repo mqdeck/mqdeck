@@ -116,7 +116,9 @@ sudo journalctl -u mqdeck-agent -n 50 --no-pager
 
 The installer preserves `/etc/mqdeck/agent.yaml` and
 `/etc/mqdeck/agent.env`. Confirm in the API or Web control panel that the Agent
-has reconnected before proceeding to the next Agent.
+has reconnected before proceeding to the next Agent. See [View Agent
+logs](install-agent-linux.md#view-agent-logs) for live and historical
+`journalctl` commands.
 
 ### 3. Web
 

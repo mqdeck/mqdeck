@@ -25,6 +25,35 @@ do not create an inbound Agent firewall rule. The installer defaults
 `MQDECK_API_URL` to `http://127.0.0.1:8080`; replace it only when the API runs
 on another machine.
 
+## Inspect the Agent service
+
+Check whether the service is running and review Service Control Manager events
+from the last hour in an Administrator PowerShell session:
+
+```powershell
+Get-Service MQDeckAgent
+Get-CimInstance Win32_Service -Filter "Name='MQDeckAgent'" |
+  Select-Object Name, State, StartMode, ProcessId, ExitCode
+Get-WinEvent -FilterHashtable @{
+  LogName = "System"
+  ProviderName = "Service Control Manager"
+  StartTime = (Get-Date).AddHours(-1)
+} | Where-Object Message -Match "MQDeckAgent" |
+  Select-Object TimeCreated, LevelDisplayName, Message
+```
+
+These events show service start, stop, and launch failures. The Agent also
+reports its current connection state in the MQDeck Agents screen. For a
+foreground diagnostic, stop the service during a maintenance window and run
+the installed executable directly; restore the service immediately afterward:
+
+```powershell
+Stop-Service MQDeckAgent
+& "$env:ProgramFiles\MQDeck\Agent\mqdeck-agent.exe" -config "$env:ProgramData\MQDeck\agent.yaml"
+# Press Ctrl+C after collecting the diagnostic output.
+Start-Service MQDeckAgent
+```
+
 For an existing Windows service, follow the [upgrade and rollback
 guide](upgrade.md). The installer stops the service and leaves it stopped until
 the new binary has been validated.
