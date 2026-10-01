@@ -28,11 +28,32 @@ sequenceDiagram
     MQ-->>A: Current broker data
     A-->>API: Correlated ephemeral result
     API-->>UI: Normalized report + check results
+    opt Operator enables Queue Watch
+        UI->>API: SSE /queues/{queue}/watch
+        loop Every 2 seconds while open
+            API->>A: watch_queue (read-only)
+            A->>MQ: DISPLAY QSTATUS
+            MQ-->>A: Current depth
+            A-->>API: Correlated sample
+            API-->>UI: Net movement + current depth
+        end
+    end
 ```
 
 The overview never contacts a broker. A detail request uses the agent named on
 the inventory entry, the configured default agent, or an agent selected by the
 operator. If none is specified, the API selects an available connected agent.
+
+Queue Watch is deliberately opt-in and exists only while its queue detail
+accordion remains open. The browser receives one-way Server-Sent Events (SSE),
+which is simpler than another bidirectional browser socket for telemetry. API
+to Agent traffic continues over the existing authenticated WebSocket. Each
+sample runs only the allowlisted queue-status check; closing the accordion or
+disabling the switch cancels the stream.
+
+Incoming and outgoing values represent net depth movement between samples.
+Simultaneous puts and gets can offset one another, so Queue Watch is an
+immediate operational signal rather than an accounting counter.
 
 ## Why WebSocket instead of gRPC
 
@@ -52,6 +73,7 @@ selectable.
 - `inventory.yaml` is the source of truth for broker metadata and routing.
 - Agent presence, outstanding requests, and diagnostic results exist in memory.
 - Results are returned to the requesting browser and are not retained.
+- Queue Watch samples and session totals are not retained.
 - The inventory is self-contained and does not expand environment variables.
   Restrict its filesystem permissions because it contains the credentials the
   Agent needs for read-only diagnostics.
@@ -66,6 +88,8 @@ selectable.
   RabbitMQ to read-only HTTP/diagnostic operations.
 - Arbitrary shell strings, MQSC mutations, publishing, consuming, and Test
   Flight operations are not part of the control protocol.
+- Queue names are validated, bounded, and never interpolated into arbitrary
+  MQSC. The Agent selects its fixed `queue_status` collector.
 
 ## Configuration
 

@@ -17,12 +17,24 @@ sequenceDiagram
     Broker-->>Agent: current state
     Agent-->>API: correlated result
     API-->>Web: normalized ephemeral report
+    opt Queue detail watch enabled
+      Web->>API: SSE queue watch
+      API->>Agent: watch_queue(request_id, target)
+      Agent->>Broker: allowlisted queue status
+      Agent-->>API: current depth sample
+      API-->>Web: net movement event
+    end
 ```
 
 The API keeps connected Agents and pending requests in memory. It stores no
 broker observations. Opening a detail page chooses the Agent explicitly named
 by the inventory, the inventory default, a UI override, or the first available
 Agent.
+
+Queue Watch uses SSE from API to Web because the UI only receives telemetry.
+API to Agent reuses the authenticated WebSocket. It samples the read-only queue
+status collector every two seconds, keeps no history on the server, and stops
+when the operator disables the watch or closes the queue detail accordion.
 
 WebSocket over HTTPS was selected because the Agent must initiate a
 bidirectional connection through ordinary firewalls and reverse proxies. At

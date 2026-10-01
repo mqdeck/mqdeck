@@ -216,7 +216,10 @@ After all components are healthy:
    channel without a current `CHSTATUS` instance must appear as defined, not as
    failed.
 5. Confirm that system queues are included in the queue flow.
-6. If the MQ user has limited authority, confirm that Web shows a visibility
+6. Expand a local queue, enable Queue Watch, and confirm that current depth is
+   sampled. A test put or get should animate the corresponding net-movement
+   bar; disable the watch before continuing.
+7. If the MQ user has limited authority, confirm that Web shows a visibility
    warning instead of reporting an unhealthy queue manager solely because
    some `DISPLAY` commands were not permitted.
 

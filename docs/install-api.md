@@ -32,7 +32,10 @@ curl --fail http://127.0.0.1:8080/healthz
 ```
 
 Allow WebSocket upgrades for `/api/v1/agents/connect` in the reverse proxy.
-The API needs no database or Elasticsearch.
+For Queue Watch routes under `/api/v1/hosts/*/queues/*/watch`, preserve
+`text/event-stream`, disable response buffering, and use a streaming timeout
+appropriate for an operator-controlled session. The API sets
+`X-Accel-Buffering: no`. The API needs no database or Elasticsearch.
 
 ## Windows Server
 

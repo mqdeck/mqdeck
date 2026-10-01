@@ -13,7 +13,7 @@ telemetry ingestion, retained observations, or Test Flight.
 ```mermaid
 flowchart LR
     YAML["Local inventory.yaml"] --> API["MQDeck API"]
-    WEB["MQDeck Web"] -->|"inventory and on-demand report"| API
+    WEB["MQDeck Web"] -->|"inventory, report, and queue-watch SSE"| API
     AGENT["MQDeck Agent"] -->|"outbound authenticated WebSocket"| API
     AGENT -->|"allowlisted read-only checks"| IBM["IBM MQ"]
     AGENT -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
@@ -25,7 +25,8 @@ memory, returned with their individual check evidence, and discarded.
 
 ## Components
 
-- **Web**: static inventory overview, live Agent directory, and on-demand reports.
+- **Web**: static inventory overview, live Agent directory, on-demand reports,
+  and an operator-enabled live queue-movement watch.
 - **API**: YAML inventory and in-memory control plane.
 - **Agent**: outbound WebSocket client and read-only diagnostic executor.
 
@@ -49,7 +50,9 @@ The architecture and security decisions are documented in
 
 ## Safety model
 
-The Agent validates every target received from the API. RabbitMQ uses `GET`
+The Agent validates every target received from the API. Queue Watch reuses the
+same authenticated Agent connection and runs only the built-in IBM MQ queue
+status collector. RabbitMQ uses `GET`
 operations; IBM MQ command execution remains restricted to a single `DISPLAY`
 MQSC command. The remote protocol cannot publish, consume, mutate broker state,
 or execute arbitrary shell strings.
