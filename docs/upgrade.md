@@ -4,7 +4,7 @@ MQDeck is upgraded one component at a time. The API, Agent, and Web packages
 are independent; there is no monolithic upgrade package and no database or
 Elasticsearch migration.
 
-This guide uses version `1.0.11`. Replace the version in filenames and URLs
+This guide uses version `1.0.12`. Replace the version in filenames and URLs
 when upgrading to a later release.
 
 ## Upgrade order and availability
@@ -28,7 +28,7 @@ stopped so that the new binary can be validated before it is started.
 ## Before upgrading
 
 Read the release notes and download the package for each component and
-architecture from the [MQDeck release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.11).
+architecture from the [MQDeck release](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.12).
 Keep the previous packages until the upgrade has been verified.
 
 Back up the configuration. The component installers preserve these files, but
@@ -48,7 +48,7 @@ secret manager or systemd override, back that configuration up separately.
 Download the checksums beside the packages and verify them before extracting:
 
 ```bash
-curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/SHA256SUMS
+curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/SHA256SUMS
 sha256sum --check SHA256SUMS --ignore-missing
 ```
 
@@ -71,8 +71,8 @@ Get-Service MQDeckAPI, MQDeckAgent, MQDeckWeb -ErrorAction SilentlyContinue
 Download `SHA256SUMS` and compare a package with its published value:
 
 ```powershell
-(Get-FileHash .\mqdeck-api_1.0.11_windows_amd64.zip -Algorithm SHA256).Hash.ToLower()
-Select-String -Path .\SHA256SUMS -Pattern "mqdeck-api_1.0.11_windows_amd64.zip"
+(Get-FileHash .\mqdeck-api_1.0.12_windows_amd64.zip -Algorithm SHA256).Hash.ToLower()
+Select-String -Path .\SHA256SUMS -Pattern "mqdeck-api_1.0.12_windows_amd64.zip"
 ```
 
 The two hashes must be identical.
@@ -86,9 +86,9 @@ directory.
 ### 1. API
 
 ```bash
-curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/mqdeck-api_1.0.11_linux_amd64.tar.gz
-tar -xzf mqdeck-api_1.0.11_linux_amd64.tar.gz
-cd mqdeck-api_1.0.11_linux_amd64
+curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/mqdeck-api_1.0.12_linux_amd64.tar.gz
+tar -xzf mqdeck-api_1.0.12_linux_amd64.tar.gz
+cd mqdeck-api_1.0.12_linux_amd64
 ./mqdeck-api -version
 sudo bash -c 'set -a; . /etc/mqdeck/api.env; set +a; MQDECK_INVENTORY_PATH=/etc/mqdeck/inventory.yaml ./mqdeck-api -validate'
 sudo ./install-api.sh
@@ -104,9 +104,9 @@ does not overwrite `/etc/mqdeck/inventory.yaml` or `/etc/mqdeck/api.env`.
 Repeat this procedure for each Agent host:
 
 ```bash
-curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/mqdeck-agent_1.0.11_linux_amd64.tar.gz
-tar -xzf mqdeck-agent_1.0.11_linux_amd64.tar.gz
-cd mqdeck-agent_1.0.11_linux_amd64
+curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/mqdeck-agent_1.0.12_linux_amd64.tar.gz
+tar -xzf mqdeck-agent_1.0.12_linux_amd64.tar.gz
+cd mqdeck-agent_1.0.12_linux_amd64
 ./mqdeck-agent -version
 sudo bash -c 'set -a; . /etc/mqdeck/agent.env; set +a; ./mqdeck-agent -config /etc/mqdeck/agent.yaml -validate'
 sudo ./install-agent.sh
@@ -125,9 +125,9 @@ logs](install-agent-linux.md#view-agent-logs) for live and historical
 Node.js 20.20 or newer must already be installed:
 
 ```bash
-curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/mqdeck-web_1.0.11_standalone.tar.gz
-tar -xzf mqdeck-web_1.0.11_standalone.tar.gz
-cd mqdeck-web_1.0.11_standalone
+curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/mqdeck-web_1.0.12_standalone.tar.gz
+tar -xzf mqdeck-web_1.0.12_standalone.tar.gz
+cd mqdeck-web_1.0.12_standalone
 node --version
 sudo ./install-web.sh
 sudo systemctl status mqdeck-web --no-pager
@@ -150,10 +150,10 @@ over the files from an older release. Run PowerShell as Administrator.
 ### 1. API
 
 ```powershell
-$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/mqdeck-api_1.0.11_windows_amd64.zip"
-Invoke-WebRequest $url -OutFile .\mqdeck-api_1.0.11_windows_amd64.zip
-Expand-Archive .\mqdeck-api_1.0.11_windows_amd64.zip -DestinationPath .\mqdeck-api-1.0.11
-Set-Location .\mqdeck-api-1.0.11\mqdeck-api_1.0.11_windows_amd64
+$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/mqdeck-api_1.0.12_windows_amd64.zip"
+Invoke-WebRequest $url -OutFile .\mqdeck-api_1.0.12_windows_amd64.zip
+Expand-Archive .\mqdeck-api_1.0.12_windows_amd64.zip -DestinationPath .\mqdeck-api-1.0.12
+Set-Location .\mqdeck-api-1.0.12\mqdeck-api_1.0.12_windows_amd64
 .\mqdeck-api.exe -version
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-api-service.ps1
@@ -170,10 +170,10 @@ machine-level `MQDECK_*` variables.
 ### 2. Agent
 
 ```powershell
-$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/mqdeck-agent_1.0.11_windows_amd64.zip"
-Invoke-WebRequest $url -OutFile .\mqdeck-agent_1.0.11_windows_amd64.zip
-Expand-Archive .\mqdeck-agent_1.0.11_windows_amd64.zip -DestinationPath .\mqdeck-agent-1.0.11
-Set-Location .\mqdeck-agent-1.0.11\mqdeck-agent_1.0.11_windows_amd64
+$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/mqdeck-agent_1.0.12_windows_amd64.zip"
+Invoke-WebRequest $url -OutFile .\mqdeck-agent_1.0.12_windows_amd64.zip
+Expand-Archive .\mqdeck-agent_1.0.12_windows_amd64.zip -DestinationPath .\mqdeck-agent-1.0.12
+Set-Location .\mqdeck-agent-1.0.12\mqdeck-agent_1.0.12_windows_amd64
 .\mqdeck-agent.exe -version
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-agent-service.ps1
@@ -188,10 +188,10 @@ machine-level settings such as `MQDECK_API_URL` and `MQDECK_AGENT_TOKEN`.
 ### 3. Web
 
 ```powershell
-$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.11/mqdeck-web_1.0.11_standalone.zip"
-Invoke-WebRequest $url -OutFile .\mqdeck-web_1.0.11_standalone.zip
-Expand-Archive .\mqdeck-web_1.0.11_standalone.zip -DestinationPath .\mqdeck-web-1.0.11
-Set-Location .\mqdeck-web-1.0.11\mqdeck-web_1.0.11_standalone
+$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.12/mqdeck-web_1.0.12_standalone.zip"
+Invoke-WebRequest $url -OutFile .\mqdeck-web_1.0.12_standalone.zip
+Expand-Archive .\mqdeck-web_1.0.12_standalone.zip -DestinationPath .\mqdeck-web-1.0.12
+Set-Location .\mqdeck-web-1.0.12\mqdeck-web_1.0.12_standalone
 node --version
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-web-service.ps1
@@ -204,15 +204,19 @@ The Web installer preserves the machine-level `MQDECK_API_URL` and
 `MQDECK_AUTH_*` settings. Windows does not create a `web.previous` directory;
 keep the previous ZIP for rollback.
 
-## Verify version 1.0.11
+## Verify version 1.0.12
 
 After all components are healthy:
 
 1. Confirm all expected Agents are connected.
 2. Open a queue manager and request its current details.
 3. Confirm that the access channel is shown.
-4. Confirm that system queues are included in the queue flow.
-5. If the MQ user has limited authority, confirm that Web shows a visibility
+4. Expand Channels and confirm that application, client/server connection, and
+   `SYSTEM.*` definitions visible to the MQ identity are listed. A defined
+   channel without a current `CHSTATUS` instance must appear as defined, not as
+   failed.
+5. Confirm that system queues are included in the queue flow.
+6. If the MQ user has limited authority, confirm that Web shows a visibility
    warning instead of reporting an unhealthy queue manager solely because
    some `DISPLAY` commands were not permitted.
 
@@ -226,7 +230,7 @@ For Kubernetes installations, keep the existing values and upgrade the chart:
 
 ```bash
 helm upgrade mqdeck oci://ghcr.io/mqdeck/charts/mqdeck \
-  --version 1.0.11 \
+  --version 1.0.12 \
   --namespace mqdeck \
   --reuse-values \
   --wait
@@ -246,6 +250,6 @@ into a clean directory, run its service installer, validate, and start the
 service. Restore the configuration backup only if configuration was also
 changed during the upgrade.
 
-Version `1.0.11` does not require an inventory schema migration, so existing
+Version `1.0.12` does not require an inventory schema migration, so existing
 minimal inventories and Agent configurations remain valid. After rollback,
 repeat the health, Agent connection, and broker-detail checks above.
