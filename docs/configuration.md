@@ -50,8 +50,8 @@ inventory, and included in text search. `platform` accepts `distributed`
 
 The Agent uses IBM MQ client mode (`runmqsc -c`) for both distributed and z/OS
 queue managers. A direct mainframe connection needs only the listener endpoint,
-queue-manager name, read-only `SVRCONN`, and credentials. For TLS or other
-enterprise client policies, use a CCDT:
+queue-manager name, and a generic read-only `SVRCONN`. Credentials are optional
+when CHLAUTH/MCAUSER maps the Agent without MQCSP authentication:
 
 ```yaml
 version: 1
@@ -62,17 +62,22 @@ hosts:
     adapter: ibmmq
     platform: zos
     tags: [production, mainframe, payments]
-    ccdt_url: file:///etc/mqdeck/zos-payments-ccdt.json
+    endpoint: mainframe.example.net(1414)
     queue_manager: CSQ1
     channel: MQDECK.READONLY
     credentials:
       username: MQDECK
       password: replace-with-the-read-only-password
-    tls:
-      key_repository: /etc/mqdeck/tls/mqdeck
 ```
 
-The CCDT file and key repository must exist on the selected Agent. For a GSKit
+This direct mode sets `MQSERVER` only for the bounded `runmqsc -c` process and
+does not require a CCDT. MQDeck does not query z/OS listener objects because
+those listeners are managed by CHINIT; it collects queue-manager, queue, and
+channel definitions and status.
+
+Use `ccdt_url` instead of `endpoint` only if the `SVRCONN` requires TLS, channel
+exits, or a managed connection list. The CCDT file and key repository must
+exist on the selected Agent. For a GSKit
 repository, `key_repository` can omit the `.kdb` suffix. `endpoint` and
 `ccdt_url` are mutually exclusive so the active connection path remains clear.
 The Agent removes inherited IBM MQ connection variables and sets `MQCCDTURL`

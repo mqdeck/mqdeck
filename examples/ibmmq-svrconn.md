@@ -22,7 +22,7 @@ use an administrative principal for production observation. The exact OAM
 records depend on the enabled checks and local security policy.
 
 MQDeck always identifies the configured SVRCONN channel used for the current
-collection. Queue, channel, listener, and status lists still reflect the
+collection. Queue, channel, and status lists still reflect the
 `DISPLAY`/`INQUIRE` authority granted to the connected identity. An empty list
 therefore does not prove that an object type is absent. When IBM MQ reports an
 authority failure, the broker view is marked as **Visibility limited** and
@@ -54,8 +54,8 @@ are intentionally not configurable in the inventory.
 Use `mq-a.example.com:1414,mq-b.example.com:1414` when the client should try
 multiple IBM MQ connection names.
 
-For an IBM MQ for z/OS queue manager that uses TLS or enterprise client
-policies, declare the CCDT and key repository in the inventory:
+For IBM MQ for z/OS, use the same direct definition. The channel can be a
+generic, read-only SVRCONN shared according to the site's security policy:
 
 ```yaml
 - id: ibmmq-zos-csq1
@@ -64,19 +64,22 @@ policies, declare the CCDT and key repository in the inventory:
   platform: zos
   tags: [production, mainframe, payments]
   agent_id: mainframe-network-agent
-  ccdt_url: file:///etc/mqdeck/zos-payments-ccdt.json
+  endpoint: mainframe.example.net(1414)
   queue_manager: CSQ1
   channel: MQDECK.READONLY
   credentials:
     username: MQDECK
     password: replace-with-the-read-only-password
-  tls:
-    key_repository: /etc/mqdeck/tls/mqdeck
 ```
 
-The files must be readable by the Agent service account. Omit `endpoint` when
-using `ccdt_url`; the CCDT owns connection names, TLS CipherSpecs, and client
-channel policy.
+This path does not require a CCDT. MQDeck does not request listener objects from
+z/OS because those listeners are managed by CHINIT rather than as distributed
+MQ listener objects.
+
+Only replace `endpoint` with `ccdt_url` when the channel requires TLS, channel
+exits, or a managed connection list. In that case, the CCDT and optional
+`tls.key_repository` files must be readable by the Agent service account; the
+CCDT owns connection names, TLS CipherSpecs, and client channel policy.
 
 ## Validate the connection
 
@@ -106,6 +109,11 @@ mqdeck-agent -config agent.yaml -validate
 For CCDT/TLS validation, clear `MQSERVER`, set `MQCCDTURL` and `MQSSLKEYR` to
 the inventory values, and run the same `runmqsc -c` command. The key repository
 value can omit its `.kdb` suffix.
+
+If direct validation fails, the IBM MQ reason code is authoritative: `2058`
+usually identifies a queue-manager name mismatch, `2059`/`2538` indicate the
+connection path, `2035` indicates identity/CHLAUTH/authority, and TLS reason
+codes require a CCDT profile matching the secured SVRCONN.
 
 For direct connections, the Agent supplies `MQSERVER` only to the `runmqsc`
 child process. For CCDT connections, it clears `MQSERVER` and supplies
