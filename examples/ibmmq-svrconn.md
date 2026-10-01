@@ -106,6 +106,20 @@ mqdeck-api -validate
 mqdeck-agent -config agent.yaml -validate
 ```
 
+On Linux, repeat the connection test as the service account. A successful test
+as `root` does not prove that the `mqdeck` identity receives the same CHLAUTH,
+MCAUSER, or command-security mapping:
+
+```bash
+sudo -u mqdeck env MQSERVER='MQDECK.READONLY/TCP/mq1.example.com(1414)' \
+  /opt/mqm/bin/runmqsc -c QM1
+```
+
+If this service-account test fails while the root test succeeds, authorize or
+map the dedicated MQDeck identity on the SVRCONN; do not run the Agent service
+as root. Alternatively, configure a dedicated authenticated identity under
+`credentials` in the inventory.
+
 For CCDT/TLS validation, clear `MQSERVER`, set `MQCCDTURL` and `MQSSLKEYR` to
 the inventory values, and run the same `runmqsc -c` command. The key repository
 value can omit its `.kdb` suffix.

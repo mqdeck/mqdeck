@@ -27,6 +27,15 @@ sudo systemctl status mqdeck-agent --no-pager
 sudo journalctl -u mqdeck-agent -n 100 --no-pager
 ```
 
+When troubleshooting IBM MQ, test `runmqsc` as the same unprivileged account
+used by the service. Testing only as `root` can hide a CHLAUTH, MCAUSER, or
+command-security difference:
+
+```bash
+sudo -u mqdeck env MQSERVER='CHANNEL/TCP/mq.example.net(1414)' \
+  /opt/mqm/bin/runmqsc -c QM1
+```
+
 The Agent opens an outbound HTTPS/WebSocket connection and listens on no
 inbound port.
 
