@@ -6,7 +6,7 @@ also require IBM MQ Client 9.4 with `runmqsc` available in `PATH`.
 ## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-AGENT_VERSION=1.0.20 # MQDECK_AGENT_VERSION
+AGENT_VERSION=1.0.22 # MQDECK_AGENT_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-agent/releases/download/v${AGENT_VERSION}/mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-agent_${AGENT_VERSION}_linux_amd64"

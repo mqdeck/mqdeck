@@ -39,7 +39,7 @@ Every component release includes its own checksum file. Download the checksum
 from the same component release as the binary:
 
 ```bash
-AGENT_VERSION=1.0.20 # MQDECK_AGENT_VERSION
+AGENT_VERSION=1.0.22 # MQDECK_AGENT_VERSION
 sha256sum --check "mqdeck-agent_${AGENT_VERSION}_SHA256SUMS" --ignore-missing
 ```
 
@@ -59,7 +59,7 @@ from another release.
 Set only the API version selected from the API repository:
 
 ```bash
-API_VERSION=1.0.21 # MQDECK_API_VERSION
+API_VERSION=1.0.22 # MQDECK_API_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-api/releases/download/v${API_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-api_${API_VERSION}_linux_amd64"
@@ -77,7 +77,7 @@ Upgrade one network zone at a time and confirm that each Agent reconnects
 before continuing:
 
 ```bash
-AGENT_VERSION=1.0.20 # MQDECK_AGENT_VERSION
+AGENT_VERSION=1.0.22 # MQDECK_AGENT_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-agent/releases/download/v${AGENT_VERSION}/mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-agent_${AGENT_VERSION}_linux_amd64"
@@ -94,7 +94,7 @@ explicitly identify a protocol compatibility requirement.
 ## Upgrade Web on Linux
 
 ```bash
-WEB_VERSION=1.0.23 # MQDECK_WEB_VERSION
+WEB_VERSION=1.0.25 # MQDECK_WEB_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-web/releases/download/v${WEB_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 cd "mqdeck-web_${WEB_VERSION}_standalone"
