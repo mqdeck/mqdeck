@@ -98,10 +98,6 @@ jobs:
           echo "agent_version=${agent_version}" >> "$GITHUB_OUTPUT"
           echo "web_version=${web_version}" >> "$GITHUB_OUTPUT"
 
-          echo "API: ${api_version}"
-          echo "Agent: ${agent_version}"
-          echo "Web: ${web_version}"
-
       - name: Update install and update documentation
         shell: bash
         env:
@@ -122,8 +118,7 @@ jobs:
           if [[ "${#files[@]}" -eq 0 ]]; then
             echo "No install.md or update.md files found"
           else
-            echo "Documentation files found:"
-            printf '  %s\n' "${files[@]}"
+            printf '%s\n' "${files[@]}"
 
             for file in "${files[@]}"; do
               sed -i \
@@ -144,7 +139,6 @@ jobs:
           set -euo pipefail
 
           if [[ ! -f /tmp/mqdeck-markdown-files ]]; then
-            echo "No documentation files to commit"
             exit 0
           fi
 
@@ -156,13 +150,10 @@ jobs:
           done < /tmp/mqdeck-markdown-files
 
           if git diff --cached --quiet; then
-            echo "No documentation changes"
             exit 0
           fi
 
-          git commit \
-            -m "Update component versions for MQDeck v${MQDECK_VERSION}"
-
+          git commit -m "Update component versions for MQDeck v${MQDECK_VERSION}"
           git push origin HEAD:main
 
       - name: Download latest component releases
@@ -276,42 +267,6 @@ jobs:
 
           fi
 
-      - name: Cleanup old MQDeck releases
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CURRENT_VERSION: ${{ steps.release.outputs.version }}
-        run: |
-          set -euo pipefail
-
-          gh release list \
-            --repo "$GITHUB_REPOSITORY" \
-            --limit 100 \
-            --json tagName \
-            --jq '.[].tagName' \
-          | while read -r tag; do
-
-              [[ -n "${tag}" ]] || continue
-
-              if [[ "${tag}" == chart-v* ]]; then
-                continue
-              fi
-
-              if [[ "${tag}" == "v${CURRENT_VERSION}" ]]; then
-                continue
-              fi
-
-              if [[ "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-                echo "Deleting old MQDeck release: ${tag}"
-
-                gh release delete \
-                  "${tag}" \
-                  --repo "$GITHUB_REPOSITORY" \
-                  --yes
-              fi
-
-            done
-
       - name: Cleanup old workflow runs
         if: always()
         shell: bash
@@ -334,13 +289,11 @@ jobs:
           count=0
 
           for run_id in "${runs[@]}"; do
-
             [[ -n "${run_id}" ]] || continue
 
             count=$((count + 1))
 
             if [[ "${count}" -le 2 ]]; then
-              echo "Keeping workflow run: ${run_id}"
               continue
             fi
 
@@ -348,10 +301,7 @@ jobs:
               continue
             fi
 
-            echo "Deleting old workflow run: ${run_id}"
-
             gh run delete \
               "${run_id}" \
               --repo "$GITHUB_REPOSITORY" || true
-
           done
