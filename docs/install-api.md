@@ -9,7 +9,7 @@ The commands below install the x86-64 build. Replace `linux_amd64` with
 `linux_arm64` on ARM64 hosts.
 
 ```bash
-API_VERSION=X.Y.Z
+API_VERSION=1.0.20 # MQDECK_API_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-api/releases/download/v${API_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-api_${API_VERSION}_linux_amd64"
@@ -40,10 +40,15 @@ appropriate for an operator-controlled session. The API sets
 
 ## Windows Server
 
-Download `mqdeck-api_X.Y.Z_windows_amd64.zip` from the
+Use the current API version:
+
+```powershell
+$ApiVersion = "1.0.20" # MQDECK_API_VERSION
+```
+
+Download `mqdeck-api_${ApiVersion}_windows_amd64.zip` from the
 [API releases](https://github.com/mqdeck/mqdeck-api/releases), verify its
-component checksum, extract it,
-and run PowerShell as Administrator:
+component checksum, extract it, and run PowerShell as Administrator:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("MQDECK_AGENT_TOKEN", "replace-with-a-long-random-secret", "Machine")

@@ -6,7 +6,7 @@ MQDeck Web is an independent standalone Node.js component. Install Node.js
 ## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-WEB_VERSION=X.Y.Z
+WEB_VERSION=1.0.22 # MQDECK_WEB_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-web/releases/download/v${WEB_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 cd "mqdeck-web_${WEB_VERSION}_standalone"
@@ -32,7 +32,7 @@ never connects directly to brokers or Agents.
 After installing Node.js 20.20 or newer, run PowerShell as Administrator:
 
 ```powershell
-$WebVersion = "X.Y.Z"
+$WebVersion = "1.0.22" # MQDECK_WEB_VERSION
 $url = "https://github.com/mqdeck/mqdeck-web/releases/download/v$WebVersion/mqdeck-web_${WebVersion}_standalone.zip"
 Invoke-WebRequest $url -OutFile mqdeck-web.zip
 Expand-Archive .\mqdeck-web.zip -DestinationPath .\mqdeck-web

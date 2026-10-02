@@ -6,7 +6,7 @@ Install IBM MQ Client 9.4 when the Agent observes IBM MQ, and ensure
 Run PowerShell as Administrator:
 
 ```powershell
-$AgentVersion = "X.Y.Z"
+$AgentVersion = "1.0.20" # MQDECK_AGENT_VERSION
 $url = "https://github.com/mqdeck/mqdeck-agent/releases/download/v$AgentVersion/mqdeck-agent_${AgentVersion}_windows_amd64.zip"
 Invoke-WebRequest $url -OutFile mqdeck-agent.zip
 Expand-Archive .\mqdeck-agent.zip -DestinationPath .\mqdeck-agent
