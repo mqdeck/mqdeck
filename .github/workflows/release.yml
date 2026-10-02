@@ -47,58 +47,23 @@ jobs:
             exit 1
           }
 
-          api_tag="$(
-            gh release list \
-              --repo mqdeck/mqdeck-api \
-              --limit 1 \
-              --json tagName \
-              --jq '.[0].tagName'
-          )"
+          api_tag="$(gh release list --repo mqdeck/mqdeck-api --limit 1 --json tagName --jq '.[0].tagName')"
+          agent_tag="$(gh release list --repo mqdeck/mqdeck-agent --limit 1 --json tagName --jq '.[0].tagName')"
+          web_tag="$(gh release list --repo mqdeck/mqdeck-web --limit 1 --json tagName --jq '.[0].tagName')"
 
-          agent_tag="$(
-            gh release list \
-              --repo mqdeck/mqdeck-agent \
-              --limit 1 \
-              --json tagName \
-              --jq '.[0].tagName'
-          )"
-
-          web_tag="$(
-            gh release list \
-              --repo mqdeck/mqdeck-web \
-              --limit 1 \
-              --json tagName \
-              --jq '.[0].tagName'
-          )"
-
-          [[ -n "${api_tag}" ]] || {
-            echo "No API release found" >&2
-            exit 1
-          }
-
-          [[ -n "${agent_tag}" ]] || {
-            echo "No Agent release found" >&2
-            exit 1
-          }
-
-          [[ -n "${web_tag}" ]] || {
-            echo "No Web release found" >&2
-            exit 1
-          }
-
-          api_version="${api_tag#v}"
-          agent_version="${agent_tag#v}"
-          web_version="${web_tag#v}"
+          [[ -n "${api_tag}" ]] || { echo "No API release found" >&2; exit 1; }
+          [[ -n "${agent_tag}" ]] || { echo "No Agent release found" >&2; exit 1; }
+          [[ -n "${web_tag}" ]] || { echo "No Web release found" >&2; exit 1; }
 
           echo "api_tag=${api_tag}" >> "$GITHUB_OUTPUT"
           echo "agent_tag=${agent_tag}" >> "$GITHUB_OUTPUT"
           echo "web_tag=${web_tag}" >> "$GITHUB_OUTPUT"
 
-          echo "api_version=${api_version}" >> "$GITHUB_OUTPUT"
-          echo "agent_version=${agent_version}" >> "$GITHUB_OUTPUT"
-          echo "web_version=${web_version}" >> "$GITHUB_OUTPUT"
+          echo "api_version=${api_tag#v}" >> "$GITHUB_OUTPUT"
+          echo "agent_version=${agent_tag#v}" >> "$GITHUB_OUTPUT"
+          echo "web_version=${web_tag#v}" >> "$GITHUB_OUTPUT"
 
-      - name: Update install and update documentation
+      - name: Update documentation versions
         shell: bash
         env:
           API_VERSION: ${{ steps.components.outputs.api_version }}
@@ -108,28 +73,26 @@ jobs:
           set -euo pipefail
 
           mapfile -t files < <(
-            find . \
-              -type f \
-              \( -iname 'install.md' -o -iname 'update.md' \) \
-              -not -path './.git/*' \
-              | sort
+            grep -rlE 'MQDECK_(API|AGENT|WEB)_VERSION' docs --include='*.md' | sort
           )
 
-          if [[ "${#files[@]}" -eq 0 ]]; then
-            echo "No install.md or update.md files found"
-          else
-            printf '%s\n' "${files[@]}"
+          [[ "${#files[@]}" -gt 0 ]] || {
+            echo "No version-managed documentation found" >&2
+            exit 1
+          }
 
-            for file in "${files[@]}"; do
-              sed -i \
-                -e "s/{{MQDECK_API_VERSION}}/${API_VERSION}/g" \
-                -e "s/{{MQDECK_AGENT_VERSION}}/${AGENT_VERSION}/g" \
-                -e "s/{{MQDECK_WEB_VERSION}}/${WEB_VERSION}/g" \
-                "${file}"
-            done
+          for file in "${files[@]}"; do
+            sed -Ei \
+              -e "s|(API_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_API_VERSION)|\1${API_VERSION}\2|g" \
+              -e "s|(AGENT_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_AGENT_VERSION)|\1${AGENT_VERSION}\2|g" \
+              -e "s|(WEB_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_WEB_VERSION)|\1${WEB_VERSION}\2|g" \
+              -e "s|(\$ApiVersion = \")[^\"]+(\" # MQDECK_API_VERSION)|\1${API_VERSION}\2|g" \
+              -e "s|(\$AgentVersion = \")[^\"]+(\" # MQDECK_AGENT_VERSION)|\1${AGENT_VERSION}\2|g" \
+              -e "s|(\$WebVersion = \")[^\"]+(\" # MQDECK_WEB_VERSION)|\1${WEB_VERSION}\2|g" \
+              "${file}"
+          done
 
-            printf '%s\n' "${files[@]}" > /tmp/mqdeck-markdown-files
-          fi
+          printf '%s\n' "${files[@]}" > /tmp/mqdeck-doc-files
 
       - name: Commit documentation versions to main
         shell: bash
@@ -138,23 +101,19 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ ! -f /tmp/mqdeck-markdown-files ]]; then
-            exit 0
-          fi
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           while IFS= read -r file; do
             git add "${file}"
-          done < /tmp/mqdeck-markdown-files
+          done < /tmp/mqdeck-doc-files
 
           if git diff --cached --quiet; then
-            exit 0
+            echo "Documentation already uses current component versions"
+          else
+            git commit -m "Update component versions for MQDeck v${MQDECK_VERSION}"
+            git push origin HEAD:main
           fi
-
-          git commit -m "Update component versions for MQDeck v${MQDECK_VERSION}"
-          git push origin HEAD:main
 
       - name: Download latest component releases
         shell: bash
@@ -264,7 +223,6 @@ jobs:
               --repo "${GITHUB_REPOSITORY}" \
               --title "MQDeck ${VERSION}" \
               --notes-file COMPONENTS.md
-
           fi
 
       - name: Cleanup old workflow runs
