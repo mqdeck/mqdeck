@@ -98,6 +98,10 @@ jobs:
           echo "agent_version=${agent_version}" >> "$GITHUB_OUTPUT"
           echo "web_version=${web_version}" >> "$GITHUB_OUTPUT"
 
+          echo "API: ${api_version}"
+          echo "Agent: ${agent_version}"
+          echo "Web: ${web_version}"
+
       - name: Update install and update documentation
         shell: bash
         env:
@@ -107,38 +111,49 @@ jobs:
         run: |
           set -euo pipefail
 
-          files=(
-            docs/install.md
-            docs/update.md
+          mapfile -t files < <(
+            find . \
+              -type f \
+              \( -iname 'install.md' -o -iname 'update.md' \) \
+              -not -path './.git/*' \
+              | sort
           )
 
-          for file in "${files[@]}"; do
-            [[ -f "${file}" ]] || {
-              echo "File not found: ${file}" >&2
-              exit 1
-            }
+          if [[ "${#files[@]}" -eq 0 ]]; then
+            echo "No install.md or update.md files found"
+          else
+            echo "Documentation files found:"
+            printf '  %s\n' "${files[@]}"
 
-            sed -i \
-              -e "s/{{MQDECK_API_VERSION}}/${API_VERSION}/g" \
-              -e "s/{{MQDECK_AGENT_VERSION}}/${AGENT_VERSION}/g" \
-              -e "s/{{MQDECK_WEB_VERSION}}/${WEB_VERSION}/g" \
-              "${file}"
-          done
+            for file in "${files[@]}"; do
+              sed -i \
+                -e "s/{{MQDECK_API_VERSION}}/${API_VERSION}/g" \
+                -e "s/{{MQDECK_AGENT_VERSION}}/${AGENT_VERSION}/g" \
+                -e "s/{{MQDECK_WEB_VERSION}}/${WEB_VERSION}/g" \
+                "${file}"
+            done
+
+            printf '%s\n' "${files[@]}" > /tmp/mqdeck-markdown-files
+          fi
 
       - name: Commit documentation versions to main
         shell: bash
         env:
           MQDECK_VERSION: ${{ steps.release.outputs.version }}
-          API_VERSION: ${{ steps.components.outputs.api_version }}
-          AGENT_VERSION: ${{ steps.components.outputs.agent_version }}
-          WEB_VERSION: ${{ steps.components.outputs.web_version }}
         run: |
           set -euo pipefail
+
+          if [[ ! -f /tmp/mqdeck-markdown-files ]]; then
+            echo "No documentation files to commit"
+            exit 0
+          fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add docs/install.md docs/update.md
+          while IFS= read -r file; do
+            git add "${file}"
+          done < /tmp/mqdeck-markdown-files
 
           if git diff --cached --quiet; then
             echo "No documentation changes"
@@ -251,15 +266,17 @@ jobs:
               --notes-file COMPONENTS.md
 
           else
+
             gh release create \
               "v${VERSION}" \
               dist/* \
               --repo "${GITHUB_REPOSITORY}" \
               --title "MQDeck ${VERSION}" \
               --notes-file COMPONENTS.md
+
           fi
 
-      - name: Cleanup old GitHub releases
+      - name: Cleanup old MQDeck releases
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -274,36 +291,67 @@ jobs:
             --jq '.[].tagName' \
           | while read -r tag; do
 
+              [[ -n "${tag}" ]] || continue
+
               if [[ "${tag}" == chart-v* ]]; then
                 continue
               fi
 
-              if [[ "${tag}" != "v${CURRENT_VERSION}" ]]; then
+              if [[ "${tag}" == "v${CURRENT_VERSION}" ]]; then
+                continue
+              fi
+
+              if [[ "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                echo "Deleting old MQDeck release: ${tag}"
+
                 gh release delete \
                   "${tag}" \
                   --repo "$GITHUB_REPOSITORY" \
                   --yes
               fi
+
             done
 
       - name: Cleanup old workflow runs
+        if: always()
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
-          gh run list \
-            --repo "$GITHUB_REPOSITORY" \
-            --workflow "$GITHUB_WORKFLOW" \
-            --limit 100 \
-            --json databaseId,createdAt \
-            --jq 'sort_by(.createdAt) | reverse | .[2:] | .[].databaseId' \
-          | while read -r run_id; do
+          current_run="${GITHUB_RUN_ID}"
 
-              if [[ -n "${run_id}" ]]; then
-                gh run delete \
-                  "${run_id}" \
-                  --repo "$GITHUB_REPOSITORY"
-              fi
-            done
+          mapfile -t runs < <(
+            gh run list \
+              --repo "$GITHUB_REPOSITORY" \
+              --workflow "$GITHUB_WORKFLOW" \
+              --limit 100 \
+              --json databaseId,createdAt \
+              --jq 'sort_by(.createdAt) | reverse | .[].databaseId'
+          )
+
+          count=0
+
+          for run_id in "${runs[@]}"; do
+
+            [[ -n "${run_id}" ]] || continue
+
+            count=$((count + 1))
+
+            if [[ "${count}" -le 2 ]]; then
+              echo "Keeping workflow run: ${run_id}"
+              continue
+            fi
+
+            if [[ "${run_id}" == "${current_run}" ]]; then
+              continue
+            fi
+
+            echo "Deleting old workflow run: ${run_id}"
+
+            gh run delete \
+              "${run_id}" \
+              --repo "$GITHUB_REPOSITORY" || true
+
+          done
