@@ -7,8 +7,10 @@ components required on each machine:
 2. `mqdeck-agent`: outbound executor placed in each broker network zone.
 3. `mqdeck-web`: operator interface and authenticated API proxy.
 
-There is no public monolithic package. Each component has its own release,
-checksum, configuration, operating-system service, and upgrade lifecycle.
+There is no monolithic product version. Each component has its own release,
+checksum, configuration, operating-system service, and upgrade lifecycle. A
+bundle may contain one, two, or all three components without changing the
+versions of components that were not rebuilt.
 
 For RHEL-family Linux distributions, download the component package with
 `curl` or `wget`, run its installer as root, review the generated files under
@@ -25,3 +27,6 @@ See the [installation sequence](installation-sequence.md) for the verification
 path and the [configuration reference](configuration.md) for all supported
 settings. Existing installations should follow the component-by-component
 [upgrade and rollback guide](upgrade.md).
+
+For package locations and the independent publishing workflow, see
+[Component releases](releases.md).

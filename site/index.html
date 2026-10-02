@@ -148,22 +148,25 @@
 
       <section class="section install-section" id="install">
         <div class="container install-shell">
-          <div class="install-copy"><div class="eyebrow">Independent component packages</div><h2>Install each service where it belongs.</h2><p>API, Agent, and Web have separate packages, configuration, checksums, and service lifecycles. When installed together, Web and Agent use the local API automatically.</p><div class="install-facts"><div><strong>3</strong><span>Component packages</span></div><div><strong>0</strong><span>Datastores</span></div><div><strong>1</strong><span>Outbound Agent channel</span></div></div><a class="text-link" href="downloads/1.0.19/">Browse component downloads <span>→</span></a></div>
+          <div class="install-copy"><div class="eyebrow">Independent component packages</div><h2>Install each service where it belongs.</h2><p>API, Agent, and Web have separate versions, packages, checksums, and service lifecycles. Upgrade only the component that changed.</p><div class="install-facts"><div><strong>3</strong><span>Component releases</span></div><div><strong>0</strong><span>Shared version constraints</span></div><div><strong>1</strong><span>Outbound Agent channel</span></div></div><a class="text-link" href="downloads/">Browse component downloads <span>→</span></a></div>
           <div class="installer" data-installer>
             <div class="install-tabs" role="tablist" aria-label="Component"><button type="button" role="tab" aria-selected="true" aria-controls="install-api" data-install-tab="api">API</button><button type="button" role="tab" aria-selected="false" aria-controls="install-agent" data-install-tab="agent">Agent</button><button type="button" role="tab" aria-selected="false" aria-controls="install-web" data-install-tab="web">Web</button></div>
-            <div class="install-panel" id="install-api" role="tabpanel" data-install-panel="api"><div class="code-heading"><span><i></i><i></i><i></i></span><strong>API on RHEL</strong><button type="button" data-copy="#api-command">Copy</button></div><pre id="api-command"><code>curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.19/mqdeck-api_1.0.19_linux_amd64.tar.gz
-tar -xzf mqdeck-api_1.0.19_linux_amd64.tar.gz
-cd mqdeck-api_1.0.19_linux_amd64
+            <div class="install-panel" id="install-api" role="tabpanel" data-install-panel="api"><div class="code-heading"><span><i></i><i></i><i></i></span><strong>API on RHEL</strong><button type="button" data-copy="#api-command">Copy</button></div><pre id="api-command"><code>API_VERSION=X.Y.Z
+curl -fLO "https://github.com/mqdeck/mqdeck-api/releases/download/v${API_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
+tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
+cd "mqdeck-api_${API_VERSION}_linux_amd64"
 sudo ./install-api.sh
 sudo systemctl enable --now mqdeck-api</code></pre></div>
-            <div class="install-panel" id="install-agent" role="tabpanel" data-install-panel="agent" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Agent on RHEL</strong><button type="button" data-copy="#agent-command">Copy</button></div><pre id="agent-command"><code>curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.19/mqdeck-agent_1.0.19_linux_amd64.tar.gz
-tar -xzf mqdeck-agent_1.0.19_linux_amd64.tar.gz
-cd mqdeck-agent_1.0.19_linux_amd64
+            <div class="install-panel" id="install-agent" role="tabpanel" data-install-panel="agent" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Agent on RHEL</strong><button type="button" data-copy="#agent-command">Copy</button></div><pre id="agent-command"><code>AGENT_VERSION=X.Y.Z
+curl -fLO "https://github.com/mqdeck/mqdeck-agent/releases/download/v${AGENT_VERSION}/mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
+tar -xzf "mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
+cd "mqdeck-agent_${AGENT_VERSION}_linux_amd64"
 sudo ./install-agent.sh
 sudo systemctl enable --now mqdeck-agent</code></pre></div>
-            <div class="install-panel" id="install-web" role="tabpanel" data-install-panel="web" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Web on RHEL</strong><button type="button" data-copy="#web-command">Copy</button></div><pre id="web-command"><code>curl -fLO https://github.com/mqdeck/mqdeck/releases/download/v1.0.19/mqdeck-web_1.0.19_standalone.tar.gz
-tar -xzf mqdeck-web_1.0.19_standalone.tar.gz
-cd mqdeck-web_1.0.19_standalone
+            <div class="install-panel" id="install-web" role="tabpanel" data-install-panel="web" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Web on RHEL</strong><button type="button" data-copy="#web-command">Copy</button></div><pre id="web-command"><code>WEB_VERSION=X.Y.Z
+curl -fLO "https://github.com/mqdeck/mqdeck-web/releases/download/v${WEB_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
+tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
+cd "mqdeck-web_${WEB_VERSION}_standalone"
 sudo ./install-web.sh
 sudo systemctl enable --now mqdeck-web</code></pre></div>
             <div class="copy-status" aria-live="polite" data-copy-status></div>

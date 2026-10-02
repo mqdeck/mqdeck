@@ -4,12 +4,14 @@
 
 Download the API release for the target operating system, install its service,
 and review the static inventory. Confirm `GET /healthz` before continuing.
+The API version is selected independently from Agent and Web versions.
 
 ## 2. Web component
 
 Install the Web standalone release as its own service. Configure the API URL,
 operator credentials, and session secret. Confirm the login page through the
 production reverse proxy.
+Do not assume the Web version must match the installed API version.
 
 ## 3. Broker identities
 

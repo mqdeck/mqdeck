@@ -42,15 +42,22 @@ Complete example files are distributed with the API and Agent:
 - `mqdeck-api/inventory.example.yaml`
 - `mqdeck-agent/mqdeck.on-demand.example.yaml`
 
-Each component is released independently; there is no combined binary bundle.
-Public, versioned component downloads are available under
-[`github.com/mqdeck/mqdeck/releases/tag/v1.0.19`](https://github.com/mqdeck/mqdeck/releases/tag/v1.0.19).
+Each component is released and versioned independently. Download the required
+version from the [API](https://github.com/mqdeck/mqdeck-api/releases),
+[Agent](https://github.com/mqdeck/mqdeck-agent/releases), or
+[Web](https://github.com/mqdeck/mqdeck-web/releases) repository. Optional
+bundles in this repository contain only the component versions declared in
+their `COMPONENTS.md` manifest.
 
 Linux packages include a `systemd` unit and installer for RHEL-family systems.
 Windows packages include a PowerShell service installer. Start with the
 [component installation sequence](docs/installation-sequence.md). For an
 existing installation, use the production [upgrade and rollback
 guide](docs/upgrade.md).
+
+Maintainers should follow the [independent component release
+model](docs/releases.md); a delivery can contain one changed component or any
+explicit combination of component versions.
 
 The architecture and security decisions are documented in
 [`docs/on-demand-architecture.md`](docs/on-demand-architecture.md).

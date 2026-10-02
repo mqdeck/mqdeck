@@ -6,10 +6,11 @@ Install IBM MQ Client 9.4 when the Agent observes IBM MQ, and ensure
 Run PowerShell as Administrator:
 
 ```powershell
-$url = "https://github.com/mqdeck/mqdeck/releases/download/v1.0.19/mqdeck-agent_1.0.19_windows_amd64.zip"
+$AgentVersion = "X.Y.Z"
+$url = "https://github.com/mqdeck/mqdeck-agent/releases/download/v$AgentVersion/mqdeck-agent_${AgentVersion}_windows_amd64.zip"
 Invoke-WebRequest $url -OutFile mqdeck-agent.zip
 Expand-Archive .\mqdeck-agent.zip -DestinationPath .\mqdeck-agent
-Set-Location .\mqdeck-agent\mqdeck-agent_1.0.19_windows_amd64
+Set-Location ".\mqdeck-agent\mqdeck-agent_${AgentVersion}_windows_amd64"
 [Environment]::SetEnvironmentVariable("MQDECK_AGENT_TOKEN", "replace-with-the-same-api-token", "Machine")
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-agent-service.ps1

@@ -1,13 +1,19 @@
 # Kubernetes and Helm
 
-The chart deploys API, Agent, and Web as separate workloads. Each component can
-be enabled, upgraded, scaled, or disabled independently. Version `1.0.19` uses
-the on-demand control plane and has no Elasticsearch dependency.
+The chart deploys API, Agent, and Web as separate workloads. The chart version
+and the three image versions are independent. Set only the image tags that the
+deployment intends to change; there is no Elasticsearch dependency.
 
 ```bash
-helm pull oci://ghcr.io/mqdeck/charts/mqdeck --version 1.0.19
+CHART_VERSION=X.Y.Z
+API_VERSION=X.Y.Z
+AGENT_VERSION=X.Y.Z
+WEB_VERSION=X.Y.Z
 helm upgrade --install mqdeck oci://ghcr.io/mqdeck/charts/mqdeck \
-  --version 1.0.19 --namespace mqdeck --create-namespace
+  --version "${CHART_VERSION}" --namespace mqdeck --create-namespace \
+  --set api.image.tag="${API_VERSION}" \
+  --set agent.image.tag="${AGENT_VERSION}" \
+  --set web.image.tag="${WEB_VERSION}"
 ```
 
 Provide:
