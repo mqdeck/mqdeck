@@ -24,6 +24,12 @@ published component releases. Run the **Publish component bundle** workflow,
 choose a bundle tag, and fill only the versions that belong in that delivery.
 Blank components are intentionally omitted.
 
+Because the component repositories are private, configure the
+`MQDECK_RELEASE_TOKEN` Actions secret in the `mqdeck` repository. Use a
+fine-grained token with read-only **Contents** access to `mqdeck-api`,
+`mqdeck-agent`, and `mqdeck-web`. The workflow uses the repository's standard
+token separately to publish the public bundle.
+
 Every bundle includes `COMPONENTS.md`, which records the exact component
 versions, and `BUNDLE_SHA256SUMS`. A bundle tag is a delivery identifier, not a
 shared software version, and does not require unchanged services to be
