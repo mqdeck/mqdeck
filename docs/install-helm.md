@@ -6,9 +6,9 @@ deployment intends to change; there is no Elasticsearch dependency.
 
 ```bash
 CHART_VERSION=X.Y.Z
-API_VERSION=1.0.20 # MQDECK_API_VERSION
+API_VERSION=1.0.21 # MQDECK_API_VERSION
 AGENT_VERSION=1.0.20 # MQDECK_AGENT_VERSION
-WEB_VERSION=1.0.22 # MQDECK_WEB_VERSION
+WEB_VERSION=1.0.23 # MQDECK_WEB_VERSION
 helm upgrade --install mqdeck oci://ghcr.io/mqdeck/charts/mqdeck \
   --version "${CHART_VERSION}" --namespace mqdeck --create-namespace \
   --set api.image.tag="${API_VERSION}" \

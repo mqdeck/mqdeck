@@ -59,7 +59,7 @@ from another release.
 Set only the API version selected from the API repository:
 
 ```bash
-API_VERSION=1.0.20 # MQDECK_API_VERSION
+API_VERSION=1.0.21 # MQDECK_API_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-api/releases/download/v${API_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-api_${API_VERSION}_linux_amd64"
@@ -94,7 +94,7 @@ explicitly identify a protocol compatibility requirement.
 ## Upgrade Web on Linux
 
 ```bash
-WEB_VERSION=1.0.22 # MQDECK_WEB_VERSION
+WEB_VERSION=1.0.23 # MQDECK_WEB_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-web/releases/download/v${WEB_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 cd "mqdeck-web_${WEB_VERSION}_standalone"

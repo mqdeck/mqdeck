@@ -6,7 +6,7 @@ MQDeck Web is an independent standalone Node.js component. Install Node.js
 ## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-WEB_VERSION=1.0.22 # MQDECK_WEB_VERSION
+WEB_VERSION=1.0.23 # MQDECK_WEB_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck-web/releases/download/v${WEB_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 cd "mqdeck-web_${WEB_VERSION}_standalone"
