@@ -7,8 +7,8 @@ Web packages available when that tag was cut. The delivery versions are listed
 in that release's `COMPONENTS.md`.
 
 API, Agent, Web, the IBM MQ adapter, and the Helm chart remain versioned by
-the component that changed. For example, public release `v1.0.30` may ship
-API 1.0.22, Agent 1.0.22, and Web 1.0.25.
+the component that changed. For example, public release `v1.0.0` ships API
+1.0.24, Agent 1.0.25, and Web 1.0.28.
 
 ## Where public users download packages
 
@@ -27,7 +27,7 @@ https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/<asset>
 
 The release tag (`MQDECK_VERSION`) selects the public delivery. Asset file
 names still embed the component version from `COMPONENTS.md` (for example
-`mqdeck-api_1.0.22_linux_amd64.tar.gz`).
+`mqdeck-api_1.0.24_linux_amd64.tar.gz`).
 
 Component source repositories (`mqdeck-api`, `mqdeck-agent`, `mqdeck-web`) are
 private. Their releases are an internal build feed only; operators and public

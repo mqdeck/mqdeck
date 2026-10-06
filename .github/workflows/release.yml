@@ -91,10 +91,10 @@ jobs:
               -e "s|(API_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_API_VERSION)|\1${API_VERSION}\2|g" \
               -e "s|(AGENT_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_AGENT_VERSION)|\1${AGENT_VERSION}\2|g" \
               -e "s|(WEB_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_WEB_VERSION)|\1${WEB_VERSION}\2|g" \
-              -e "s|(\$MqdeckVersion = \")[^\"]+(\" # MQDECK_VERSION)|\1${MQDECK_VERSION}\2|g" \
-              -e "s|(\$ApiVersion = \")[^\"]+(\" # MQDECK_API_VERSION)|\1${API_VERSION}\2|g" \
-              -e "s|(\$AgentVersion = \")[^\"]+(\" # MQDECK_AGENT_VERSION)|\1${AGENT_VERSION}\2|g" \
-              -e "s|(\$WebVersion = \")[^\"]+(\" # MQDECK_WEB_VERSION)|\1${WEB_VERSION}\2|g" \
+              -e 's|(\$MqdeckVersion = ")[^"]+(" # MQDECK_VERSION)|\1'"${MQDECK_VERSION}"'\2|g' \
+              -e 's|(\$ApiVersion = ")[^"]+(" # MQDECK_API_VERSION)|\1'"${API_VERSION}"'\2|g' \
+              -e 's|(\$AgentVersion = ")[^"]+(" # MQDECK_AGENT_VERSION)|\1'"${AGENT_VERSION}"'\2|g' \
+              -e 's|(\$WebVersion = ")[^"]+(" # MQDECK_WEB_VERSION)|\1'"${WEB_VERSION}"'\2|g' \
               "${file}"
           done
 

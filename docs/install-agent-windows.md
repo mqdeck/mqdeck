@@ -11,8 +11,8 @@ listed in that release's `COMPONENTS.md`.
 Run PowerShell as Administrator:
 
 ```powershell
-$MqdeckVersion = "1.0.30" # MQDECK_VERSION
-$AgentVersion = "1.0.22" # MQDECK_AGENT_VERSION
+$MqdeckVersion = "1.0.0" # MQDECK_VERSION
+$AgentVersion = "1.0.25" # MQDECK_AGENT_VERSION
 $url = "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-agent_${AgentVersion}_windows_amd64.zip"
 Invoke-WebRequest $url -OutFile mqdeck-agent.zip
 Expand-Archive .\mqdeck-agent.zip -DestinationPath .\mqdeck-agent

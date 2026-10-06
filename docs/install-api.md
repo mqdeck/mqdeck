@@ -49,8 +49,8 @@ appropriate for an operator-controlled session. The API sets
 Use the current public release and API version from `COMPONENTS.md`:
 
 ```powershell
-$MqdeckVersion = "1.0.30" # MQDECK_VERSION
-$ApiVersion = "1.0.22" # MQDECK_API_VERSION
+$MqdeckVersion = "1.0.0" # MQDECK_VERSION
+$ApiVersion = "1.0.24" # MQDECK_API_VERSION
 $url = "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-api_${ApiVersion}_windows_amd64.zip"
 Invoke-WebRequest $url -OutFile mqdeck-api.zip
 Expand-Archive .\mqdeck-api.zip -DestinationPath .\mqdeck-api

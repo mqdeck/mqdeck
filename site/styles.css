@@ -952,7 +952,7 @@ h1 em {
   font-weight: 720;
 }
 
-.vendor-mark {
+.component-mark {
   display: inline-grid;
   width: 25px;
   height: 25px;
@@ -966,11 +966,8 @@ h1 em {
   font-weight: 850;
 }
 
-.vendor-mark.ibm { background: #1473ce; }
-.vendor-mark.rabbit { background: #d76527; }
-.vendor-mark.elastic { background: linear-gradient(145deg, #eabd37, #1eb5ae); color: #11151c; }
-.vendor-mark.kube { background: #326de6; }
-.vendor-mark.large { width: 43px; height: 43px; border-radius: 11px; font-size: 17px; }
+.component-mark.agent { background: #326de6; }
+.component-mark.large { width: 43px; height: 43px; border-radius: 11px; font-size: 17px; }
 
 .section-heading {
   margin-bottom: 48px;
@@ -1337,7 +1334,7 @@ h1 em {
   background: #171e29;
 }
 
-.diagram-node > i:not(.vendor-mark) {
+.diagram-node > i:not(.component-mark) {
   display: grid;
   width: 30px;
   height: 30px;
@@ -1814,6 +1811,14 @@ h1 em {
   font-size: 12px;
 }
 
+.footer-inner > p.trademark-notice {
+  grid-column: 1 / -1;
+  padding-bottom: 24px;
+  margin-top: -18px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
 .footer-links {
   display: flex;
   gap: 20px;
@@ -2027,6 +2032,11 @@ h1 em {
     flex-direction: column;
     padding-block: 30px;
     gap: 15px;
+  }
+
+  .footer-inner > p.trademark-notice {
+    padding-bottom: 0;
+    margin-top: 0;
   }
 }
 

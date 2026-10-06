@@ -38,8 +38,8 @@ never connects directly to brokers or Agents.
 After installing Node.js 20.20 or newer, run PowerShell as Administrator:
 
 ```powershell
-$MqdeckVersion = "1.0.30" # MQDECK_VERSION
-$WebVersion = "1.0.25" # MQDECK_WEB_VERSION
+$MqdeckVersion = "1.0.0" # MQDECK_VERSION
+$WebVersion = "1.0.28" # MQDECK_WEB_VERSION
 $url = "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-web_${WebVersion}_standalone.zip"
 Invoke-WebRequest $url -OutFile mqdeck-web.zip
 Expand-Archive .\mqdeck-web.zip -DestinationPath .\mqdeck-web

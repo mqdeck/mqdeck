@@ -1,0 +1,63 @@
+name: Bug report
+description: Report a reproducible problem with an MQDeck public package or its documentation.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include credentials, broker payloads, production host names, or other sensitive data. Report security vulnerabilities privately through the Security tab.
+  - type: input
+    id: release
+    attributes:
+      label: MQDeck release
+      description: Enter the public release tag, such as v1.0.0.
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - API
+        - Agent
+        - Web
+        - Helm chart
+        - Documentation
+        - Packaging or installer
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Describe the operating system, architecture, installation method, and relevant broker type without exposing sensitive identifiers.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest safe sequence that reproduces the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: sensitive-data
+    attributes:
+      label: Sensitive-data check
+      options:
+        - label: I removed credentials, broker payloads, diagnostic results, and production identifiers.
+          required: true

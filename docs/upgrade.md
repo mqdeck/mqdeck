@@ -46,8 +46,8 @@ sha256sum --check "mqdeck-agent_${AGENT_VERSION}_SHA256SUMS" --ignore-missing
 On Windows:
 
 ```powershell
-$MqdeckVersion = "1.0.30" # MQDECK_VERSION
-$AgentVersion = "1.0.22" # MQDECK_AGENT_VERSION
+$MqdeckVersion = "1.0.0" # MQDECK_VERSION
+$AgentVersion = "1.0.25" # MQDECK_AGENT_VERSION
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-agent_${AgentVersion}_SHA256SUMS" -OutFile "mqdeck-agent_${AgentVersion}_SHA256SUMS"
 (Get-FileHash ".\mqdeck-agent_${AgentVersion}_windows_amd64.zip" -Algorithm SHA256).Hash.ToLower()
 Select-String -Path ".\mqdeck-agent_${AgentVersion}_SHA256SUMS" -Pattern "windows_amd64.zip"
@@ -117,10 +117,10 @@ Use the same public release tag and independent component variables from
 `COMPONENTS.md`:
 
 ```powershell
-$MqdeckVersion = "1.0.30" # MQDECK_VERSION
-$ApiVersion = "1.0.22" # MQDECK_API_VERSION
-$AgentVersion = "1.0.22" # MQDECK_AGENT_VERSION
-$WebVersion = "1.0.25" # MQDECK_WEB_VERSION
+$MqdeckVersion = "1.0.0" # MQDECK_VERSION
+$ApiVersion = "1.0.24" # MQDECK_API_VERSION
+$AgentVersion = "1.0.25" # MQDECK_AGENT_VERSION
+$WebVersion = "1.0.28" # MQDECK_WEB_VERSION
 ```
 
 Download and extract only the components being upgraded into new directories

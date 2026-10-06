@@ -75,3 +75,11 @@ or execute arbitrary shell strings.
 
 MQDeck binaries are governed by the
 [MQDeck Community Binary License 1.0](LICENSE.md).
+
+## Trademarks and independence
+
+IBM, IBM MQ, RabbitMQ, and other third-party names are used only to describe
+compatibility. MQDeck is an independent product and is not affiliated with,
+endorsed by, sponsored by, or supported by IBM, Broadcom, or any other
+trademark owner. See [Third-party notices](THIRD_PARTY_NOTICES.md) for the
+applicable attributions.
