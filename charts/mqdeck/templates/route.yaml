@@ -1,0 +1,22 @@
+{{- if and .Values.openshiftRoute.enabled .Values.web.enabled }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "mqdeck.fullname" . }}
+  labels:
+    {{- include "mqdeck.labels" . | nindent 4 }}
+  {{- with .Values.openshiftRoute.annotations }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.openshiftRoute.host }}
+  host: {{ . | quote }}
+  {{- end }}
+  to:
+    kind: Service
+    name: {{ include "mqdeck.fullname" . }}-web
+    weight: 100
+  port:
+    targetPort: http
+  tls: {{ toYaml .Values.openshiftRoute.tls | nindent 4 }}
+{{- end }}

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0e14" />
+    <meta name="description" content="MQDeck is a lightweight, read-only, on-demand diagnostic console for IBM MQ and RabbitMQ. No Elasticsearch required." />
+    <meta property="og:title" content="MQDeck | Messaging diagnostics on demand" />
+    <meta property="og:description" content="Keep a simple YAML inventory and request fresh IBM MQ or RabbitMQ diagnostics through connected Agents only when needed." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mqdeck.github.io/mqdeck/" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="canonical" href="https://mqdeck.github.io/mqdeck/" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+    <title>MQDeck | Messaging diagnostics on demand</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header" data-header>
+      <div class="container header-inner">
+        <a class="brand" href="#top" aria-label="MQDeck home">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span class="brand-copy"><strong>MQDECK</strong><small>Messaging Diagnostics</small></span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" data-menu-toggle>
+          <span class="sr-only">Toggle navigation</span><span></span><span></span><span></span>
+        </button>
+        <nav class="primary-navigation" id="primary-navigation" aria-label="Primary navigation" data-navigation>
+          <a href="#platform">Platform</a>
+          <a href="#architecture">Architecture</a>
+          <a href="#install">Install</a>
+          <a href="#documentation">Documentation</a>
+          <a class="nav-release" href="https://github.com/mqdeck/mqdeck">View on GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero section" id="top">
+        <div class="hero-glow hero-glow-one" aria-hidden="true"></div>
+        <div class="hero-glow hero-glow-two" aria-hidden="true"></div>
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Read-only · on demand · no datastore</div>
+            <h1>Messaging diagnostics <em>when you need them.</em></h1>
+            <p class="hero-lede">
+              Keep a simple YAML inventory of IBM MQ and RabbitMQ. Browse it without touching a broker,
+              then request a fresh diagnosis through a connected Agent when an operator opens the details.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md">
+                Get started
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+              </a>
+              <a class="button button-secondary" href="#install">Install components</a>
+            </div>
+            <div class="hero-notes" aria-label="Platform qualities">
+              <span><i class="status-dot"></i> No Elasticsearch</span>
+              <span><i class="status-dot"></i> No scheduled polling</span>
+              <span><i class="status-dot"></i> Read-only adapters</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="compatibility" aria-label="Supported platforms">
+        <div class="container compatibility-inner">
+          <span>Focused on messaging operations</span>
+          <div class="compatibility-list">
+            <strong><i class="vendor-mark ibm">I</i>IBM MQ</strong>
+            <strong><i class="vendor-mark rabbit">R</i>RabbitMQ</strong>
+            <strong><i class="vendor-mark kube">A</i>Outbound Agents</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section platform-section" id="platform">
+        <div class="container">
+          <div class="section-heading narrow-heading">
+            <div class="eyebrow">A smaller operational surface</div>
+            <h2>Inventory first. Live broker data only on request.</h2>
+            <p>The inventory overview reads local configuration. Inside IBM MQ details, Overview checks only queue-manager status; Queues and Channels load their own data only when opened.</p>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card feature-card-wide">
+              <div class="feature-icon topology-icon" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div><small>MINIMAL YAML INVENTORY</small><h3>Only what the Agent needs to connect.</h3><p>Register connection data, searchable tags, and a default Agent ID. Direct or CCDT-based IBM MQ connections can reach distributed and z/OS queue managers.</p></div>
+              <div class="mini-topology" aria-hidden="true"><div><i>Y</i><span>Inventory</span></div><b></b><div class="center"><i>A</i><span>API</span></div><b></b><div><i>W</i><span>Web</span></div></div>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon pulse-icon" aria-hidden="true"><span></span></div>
+              <small>LIVE QUEUE WATCH</small><h3>See accumulation and drain as they happen.</h3><p>Enable a lightweight watch inside an IBM MQ queue detail to follow net arrivals, departures, and current depth with animated visual signals.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon shield-icon" aria-hidden="true">✓</div>
+              <small>OUTBOUND CONTROL</small><h3>Reach private network zones without opening Agent ports.</h3><p>Each Agent initiates one authenticated WebSocket to the API and reconnects automatically.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon shield-icon" aria-hidden="true">R</div>
+              <small>READ ONLY BY DESIGN</small><h3>Keep remote execution narrow and auditable.</h3><p>The Agent revalidates every target. IBM MQ stays on DISPLAY operations; RabbitMQ stays on GET and allowlisted diagnostics.</p>
+            </article>
+            <article class="feature-card feature-card-accent">
+              <div class="release-label"><span></span> Simplified architecture</div>
+              <strong class="release-version">3 parts</strong>
+              <p>Web, API, and Agent. No telemetry pipeline, scheduler, Test Flight, or observation database.</p>
+              <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/on-demand-architecture.md">Read the decision record <span>→</span></a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section architecture-section" id="architecture">
+        <div class="container architecture-grid">
+          <div class="architecture-copy">
+            <div class="eyebrow">One correlated request</div>
+            <h2>The Agent goes out. The command comes back.</h2>
+            <p>The persistent connection is initiated from inside the broker network. When Web requests a report, API routes it to the preferred or selected Agent and waits for the correlated result.</p>
+            <ul class="check-list">
+              <li><span>✓</span> WebSocket over the existing HTTPS port</li>
+              <li><span>✓</span> Request IDs, timeout, and bounded concurrency</li>
+              <li><span>✓</span> No inbound Agent listener</li>
+              <li><span>✓</span> Results discarded after the response</li>
+            </ul>
+            <a class="text-link" href="https://github.com/mqdeck/mqdeck/blob/main/docs/architecture.md">Explore the architecture <span>→</span></a>
+          </div>
+          <div class="architecture-diagram" aria-label="MQDeck on-demand flow">
+            <div class="diagram-column brokers-column"><small>BROKERS</small><div class="diagram-node"><i class="vendor-mark ibm">I</i><span><strong>IBM MQ</strong><small>SVRCONN · DISPLAY</small></span></div><div class="diagram-node"><i class="vendor-mark rabbit">R</i><span><strong>RabbitMQ</strong><small>Management API · GET</small></span></div></div>
+            <div class="diagram-arrow"><span>read only</span><i>←</i></div>
+            <div class="diagram-column agent-column"><small>NETWORK POINT</small><div class="diagram-node primary-node"><i>M</i><span><strong>MQDeck Agent</strong><small>validate · execute · respond</small></span></div></div>
+            <div class="diagram-arrow"><span>outbound WebSocket</span><i>→</i></div>
+            <div class="diagram-column query-column"><small>CONTROL PLANE</small><div class="diagram-node"><i class="vendor-mark kube">A</i><span><strong>MQDeck API</strong><small>inventory · route · correlate</small></span></div><div class="query-stack"><span>Web</span><i>→</i><span>API</span><i>↔</i><span>Agent</span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section coverage-section">
+        <div class="container">
+          <div class="section-heading split-heading"><div><div class="eyebrow">Broker-aware reports</div><h2>Native detail for both platforms.</h2></div><p>Adapters normalize the runtime objects that matter without turning MQDeck into a broker administrator.</p></div>
+          <div class="broker-grid">
+            <article class="broker-card"><div class="broker-card-header"><i class="vendor-mark ibm large">I</i><div><small>QUEUE MANAGERS</small><h3>IBM MQ</h3></div><span>SVRCONN</span></div><p>Inspect distributed and z/OS queue managers through the IBM MQ client, using direct endpoints or secured CCDT/TLS profiles.</p><div class="capability-list"><span>All queues</span><span>Live Queue Watch</span><span>Channel definitions</span><span>Channel runtime</span><span>z/OS</span><span>CCDT / TLS</span></div><a href="https://github.com/mqdeck/mqdeck/blob/main/examples/ibmmq-svrconn.md">Configure IBM MQ <span>→</span></a></article>
+            <article class="broker-card"><div class="broker-card-header"><i class="vendor-mark rabbit large">R</i><div><small>BROKER CLUSTERS</small><h3>RabbitMQ</h3></div><span>HTTP GET</span></div><p>Inspect current node and cluster state through bounded Management API requests.</p><div class="capability-list"><span>Nodes & alarms</span><span>Queues & rates</span><span>Connections</span><span>Channels</span><span>Consumers</span><span>Bindings</span></div><a href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md">Configure RabbitMQ <span>→</span></a></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section install-section" id="install">
+        <div class="container install-shell">
+          <div class="install-copy"><div class="eyebrow">Public release packages</div><h2>Install each service where it belongs.</h2><p>Download API, Agent, and Web from the public MQDeck release. Use the release tag in the URL and the component versions from that release's COMPONENTS.md.</p><div class="install-facts"><div><strong>1</strong><span>Public release source</span></div><div><strong>3</strong><span>Independent components</span></div><div><strong>1</strong><span>Outbound Agent channel</span></div></div><a class="text-link" href="downloads/">Browse public downloads <span>→</span></a></div>
+          <div class="installer" data-installer>
+            <div class="install-tabs" role="tablist" aria-label="Component"><button type="button" role="tab" aria-selected="true" aria-controls="install-api" data-install-tab="api">API</button><button type="button" role="tab" aria-selected="false" aria-controls="install-agent" data-install-tab="agent">Agent</button><button type="button" role="tab" aria-selected="false" aria-controls="install-web" data-install-tab="web">Web</button></div>
+            <div class="install-panel" id="install-api" role="tabpanel" data-install-panel="api"><div class="code-heading"><span><i></i><i></i><i></i></span><strong>API on RHEL</strong><button type="button" data-copy="#api-command">Copy</button></div><pre id="api-command"><code>MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+API_VERSION=1.0.24 # MQDECK_API_VERSION
+curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
+tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
+cd "mqdeck-api_${API_VERSION}_linux_amd64"
+sudo ./install-api.sh
+sudo systemctl enable --now mqdeck-api</code></pre></div>
+            <div class="install-panel" id="install-agent" role="tabpanel" data-install-panel="agent" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Agent on RHEL</strong><button type="button" data-copy="#agent-command">Copy</button></div><pre id="agent-command"><code>MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+AGENT_VERSION=1.0.25 # MQDECK_AGENT_VERSION
+curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
+tar -xzf "mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
+cd "mqdeck-agent_${AGENT_VERSION}_linux_amd64"
+sudo ./install-agent.sh
+sudo systemctl enable --now mqdeck-agent</code></pre></div>
+            <div class="install-panel" id="install-web" role="tabpanel" data-install-panel="web" hidden><div class="code-heading"><span><i></i><i></i><i></i></span><strong>Web on RHEL</strong><button type="button" data-copy="#web-command">Copy</button></div><pre id="web-command"><code>MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+WEB_VERSION=1.0.28 # MQDECK_WEB_VERSION
+curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
+tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
+cd "mqdeck-web_${WEB_VERSION}_standalone"
+sudo ./install-web.sh
+sudo systemctl enable --now mqdeck-web</code></pre></div>
+            <div class="copy-status" aria-live="polite" data-copy-status></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section docs-section" id="documentation">
+        <div class="container">
+          <div class="section-heading narrow-heading"><div class="eyebrow">Small system, clear guidance</div><h2>From inventory to first diagnosis.</h2><p>Use the focused guides for architecture, configuration, installation, and safe operations.</p></div>
+          <div class="docs-grid">
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md"><span class="doc-number">01</span><div><strong>Getting started</strong><small>Install the three independent services.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/architecture.md"><span class="doc-number">02</span><div><strong>Architecture</strong><small>Understand inventory, routing, and ephemeral results.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md"><span class="doc-number">03</span><div><strong>Configuration</strong><small>Define minimal broker connections and Agent routing.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/installation-sequence.md"><span class="doc-number">04</span><div><strong>Installation sequence</strong><small>Install API, Web, and outbound Agents.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-agent-linux.md"><span class="doc-number">05</span><div><strong>Linux Agent</strong><small>Install and validate a native Agent.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-agent-windows.md"><span class="doc-number">06</span><div><strong>Windows services</strong><small>Create API, Agent, and Web services.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/SECURITY.md"><span class="doc-number">07</span><div><strong>Security</strong><small>Review trust boundaries and deployment controls.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/upgrade.md"><span class="doc-number">08</span><div><strong>Upgrade and rollback</strong><small>Replace each binary safely without losing configuration.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/tree/main/examples"><span class="doc-number">09</span><div><strong>Examples</strong><small>Start from inventory and Agent templates.</small></div><i>→</i></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta section"><div class="container final-cta-inner"><div><div class="eyebrow">MQDeck simplified</div><h2>Diagnose messaging without building a telemetry platform.</h2><p>Register the broker, connect an Agent, and ask for current facts.</p></div><div class="final-actions"><a class="button button-primary" href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md">Get started <span>→</span></a><a class="button button-secondary" href="https://github.com/mqdeck/mqdeck">View on GitHub</a></div></div></section>
+    </main>
+
+    <footer class="site-footer"><div class="container footer-inner"><a class="brand footer-brand" href="#top" aria-label="MQDeck home"><span class="brand-mark" aria-hidden="true">M</span><span class="brand-copy"><strong>MQDECK</strong><small>Messaging Diagnostics</small></span></a><p>Read-only, on-demand diagnostics for IBM MQ and RabbitMQ.</p><div class="footer-links"><a href="https://github.com/mqdeck/mqdeck/blob/main/LICENSE.md">License</a><a href="https://github.com/mqdeck/mqdeck/blob/main/SECURITY.md">Security</a><a href="https://github.com/mqdeck/mqdeck">GitHub</a></div><small>© <span data-current-year>2026</span> MQDeck</small></div></footer>
+  </body>
+</html>

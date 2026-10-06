@@ -1,0 +1,271 @@
+name: Publish MQDeck release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve MQDeck version
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version="${GITHUB_REF_NAME#v}"
+
+          [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo "Invalid MQDeck version: ${version}" >&2
+            exit 1
+          }
+
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve latest component releases
+        id: components
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.MQDECK_RELEASE_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          [[ -n "${GH_TOKEN}" ]] || {
+            echo "MQDECK_RELEASE_TOKEN is required" >&2
+            exit 1
+          }
+
+          api_tag="$(gh release list --repo mqdeck/mqdeck-api --limit 1 --json tagName --jq '.[0].tagName')"
+          agent_tag="$(gh release list --repo mqdeck/mqdeck-agent --limit 1 --json tagName --jq '.[0].tagName')"
+          web_tag="$(gh release list --repo mqdeck/mqdeck-web --limit 1 --json tagName --jq '.[0].tagName')"
+
+          [[ -n "${api_tag}" ]] || { echo "No API release found" >&2; exit 1; }
+          [[ -n "${agent_tag}" ]] || { echo "No Agent release found" >&2; exit 1; }
+          [[ -n "${web_tag}" ]] || { echo "No Web release found" >&2; exit 1; }
+
+          echo "api_tag=${api_tag}" >> "$GITHUB_OUTPUT"
+          echo "agent_tag=${agent_tag}" >> "$GITHUB_OUTPUT"
+          echo "web_tag=${web_tag}" >> "$GITHUB_OUTPUT"
+
+          echo "api_version=${api_tag#v}" >> "$GITHUB_OUTPUT"
+          echo "agent_version=${agent_tag#v}" >> "$GITHUB_OUTPUT"
+          echo "web_version=${web_tag#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Update documentation versions
+        shell: bash
+        env:
+          MQDECK_VERSION: ${{ steps.release.outputs.version }}
+          API_VERSION: ${{ steps.components.outputs.api_version }}
+          AGENT_VERSION: ${{ steps.components.outputs.agent_version }}
+          WEB_VERSION: ${{ steps.components.outputs.web_version }}
+        run: |
+          set -euo pipefail
+
+          mapfile -t files < <(
+            {
+              grep -rlE 'MQDECK_VERSION|MQDECK_(API|AGENT|WEB)_VERSION' docs --include='*.md' || true
+              grep -rlE 'MQDECK_VERSION|MQDECK_(API|AGENT|WEB)_VERSION' site --include='*.html' || true
+            } | sort -u
+          )
+
+          [[ "${#files[@]}" -gt 0 ]] || {
+            echo "No version-managed documentation found" >&2
+            exit 1
+          }
+
+          for file in "${files[@]}"; do
+            sed -Ei \
+              -e "s|(MQDECK_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_VERSION)|\1${MQDECK_VERSION}\2|g" \
+              -e "s|(API_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_API_VERSION)|\1${API_VERSION}\2|g" \
+              -e "s|(AGENT_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_AGENT_VERSION)|\1${AGENT_VERSION}\2|g" \
+              -e "s|(WEB_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_WEB_VERSION)|\1${WEB_VERSION}\2|g" \
+              -e "s|(\$MqdeckVersion = \")[^\"]+(\" # MQDECK_VERSION)|\1${MQDECK_VERSION}\2|g" \
+              -e "s|(\$ApiVersion = \")[^\"]+(\" # MQDECK_API_VERSION)|\1${API_VERSION}\2|g" \
+              -e "s|(\$AgentVersion = \")[^\"]+(\" # MQDECK_AGENT_VERSION)|\1${AGENT_VERSION}\2|g" \
+              -e "s|(\$WebVersion = \")[^\"]+(\" # MQDECK_WEB_VERSION)|\1${WEB_VERSION}\2|g" \
+              "${file}"
+          done
+
+          printf '%s\n' "${files[@]}" > /tmp/mqdeck-doc-files
+
+      - name: Commit documentation versions to main
+        shell: bash
+        env:
+          MQDECK_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          while IFS= read -r file; do
+            git add "${file}"
+          done < /tmp/mqdeck-doc-files
+
+          if git diff --cached --quiet; then
+            echo "Documentation already uses current component versions"
+          else
+            git commit -m "Update component versions for MQDeck v${MQDECK_VERSION}"
+            git push origin HEAD:main
+          fi
+
+      - name: Download latest component releases
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.MQDECK_RELEASE_TOKEN }}
+          API_TAG: ${{ steps.components.outputs.api_tag }}
+          AGENT_TAG: ${{ steps.components.outputs.agent_tag }}
+          WEB_TAG: ${{ steps.components.outputs.web_tag }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p dist
+
+          api_tmp="$(mktemp -d)"
+          agent_tmp="$(mktemp -d)"
+          web_tmp="$(mktemp -d)"
+
+          gh release download "${API_TAG}" \
+            --repo mqdeck/mqdeck-api \
+            --pattern 'mqdeck-api_*' \
+            --dir "${api_tmp}"
+
+          gh release download "${AGENT_TAG}" \
+            --repo mqdeck/mqdeck-agent \
+            --pattern 'mqdeck-agent_*' \
+            --dir "${agent_tmp}"
+
+          gh release download "${WEB_TAG}" \
+            --repo mqdeck/mqdeck-web \
+            --pattern 'mqdeck-web_*' \
+            --dir "${web_tmp}"
+
+          cp "${api_tmp}"/* dist/
+          cp "${agent_tmp}"/* dist/
+          cp "${web_tmp}"/* dist/
+
+      - name: Generate release manifest
+        shell: bash
+        env:
+          MQDECK_VERSION: ${{ steps.release.outputs.version }}
+          API_VERSION: ${{ steps.components.outputs.api_version }}
+          AGENT_VERSION: ${{ steps.components.outputs.agent_version }}
+          WEB_VERSION: ${{ steps.components.outputs.web_version }}
+        run: |
+          set -euo pipefail
+
+          cat > COMPONENTS.md <<EOF
+          # MQDeck ${MQDECK_VERSION}
+
+          Components included in this release:
+
+          - API: ${API_VERSION}
+          - Agent: ${AGENT_VERSION}
+          - Web: ${WEB_VERSION}
+
+          Release tag: v${MQDECK_VERSION}
+          EOF
+
+          cp COMPONENTS.md dist/
+
+      - name: Generate bundle checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          (
+            cd dist
+
+            find . \
+              -maxdepth 1 \
+              -type f \
+              ! -name 'BUNDLE_SHA256SUMS' \
+              -printf '%f\n' \
+            | sort \
+            | xargs sha256sum \
+            > BUNDLE_SHA256SUMS
+          )
+
+      - name: Publish MQDeck release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          if gh release view "v${VERSION}" \
+            --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+
+            gh release upload \
+              "v${VERSION}" \
+              dist/* \
+              --repo "${GITHUB_REPOSITORY}" \
+              --clobber
+
+            gh release edit \
+              "v${VERSION}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "MQDeck ${VERSION}" \
+              --notes-file COMPONENTS.md
+
+          else
+
+            gh release create \
+              "v${VERSION}" \
+              dist/* \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "MQDeck ${VERSION}" \
+              --notes-file COMPONENTS.md
+          fi
+
+      - name: Cleanup old workflow runs
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          current_run="${GITHUB_RUN_ID}"
+
+          mapfile -t runs < <(
+            gh run list \
+              --repo "$GITHUB_REPOSITORY" \
+              --workflow "$GITHUB_WORKFLOW" \
+              --limit 100 \
+              --json databaseId,createdAt \
+              --jq 'sort_by(.createdAt) | reverse | .[].databaseId'
+          )
+
+          count=0
+
+          for run_id in "${runs[@]}"; do
+            [[ -n "${run_id}" ]] || continue
+
+            count=$((count + 1))
+
+            if [[ "${count}" -le 2 ]]; then
+              continue
+            fi
+
+            if [[ "${run_id}" == "${current_run}" ]]; then
+              continue
+            fi
+
+            gh run delete \
+              "${run_id}" \
+              --repo "$GITHUB_REPOSITORY" || true
+          done

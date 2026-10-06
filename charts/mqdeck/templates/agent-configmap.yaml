@@ -1,0 +1,11 @@
+{{- if and .Values.agent.enabled (not .Values.agent.existingConfigMap) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mqdeck.fullname" . }}-agent
+  labels:
+    {{- include "mqdeck.componentLabels" (dict "root" . "component" "agent") | nindent 4 }}
+data:
+  mqdeck.yaml: |
+{{ required "agent.config is required when agent.enabled=true and agent.existingConfigMap is empty" .Values.agent.config | nindent 4 }}
+{{- end }}

@@ -1,0 +1,12 @@
+version: 1
+agent:
+  id: network-zone-a
+  name: Primary datacenter Agent
+  location: primary-datacenter
+  timezone: UTC
+  max_concurrency: 4
+control_plane:
+  url: ${MQDECK_API_URL}
+  token: ${MQDECK_AGENT_TOKEN}
+  reconnect_delay: 5s
+  insecure_skip_verify: false

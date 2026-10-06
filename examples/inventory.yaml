@@ -1,0 +1,22 @@
+version: 1
+default_agent: network-zone-a
+
+# Only connection and routing data belongs here. MQDeck selects the read-only
+# collection profile, timeout and response limits automatically.
+hosts:
+  - id: rabbitmq-production-01
+    name: RabbitMQ production node 01
+    adapter: rabbitmq
+    endpoint: https://rabbitmq01.example.net:15671
+    credentials:
+      username: mqdeck_readonly
+      password: replace-with-the-read-only-password
+
+  - id: ibmmq-production-qm1
+    adapter: ibmmq
+    endpoint: mq01.example.net:1414
+    queue_manager: QM1
+    channel: MQDECK.READONLY
+    credentials:
+      username: mqdeck_readonly
+      password: replace-with-the-read-only-password
