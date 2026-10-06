@@ -11,7 +11,7 @@ in that release's `COMPONENTS.md`.
 ## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+MQDECK_VERSION=1.0.0 # MQDECK_VERSION
 WEB_VERSION=1.0.28 # MQDECK_WEB_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"

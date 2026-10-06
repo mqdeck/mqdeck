@@ -14,7 +14,7 @@ The commands below install the x86-64 build. Replace `linux_amd64` with
 `linux_arm64` on ARM64 hosts.
 
 ```bash
-MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+MQDECK_VERSION=1.0.0 # MQDECK_VERSION
 API_VERSION=1.0.24 # MQDECK_API_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"

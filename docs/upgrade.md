@@ -37,7 +37,7 @@ Every public release includes component checksum files. Download the checksum
 from the same public release as the binary:
 
 ```bash
-MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+MQDECK_VERSION=1.0.0 # MQDECK_VERSION
 AGENT_VERSION=1.0.25 # MQDECK_AGENT_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-agent_${AGENT_VERSION}_SHA256SUMS"
 sha256sum --check "mqdeck-agent_${AGENT_VERSION}_SHA256SUMS" --ignore-missing
@@ -61,7 +61,7 @@ Set the public release tag and the API version from that release's
 `COMPONENTS.md`:
 
 ```bash
-MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+MQDECK_VERSION=1.0.0 # MQDECK_VERSION
 API_VERSION=1.0.24 # MQDECK_API_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
@@ -80,7 +80,7 @@ Upgrade one network zone at a time and confirm that each Agent reconnects
 before continuing:
 
 ```bash
-MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+MQDECK_VERSION=1.0.0 # MQDECK_VERSION
 AGENT_VERSION=1.0.25 # MQDECK_AGENT_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
@@ -98,7 +98,7 @@ explicitly identify a protocol compatibility requirement.
 ## Upgrade Web on Linux
 
 ```bash
-MQDECK_VERSION=1.0.32 # MQDECK_VERSION
+MQDECK_VERSION=1.0.0 # MQDECK_VERSION
 WEB_VERSION=1.0.28 # MQDECK_WEB_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
