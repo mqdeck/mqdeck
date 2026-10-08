@@ -8,7 +8,7 @@ After=network-online.target mqdeck-api.service
 Type=simple
 User=mqdeck
 Group=mqdeck
-WorkeringDirectory=/opt/mqdeck/web
+WorkingDirectory=/opt/mqdeck/web
 Environment=NODE_ENV=production
 Environment=HOST=0.0.0.0
 Environment=PORT=3000

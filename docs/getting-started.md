@@ -36,7 +36,7 @@ statistics.
 The dotted line is the optional local model. It runs on the API host, or at an
 OpenAI-compatible URL you configure. The Worker does not load a model. Broker
 data reaches the model only after you open **Show findings** and ask the
-assistant. Inventory, collection, and Queue Watch worker with no model installed.
+assistant. Inventory, collection, and Queue Watch work with no model installed.
 See [Local assistant and models](llm.md).
 
 ## What you will use
@@ -79,7 +79,7 @@ The API does not expand `${...}` placeholders.
 2. Open a host and choose **Collect data**. IBM MQ loads Overview first. Queues and Channels load when you open those tabs.
 3. Expand a local queue to see depth and handles. Choose **Start watch** only when you want repeated depth samples.
 4. On an inactive IBM MQ channel, **Start** sends `START CHANNEL` through the selected Worker. Collection itself stays on `DISPLAY`.
-5. The [local assistant](llm.md) is optional. Reports and Queue Watch worker without a model.
+5. The [local assistant](llm.md) is optional. Reports and Queue Watch work without a model.
 
 The [installation sequence](installation-sequence.md) is the short verification
 path. Settings live in the [configuration reference](configuration.md). An

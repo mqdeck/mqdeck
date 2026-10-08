@@ -2,7 +2,7 @@
 
 The local assistant is optional. In the [getting started](getting-started.md)
 and [architecture](architecture.md) drawings it is the dotted path from the API
-to the local model. Inventory, Worker collection, reports, and Queue Watch worker
+to the local model. Inventory, Worker collection, reports, and Queue Watch work
 with `MQDECK_LLM_ENABLED=false` or with no model installed.
 
 When it is enabled, inference runs on the API host, or on an
@@ -20,8 +20,8 @@ Set this in `/etc/mqdeck/api.properties` on Linux as `mqdeck.llm.enabled=auto`, 
 
 | `MQDECK_LLM_ENABLED` | Behavior |
 | --- | --- |
-| `auto` (default) | Start the assistant when a model and `llama-server` (or `MQDECK_LLM_BASE_URL`) are available. If they are missing, the API still starts and diagnostics keep workering. |
-| `true` | Require a workering model endpoint. The API process exits if the model or server cannot start. |
+| `auto` (default) | Start the assistant when a model and `llama-server` (or `MQDECK_LLM_BASE_URL`) are available. If they are missing, the API still starts and diagnostics keep working. |
+| `true` | Require a working model endpoint. The API process exits if the model or server cannot start. |
 | `false` | Do not start a local server and do not call an external endpoint. |
 
 ## Option A - GGUF file and `llama-server`
