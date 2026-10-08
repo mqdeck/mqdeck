@@ -14,8 +14,8 @@ The commands below install the x86-64 build. Replace `linux_amd64` with
 `linux_arm64` on ARM64 hosts.
 
 ```bash
-MQDECK_VERSION=1.0.1 # MQDECK_VERSION
-API_VERSION=1.0.25 # MQDECK_API_VERSION
+MQDECK_VERSION=1.0.2 # MQDECK_VERSION
+API_VERSION=1.0.27 # MQDECK_API_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-api_${API_VERSION}_linux_amd64"
@@ -53,8 +53,8 @@ or an OpenAI-compatible endpoint. See
 Use the current public release and API version from `COMPONENTS.md`:
 
 ```powershell
-$MqdeckVersion = "1.0.1" # MQDECK_VERSION
-$ApiVersion = "1.0.25" # MQDECK_API_VERSION
+$MqdeckVersion = "1.0.2" # MQDECK_VERSION
+$ApiVersion = "1.0.27" # MQDECK_API_VERSION
 $url = "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-api_${ApiVersion}_windows_amd64.zip"
 Invoke-WebRequest $url -OutFile mqdeck-api.zip
 Expand-Archive .\mqdeck-api.zip -DestinationPath .\mqdeck-api

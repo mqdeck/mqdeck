@@ -11,8 +11,8 @@ listed in that release's `COMPONENTS.md`.
 ## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-MQDECK_VERSION=1.0.1 # MQDECK_VERSION
-AGENT_VERSION=1.0.26 # MQDECK_AGENT_VERSION
+MQDECK_VERSION=1.0.2 # MQDECK_VERSION
+AGENT_VERSION=1.0.27 # MQDECK_AGENT_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-agent_${AGENT_VERSION}_linux_amd64"
