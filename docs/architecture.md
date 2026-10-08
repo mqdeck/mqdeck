@@ -21,9 +21,9 @@ sequenceDiagram
     opt Queue detail watch enabled
       Web->>API: SSE queue watch
       API->>Worker: watch_queue(request_id, target)
-      Worker->>Broker: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH
-      Worker-->>API: current depth sample
-      API-->>Web: net movement event
+      Worker->>Broker: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
+      Worker-->>API: depth and activity sample
+      API-->>Web: enqueue, dequeue, or net movement, plus last put and last get
     end
     opt Operator asks the assistant
       Web->>API: analyze or chat on the collected report
@@ -44,9 +44,11 @@ Queue Watch is off until the operator chooses **Start watch** on an expanded
 IBM MQ queue. The snapshot rates and handles above that button do not contact
 the queue manager again. While the watch is on, API to Web uses SSE and API to
 Worker reuses the authenticated WebSocket. Each sample is
-`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH` only, every five seconds by
-default (`MQDECK_QUEUE_WATCH_INTERVAL`). The watch does not enable queue
-monitoring or statistics. The server keeps no sample history. **Stop watch**,
+`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`,
+every five seconds by default (`MQDECK_QUEUE_WATCH_INTERVAL`). The watch does
+not enable queue monitoring or statistics. Last put and last get update on
+each sample when monitoring is already enabled. The live label counts down
+that interval. The server keeps no sample history. **Stop watch**,
 collapsing the queue, or leaving the page ends the stream. A browser session
 also ends after ten minutes (`MQDECK_QUEUE_WATCH_MAX_DURATION`).
 

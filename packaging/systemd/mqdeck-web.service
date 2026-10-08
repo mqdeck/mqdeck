@@ -11,7 +11,6 @@ Group=mqdeck
 WorkingDirectory=/opt/mqdeck/web
 Environment=NODE_ENV=production
 Environment=HOST=0.0.0.0
-Environment=PORT=3000
 ExecStart=/usr/bin/node --import /opt/mqdeck/web/load-properties.mjs /opt/mqdeck/web/server.js
 Restart=on-failure
 RestartSec=10s

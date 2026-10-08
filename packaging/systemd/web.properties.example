@@ -1,6 +1,7 @@
 # Each line is property.name=value. Web reads this file itself.
 # A container can set the same item as an environment variable, MQDECK_API_URL.
 # When both are present, the environment variable wins.
+mqdeck.web.port=3000
 mqdeck.api.url=http://127.0.0.1:8080
 mqdeck.auth.username=admin
 mqdeck.auth.password=replace-with-a-strong-password

@@ -75,8 +75,9 @@ Optional on-prem model setup is documented in
 The Worker validates every target received from the API. Queue Watch starts
 only from **Start watch**, reuses the authenticated Worker connection, and
 shares one sampler among viewers of the same queue. Each sample is
-`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH`. It does not enable `MONQ` or
-`STATQ`. The default interval is five seconds
+`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`.
+It does not enable `MONQ` or `STATQ`. Last put and last get are included only
+when monitoring is already on. The default interval is five seconds
 (`MQDECK_QUEUE_WATCH_INTERVAL`). RabbitMQ checks use `GET`.
 IBM MQ collection uses one `DISPLAY` command per check. The only other MQSC
 command is `START CHANNEL`, and only after an operator confirms it on the

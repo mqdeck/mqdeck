@@ -26,8 +26,9 @@ On Linux the API reads `/etc/mqdeck/api.properties`. Write each setting in dotte
 
 Queue Watch starts only after **Start watch** on an expanded IBM MQ queue.
 Clients for the same Worker, inventory host, and queue share one sampler. Each
-sample is `DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH`. It does not request
-last put, last get, or message age, and it does not turn `MONQ` or `STATQ` on.
+sample is `DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`.
+It does not turn `MONQ` or `STATQ` on. Last put and last get are returned only
+when monitoring is already enabled.
 The default five-second interval is for a short diagnosis, not a permanent
 collector. Use a one-second interval only for a brief troubleshooting session.
 
@@ -159,13 +160,14 @@ On Linux the Worker reads `/etc/mqdeck/worker.properties`. A container sets `MQD
 
 | Variable | Purpose |
 | --- | --- |
+| `MQDECK_WEB_PORT` | Listen port. The properties key is `mqdeck.web.port`. Default is `3000` |
 | `MQDECK_API_URL` | API base URL; defaults to `http://127.0.0.1:8080` in the service package |
 | `MQDECK_AUTH_USERNAME` | Static operator username |
 | `MQDECK_AUTH_PASSWORD` | Static operator password |
 | `MQDECK_AUTH_DISPLAY_NAME` | Display name |
 | `MQDECK_AUTH_SESSION_SECRET` | Signed session secret |
 
-On Linux, write these in `/etc/mqdeck/web.properties` as `mqdeck.api.url` and `mqdeck.auth.session.secret`. A container sets `MQDECK_API_URL` and `MQDECK_AUTH_SESSION_SECRET`. When both are present, the environment variable wins.
+On Linux, write these in `/etc/mqdeck/web.properties`. `mqdeck.web.port=3000` is the listen port. A container sets `PORT` or `MQDECK_WEB_PORT`. When both a property and an environment variable are present, the environment variable wins. An explicit `PORT` is the listen port.
 
 There are no Elasticsearch, storage-mode, schedule, or Test Flight settings.
 Assistant settings belong on the API, not on Web or the Worker. See

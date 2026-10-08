@@ -30,8 +30,9 @@ opens the connection outward. IBM MQ is reached with `runmqsc` over a
 same WebSocket, is shown once, and is discarded.
 
 Queue Watch, when you choose **Start watch**, reuses that Worker connection and
-samples only `CURDEPTH` for the open queue. It does not enable monitoring or
-statistics.
+samples one queue with `CURDEPTH` plus last put, last get, and message age.
+It does not enable monitoring or statistics. Those timestamps appear only when
+monitoring is already enabled.
 
 The dotted line is the optional local model. It runs on the API host, or at an
 OpenAI-compatible URL you configure. The Worker does not load a model. Broker

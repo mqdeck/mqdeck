@@ -38,10 +38,10 @@ sequenceDiagram
         UI->>API: SSE /queues/{queue}/watch
         loop Every 5 seconds by default while Start watch is on
             API->>A: watch_queue (read-only)
-            A->>MQ: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH
-            MQ-->>A: Current depth
+            A->>MQ: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
+            MQ-->>A: Depth, and last put or last get when monitoring is already on
             A-->>API: Correlated sample
-            API-->>UI: Net movement + current depth
+            API-->>UI: Counts or net movement, depth, last put, last get, next sample countdown
         end
     end
     opt Operator asks the assistant
@@ -70,14 +70,16 @@ API to Worker traffic stays on the existing authenticated WebSocket. Each sample
 is only:
 
 ```text
-DISPLAY QSTATUS(queue-name) TYPE(QUEUE) CURDEPTH
+DISPLAY QSTATUS(queue-name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
 ```
 
-The command names one queue. It does not request last put, last get, message
-age, or application handles, and it does not change `MONQ` or `STATQ`. If those
-monitoring or statistics switches are off, they stay off. Last put and last get
-shown above the flow come from the Queues tab collection, and only when
-real-time monitoring was already enabled on the queue manager.
+The command names one queue. It does not request application handles, and it
+does not change `MONQ` or `STATQ`. If those switches are off, they stay off.
+Last put, last get, and message age come back on this same inquiry only when
+monitoring is already enabled. The live label counts down the configured
+interval until the next sample. Enqueue and dequeue counts are the depth
+change when only one side moved. When put and get both move in the same
+interval, the chart keeps the net change instead of inventing a split.
 
 Clients watching the same Worker, inventory host, and queue share one sampler
 and therefore one IBM MQ command per interval. The default interval is five
@@ -87,8 +89,9 @@ queue row, opening another queue, or leaving the page closes the EventSource,
 cancels the Worker request, and releases the API watch slot. Sampler limits
 apply globally, per Worker, and per queue manager.
 
-Incoming and outgoing values represent net depth movement between samples.
-Simultaneous puts and gets can offset one another, so Queue Watch is an
+Enqueue and dequeue are message counts for the sample, not a rounded rate.
+A single message is kept even when the interval is longer than one second.
+Simultaneous puts and gets can still offset one another, so Queue Watch is an
 immediate operational signal rather than an accounting counter.
 
 ## Why WebSocket instead of gRPC
@@ -133,6 +136,12 @@ selectable.
 - The control protocol does not publish, consume, run a shell string, or accept
   arbitrary MQSC. `START CHANNEL` is the only runtime change, and it is sent
   only for the channel name the operator confirmed.
+- Message browse is a separate operator action on one local queue. It reads at
+  most 10 messages from the front of the queue and then stops. It does not
+  walk to the end of the queue and does not write a dump file. IBM MQ uses one
+  non-destructive browse. RabbitMQ uses the management API with
+  `ack_requeue_true`, so the message stays and is marked redelivered. Browse
+  does not run on expand and is not retained.
 - Queue names are validated, bounded, and never interpolated into arbitrary
   MQSC. The Worker selects its fixed `queue_status` collector.
 
