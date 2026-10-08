@@ -44,13 +44,19 @@ sequenceDiagram
     end
     opt Operator enables Queue Watch
         UI->>API: SSE /queues/{queue}/watch
-        loop Every 5 seconds by default while Start watch is on
-            API->>A: watch_queue (read-only)
-            A->>MQ: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
-            MQ-->>A: Depth, and last put or last get when monitoring is already on
-            A-->>API: Correlated sample
-            API-->>UI: Counts or net movement, depth, last put, last get, next sample countdown
+        API->>A: read QLOCAL MONQ
+        alt Queue MONQ is OFF or QMGR
+            A->>MQ: ALTER QLOCAL(name) MONQ(LOW)
         end
+        loop Every 5 seconds by default while Start watch is on
+            API->>A: watch_queue
+            A->>MQ: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
+            MQ-->>A: Depth, last put, and last get
+            A-->>API: Correlated sample
+            API-->>UI: Counts, passing activity, depth, last put, last get, next sample countdown
+        end
+        API->>A: restore the saved queue MONQ
+        A->>MQ: ALTER QLOCAL(name) MONQ(OFF) or MONQ(QMGR)
     end
     opt Operator asks the assistant
         UI->>API: POST /hosts/{id}/ai/analyze or /ai/chat
@@ -70,12 +76,12 @@ available connected worker.
 
 The IBM MQ queue list obtains only depth and open handles with
 `DISPLAY QSTATUS(*) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS`. Expanding a local
-queue performs one exact-name inquiry for current depth, handles, monitoring
-state, last activity, and message age. This is a single read-only request, not
-polling. Results are cached for three seconds, and concurrent expansions for
-the same Worker, host, and queue share the same request. The operator starts
-repeated collection explicitly with **Start watch** and stops it with **Stop
-watch**. RabbitMQ queues do not offer Queue Watch.
+queue performs one exact-name inquiry for current depth, handles, last
+activity, and message age. This is a single read-only request, not polling.
+Results are cached for three seconds, and concurrent expansions for the same
+Worker, host, and queue share the same request. The operator starts repeated
+collection explicitly with **Start watch** and stops it with **Stop watch**.
+RabbitMQ queues do not offer Queue Watch.
 
 While the watch is on, the browser receives one-way Server-Sent Events (SSE).
 API to Worker traffic stays on the existing authenticated WebSocket. Each sample
@@ -85,14 +91,19 @@ is only:
 DISPLAY QSTATUS(queue-name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
 ```
 
-The command names one queue and does not change `MONQ` or `STATQ`. If those
-switches are off, they stay off. The UI shows that monitoring is off instead of
-presenting missing activity as a quiet queue. Last put, last destructive get,
-and message age come back on this same inquiry only when monitoring is already
-enabled. The live label counts down the configured
-interval until the next sample. Enqueue and dequeue counts are the depth
-change when only one side moved. When put and get both move in the same
-interval, the chart keeps the net change instead of inventing a split.
+That status command names one queue and does not change `MONQ` or `STATQ`.
+**Start watch** is the exception, and only for the local queue attribute. If
+that attribute is `OFF` or `QMGR`, the Worker sets `MONQ(LOW)` for the watch so
+last put and last destructive get can update, then restores the saved `OFF` or
+`QMGR` when the watch stops. A queue already set to `LOW`, `MEDIUM`, or `HIGH`
+is left as it is. The watch never leaves `LOW`, `MEDIUM`, or `HIGH` as its
+closing value, and it does not change the queue manager `MONQ` or `STATQ`. If
+the API or Worker process is killed before the watch ends, that restore does
+not run. The live label counts down the configured interval until the next
+sample. Enqueue and dequeue counts are the depth change when only one side
+moved. When put and get both move in the same interval, the depth change cannot
+be split. The UI shows that messages are passing and keeps the depth chart. It
+does not invent a message count.
 
 Clients watching the same Worker, inventory host, and queue share one sampler
 and therefore one IBM MQ command per interval. The default interval is five
@@ -142,13 +153,14 @@ selectable.
   trusted development machine.
 - The Worker revalidates every received target before execution.
 - IBM MQ collection is limited to one `DISPLAY` command per check. The Channels
-  tab may send `START CHANNEL(name)` after the operator confirms it. RabbitMQ
-  stays on read-only HTTP checks.
+  tab may send `START CHANNEL(name)` after the operator confirms it. Queue
+  Watch may send `ALTER QLOCAL(name) MONQ(LOW)` and later `MONQ(OFF)` or
+  `MONQ(QMGR)` for that queue only. RabbitMQ stays on read-only HTTP checks.
 - IBM MQ TLS and enterprise client policies use a CCDT on the selected Worker;
   MQDeck passes only `MQCCDTURL` and optional `MQSSLKEYR` to `runmqsc`.
 - The control protocol does not publish, consume, run a shell string, or accept
-  arbitrary MQSC. `START CHANNEL` is the only runtime change, and it is sent
-  only for the channel name the operator confirmed.
+  arbitrary MQSC. Runtime changes are `START CHANNEL` for the channel the
+  operator confirmed, and the Queue Watch `MONQ` change described above.
 - Message browse is a separate operator action on one local queue. It reads at
   most 10 messages from the front of the queue and then stops. It does not
   walk to the end of the queue and does not write a dump file. IBM MQ uses one

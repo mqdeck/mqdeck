@@ -41,7 +41,8 @@ enterprise channels.
   Queue Watch, and an optional local assistant.
 - **API**: YAML inventory, in-memory control plane, and optional model endpoint.
 - **Worker**: outbound WebSocket client. Collection is read-only. The Channels
-  tab can send one `START CHANNEL` command when an operator confirms it.
+  tab can send one `START CHANNEL` command when an operator confirms it. Queue
+  Watch can set one local queue's `MONQ` to `LOW` and restore `OFF` or `QMGR`.
 
 Copy the public templates in [`examples/`](examples/README.md):
 
@@ -80,12 +81,16 @@ row does not start polling. Queue Watch starts only from **Start watch**, reuses
 the authenticated Worker connection, and shares one sampler among viewers of
 the same queue. The exact-name inquiry is
 `DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`.
-MQDeck never enables `MONQ` or `STATQ`. The UI distinguishes monitoring being
-off from no activity since queue-manager start. The default watch interval is five seconds
-(`MQDECK_QUEUE_WATCH_INTERVAL`). RabbitMQ checks use `GET`.
-IBM MQ collection uses one `DISPLAY` command per check. The only other MQSC
-command is `START CHANNEL`, and only after an operator confirms it on the
-Channels tab. The protocol cannot publish, consume, or run an arbitrary shell
+Collection does not change `MONQ` or `STATQ`. Queue Watch, while it is running,
+sets a local queue from `OFF` or `QMGR` to `MONQ(LOW)` and restores `OFF` or
+`QMGR` when it stops. It does not change an existing `LOW`, `MEDIUM`, or
+`HIGH`, and it does not change the queue manager `MONQ`. When put and get both
+move in one sample, the UI shows passing activity instead of an invented split.
+The default watch interval is five seconds (`MQDECK_QUEUE_WATCH_INTERVAL`).
+RabbitMQ checks use `GET`. IBM MQ collection uses one `DISPLAY` command per
+check. The other MQSC commands are `START CHANNEL`, after an operator confirms
+it on the Channels tab, and the Queue Watch `ALTER QLOCAL(name) MONQ(...)`
+above. The protocol cannot publish, consume, or run an arbitrary shell
 command.
 
 ## License

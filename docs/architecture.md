@@ -27,10 +27,14 @@ sequenceDiagram
     end
     opt Queue detail watch enabled
       Web->>API: SSE queue watch
+      alt Queue MONQ is OFF or QMGR
+        Worker->>Broker: ALTER QLOCAL(name) MONQ(LOW)
+      end
       API->>Worker: watch_queue(request_id, target)
       Worker->>Broker: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
       Worker-->>API: depth and activity sample
-      API-->>Web: enqueue, dequeue, or net movement, plus last put and last get
+      API-->>Web: enqueue, dequeue, passing activity, or net movement, plus last put and last get
+      Worker->>Broker: ALTER QLOCAL(name) MONQ(OFF) or MONQ(QMGR)
     end
     opt Operator asks the assistant
       Web->>API: analyze or chat on the collected report
@@ -56,12 +60,14 @@ Queue Watch is off until the operator chooses **Start watch** on an expanded
 IBM MQ queue. While the watch is on, API to Web uses SSE and API to Worker
 reuses the authenticated WebSocket. Each sample is
 `DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`,
-every five seconds by default (`MQDECK_QUEUE_WATCH_INTERVAL`). The watch does
-not enable queue monitoring or statistics. The UI identifies `MONQ OFF`; last
-put and last destructive get update when monitoring is already enabled. The live label counts down
-that interval. The server keeps no sample history. **Stop watch**,
-collapsing the queue, or leaving the page ends the stream. A browser session
-also ends after ten minutes (`MQDECK_QUEUE_WATCH_MAX_DURATION`).
+every five seconds by default (`MQDECK_QUEUE_WATCH_INTERVAL`). If the queue
+`MONQ` attribute is `OFF` or `QMGR`, the watch sets `LOW` for the session and
+restores that `OFF` or `QMGR` when the stream ends. It does not change `STATQ`
+or the queue manager `MONQ`. A queue already at `LOW`, `MEDIUM`, or `HIGH` is
+left unchanged. The live label counts down the interval. The server keeps no
+sample history. **Stop watch**, collapsing the queue, or leaving the page ends
+the stream and runs the restore. A browser session also ends after ten minutes
+(`MQDECK_QUEUE_WATCH_MAX_DURATION`).
 
 The local model is optional. With `MQDECK_LLM_ENABLED=auto` and no GGUF file,
 the API still starts and the diagram's model step never runs. When a model is
@@ -69,8 +75,9 @@ ready, only an operator request sends the current report to it. The Worker is
 not on that path. See [Local assistant and models](llm.md).
 
 IBM MQ collection stays on `DISPLAY`. The Channels tab can also send
-`START CHANNEL` for one named channel after the operator confirms it. That is
-the only command that changes broker runtime state.
+`START CHANNEL` for one named channel after the operator confirms it. Queue
+Watch can change that queue's `MONQ` to `LOW` and back to `OFF` or `QMGR`.
+Those are the only commands that change broker runtime state.
 
 WebSocket over HTTPS was selected because the Worker must initiate a
 bidirectional connection through ordinary firewalls and reverse proxies. At

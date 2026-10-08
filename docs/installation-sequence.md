@@ -18,7 +18,9 @@ Do not assume the Web version must match the installed API version.
 Grant display authority for collection. IBM MQ uses a dedicated `SVRCONN`
 channel and one `DISPLAY` command per check. If operators will use **Start**
 on the Channels tab, that same identity also needs permission to run
-`START CHANNEL`. RabbitMQ uses HTTP `GET` against the Management API. Confirm
+`START CHANNEL`. If operators will use Queue Watch, the identity also needs
+authority to change `MONQ` on the local queues they watch. RabbitMQ uses HTTP
+`GET` against the Management API. Confirm
 the identity can display every object type the operator expects to observe.
 MQDeck identifies the access channel and warns when IBM MQ explicitly rejects
 a collection for insufficient authority; objects hidden by authority must not

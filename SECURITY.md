@@ -25,13 +25,15 @@ production data in the report.
 
 ## Security model
 
-MQDeck limits broker interaction to read-only collection, plus one explicit channel start:
+MQDeck limits broker interaction to read-only collection, one explicit channel start, and the Queue Watch `MONQ` change:
 
 - RabbitMQ HTTP checks use `GET`, and local checks use allowlisted diagnostic
   subcommands.
-- IBM MQ collection uses one `DISPLAY` MQSC command per check. The only other
-  accepted MQSC command is `START CHANNEL(name)`, and only when an operator
-  confirms it in Web.
+- IBM MQ collection uses one `DISPLAY` MQSC command per check. The other
+  accepted MQSC commands are `START CHANNEL(name)`, only when an operator
+  confirms it in Web, and `ALTER QLOCAL(name) MONQ(LOW)`, `MONQ(OFF)`, or
+  `MONQ(QMGR)` for the queue in an active Queue Watch. The watch restores
+  `OFF` or `QMGR` when it stops and does not change the queue manager `MONQ`.
 - Adapter responses and WebSocket messages are size-bounded.
 - Workers initiate authenticated outbound WebSocket connections; they expose no
   inbound command listener.

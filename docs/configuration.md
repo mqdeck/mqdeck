@@ -33,8 +33,10 @@ Queue Watch starts only after **Start watch** on an expanded IBM MQ queue.
 Clients for the same Worker, inventory host, and queue share one sampler. Queue
 detail and each watch sample use
 `DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`.
-MQDeck does not turn `MONQ` or `STATQ` on. The UI reports `MONQ OFF` separately
-from no observed put or destructive get since queue-manager start.
+Collection does not change `MONQ` or `STATQ`. The watch does, and only on that
+local queue: `OFF` or `QMGR` becomes `LOW` for the session and is restored to
+`OFF` or `QMGR` when the watch stops. An existing `LOW`, `MEDIUM`, or `HIGH`
+is not replaced. The queue manager `MONQ` stays as configured.
 The default five-second interval is for a short diagnosis, not a permanent
 collector. Use a one-second interval only for a brief troubleshooting session.
 

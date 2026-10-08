@@ -5,6 +5,8 @@ Administrative REST, and Messaging REST are disabled. The Worker runs the IBM
 MQ Client `runmqsc -c` utility through a dedicated `SVRCONN` channel.
 Collection accepts one `DISPLAY` statement per check. The Channels tab can
 also send `START CHANNEL` for one channel after the operator confirms it.
+Queue Watch can send `ALTER QLOCAL(name) MONQ(LOW)`, then restore `MONQ(OFF)`
+or `MONQ(QMGR)`, for the queue being watched.
 
 ## Requirements
 
@@ -134,7 +136,8 @@ For direct connections, the Worker supplies `MQSERVER` only to the `runmqsc`
 child process. For CCDT connections, it clears `MQSERVER` and supplies
 `MQCCDTURL` plus optional `MQSSLKEYR`. It passes the password through standard
 input, invokes no shell, bounds output, and rejects MQSC other than one
-`DISPLAY` command or `START CHANNEL(name)`.
+`DISPLAY` command, `START CHANNEL(name)`, or the Queue Watch
+`ALTER QLOCAL(name) MONQ(OFF|QMGR|LOW)`.
 
 For client applications, IBM MQ exposes `CONNAME` when the handle belongs to a
 channel. MQDeck displays that value as the application origin alongside the

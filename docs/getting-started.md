@@ -31,8 +31,9 @@ same WebSocket, is shown once, and is discarded.
 
 Queue Watch, when you choose **Start watch**, reuses that Worker connection and
 samples one queue with `CURDEPTH` plus last put, last get, and message age.
-It does not enable monitoring or statistics. Those timestamps appear only when
-monitoring is already enabled.
+If the queue `MONQ` attribute is `OFF` or `QMGR`, the watch sets it to `LOW`
+for that session and puts `OFF` or `QMGR` back when the watch stops. It does
+not change queue statistics or the queue manager `MONQ`.
 
 The dotted line is the optional local model. It runs on the API host, or at an
 OpenAI-compatible URL you configure. The Worker does not load a model. Broker
@@ -78,7 +79,7 @@ The API does not expand `${...}` placeholders.
 
 1. Open the inventory. That page lists hosts from the file and does not contact a broker.
 2. Open a host and choose **Collect data**. IBM MQ loads Overview first. Queues and Channels load when you open those tabs.
-3. Expand a local IBM MQ queue for one current, exact-name status inquiry. It shows depth, handles, monitoring state, and last put/get when IBM MQ monitoring already provides them. Choose **Start watch** only when you want repeated samples.
+3. Expand a local IBM MQ queue for one current, exact-name status inquiry. It shows depth, handles, and last put/get. Choose **Start watch** only when you want repeated samples. That watch can turn queue `MONQ` to `LOW` until you stop it.
 4. On an inactive IBM MQ channel, **Start** sends `START CHANNEL` through the selected Worker. Collection itself stays on `DISPLAY`.
 5. The [local assistant](llm.md) is optional. Reports and Queue Watch work without a model.
 
