@@ -78,7 +78,7 @@ The API does not expand `${...}` placeholders.
 
 1. Open the inventory. That page lists hosts from the file and does not contact a broker.
 2. Open a host and choose **Collect data**. IBM MQ loads Overview first. Queues and Channels load when you open those tabs.
-3. Expand a local queue to see depth and handles. Choose **Start watch** only when you want repeated depth samples.
+3. Expand a local IBM MQ queue for one current, exact-name status inquiry. It shows depth, handles, monitoring state, and last put/get when IBM MQ monitoring already provides them. Choose **Start watch** only when you want repeated samples.
 4. On an inactive IBM MQ channel, **Start** sends `START CHANNEL` through the selected Worker. Collection itself stays on `DISPLAY`.
 5. The [local assistant](llm.md) is optional. Reports and Queue Watch work without a model.
 

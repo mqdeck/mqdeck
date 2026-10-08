@@ -34,11 +34,19 @@ sequenceDiagram
     MQ-->>A: Current broker data
     A-->>API: Correlated ephemeral result
     API-->>UI: Normalized report + check results
+    opt Operator expands one local IBM MQ queue
+        UI->>API: GET /queues/{queue}/status
+        API->>A: inspect_queue (read-only, exact name)
+        A->>MQ: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
+        MQ-->>A: Current queue status
+        A-->>API: Correlated result
+        API-->>UI: Queue detail (three-second shared cache)
+    end
     opt Operator enables Queue Watch
         UI->>API: SSE /queues/{queue}/watch
         loop Every 5 seconds by default while Start watch is on
             API->>A: watch_queue (read-only)
-            A->>MQ: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
+            A->>MQ: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
             MQ-->>A: Depth, and last put or last get when monitoring is already on
             A-->>API: Correlated sample
             API-->>UI: Counts or net movement, depth, last put, last get, next sample countdown
@@ -60,23 +68,28 @@ uses the `worker_id` named on the inventory entry, the configured
 an worker selected by the operator. If none is specified, the API selects an
 available connected worker.
 
-Expanding a local IBM MQ queue shows the snapshot already collected for that
-tab: depth, rates, and open handles. That view does not start Queue Watch.
-The operator starts it with **Start watch** and stops it with **Stop watch**.
-RabbitMQ queues do not offer Queue Watch.
+The IBM MQ queue list obtains only depth and open handles with
+`DISPLAY QSTATUS(*) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS`. Expanding a local
+queue performs one exact-name inquiry for current depth, handles, monitoring
+state, last activity, and message age. This is a single read-only request, not
+polling. Results are cached for three seconds, and concurrent expansions for
+the same Worker, host, and queue share the same request. The operator starts
+repeated collection explicitly with **Start watch** and stops it with **Stop
+watch**. RabbitMQ queues do not offer Queue Watch.
 
 While the watch is on, the browser receives one-way Server-Sent Events (SSE).
 API to Worker traffic stays on the existing authenticated WebSocket. Each sample
 is only:
 
 ```text
-DISPLAY QSTATUS(queue-name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
+DISPLAY QSTATUS(queue-name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
 ```
 
-The command names one queue. It does not request application handles, and it
-does not change `MONQ` or `STATQ`. If those switches are off, they stay off.
-Last put, last get, and message age come back on this same inquiry only when
-monitoring is already enabled. The live label counts down the configured
+The command names one queue and does not change `MONQ` or `STATQ`. If those
+switches are off, they stay off. The UI shows that monitoring is off instead of
+presenting missing activity as a quiet queue. Last put, last destructive get,
+and message age come back on this same inquiry only when monitoring is already
+enabled. The live label counts down the configured
 interval until the next sample. Enqueue and dequeue counts are the depth
 change when only one side moved. When put and get both move in the same
 interval, the chart keeps the net change instead of inventing a split.

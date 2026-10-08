@@ -24,11 +24,17 @@ external OpenAI-compatible endpoint are covered in
 
 On Linux the API reads `/etc/mqdeck/api.properties`. Write each setting in dotted form, so `MQDECK_API_ADDRESS` becomes `mqdeck.api.address=:8080`. A container or a Windows service uses the environment variable `MQDECK_API_ADDRESS`. When both are present, the environment variable wins.
 
+Opening the Queues tab uses
+`DISPLAY QSTATUS(*) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS`. Expanding one local
+IBM MQ queue performs one exact-name inquiry and does not start polling. The API
+caches this detail for three seconds and coalesces simultaneous requests.
+
 Queue Watch starts only after **Start watch** on an expanded IBM MQ queue.
-Clients for the same Worker, inventory host, and queue share one sampler. Each
-sample is `DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`.
-It does not turn `MONQ` or `STATQ` on. Last put and last get are returned only
-when monitoring is already enabled.
+Clients for the same Worker, inventory host, and queue share one sampler. Queue
+detail and each watch sample use
+`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`.
+MQDeck does not turn `MONQ` or `STATQ` on. The UI reports `MONQ OFF` separately
+from no observed put or destructive get since queue-manager start.
 The default five-second interval is for a short diagnosis, not a permanent
 collector. Use a one-second interval only for a brief troubleshooting session.
 

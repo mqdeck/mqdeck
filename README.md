@@ -72,12 +72,16 @@ Optional on-prem model setup is documented in
 
 ## Safety model
 
-The Worker validates every target received from the API. Queue Watch starts
-only from **Start watch**, reuses the authenticated Worker connection, and
-shares one sampler among viewers of the same queue. Each sample is
-`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`.
-It does not enable `MONQ` or `STATQ`. Last put and last get are included only
-when monitoring is already on. The default interval is five seconds
+The Worker validates every target received from the API. The Queues tab uses a
+lightweight wildcard status inquiry for depth and open handles. Expanding one
+IBM MQ queue performs one exact-name, read-only status inquiry. The API caches
+that result for three seconds and coalesces simultaneous requests; expanding a
+row does not start polling. Queue Watch starts only from **Start watch**, reuses
+the authenticated Worker connection, and shares one sampler among viewers of
+the same queue. The exact-name inquiry is
+`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`.
+MQDeck never enables `MONQ` or `STATQ`. The UI distinguishes monitoring being
+off from no activity since queue-manager start. The default watch interval is five seconds
 (`MQDECK_QUEUE_WATCH_INTERVAL`). RabbitMQ checks use `GET`.
 IBM MQ collection uses one `DISPLAY` command per check. The only other MQSC
 command is `START CHANNEL`, and only after an operator confirms it on the

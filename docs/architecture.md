@@ -18,10 +18,17 @@ sequenceDiagram
     Broker-->>Worker: current state
     Worker-->>API: correlated result
     API-->>Web: normalized ephemeral report
+    opt Local IBM MQ queue expanded
+      Web->>API: exact queue status
+      API->>Worker: inspect_queue(request_id, target)
+      Worker->>Broker: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
+      Worker-->>API: current queue status
+      API-->>Web: detail from three-second shared cache
+    end
     opt Queue detail watch enabled
       Web->>API: SSE queue watch
       API->>Worker: watch_queue(request_id, target)
-      Worker->>Broker: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
+      Worker->>Broker: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE
       Worker-->>API: depth and activity sample
       API-->>Web: enqueue, dequeue, or net movement, plus last put and last get
     end
@@ -40,14 +47,18 @@ the queue-manager status check. A request chooses the Worker explicitly named by
 the inventory, the inventory default, a UI override, or the first available
 Worker.
 
+Opening the IBM MQ Queues tab requests a lightweight wildcard status with only
+depth and open handles. Expanding a local queue requests one exact-name detail
+status. The API caches it for three seconds and coalesces concurrent requests;
+no timer starts from row expansion.
+
 Queue Watch is off until the operator chooses **Start watch** on an expanded
-IBM MQ queue. The snapshot rates and handles above that button do not contact
-the queue manager again. While the watch is on, API to Web uses SSE and API to
-Worker reuses the authenticated WebSocket. Each sample is
-`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`,
+IBM MQ queue. While the watch is on, API to Web uses SSE and API to Worker
+reuses the authenticated WebSocket. Each sample is
+`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH IPPROCS OPPROCS MONQ LPUTDATE LPUTTIME LGETDATE LGETTIME MSGAGE`,
 every five seconds by default (`MQDECK_QUEUE_WATCH_INTERVAL`). The watch does
-not enable queue monitoring or statistics. Last put and last get update on
-each sample when monitoring is already enabled. The live label counts down
+not enable queue monitoring or statistics. The UI identifies `MONQ OFF`; last
+put and last destructive get update when monitoring is already enabled. The live label counts down
 that interval. The server keeps no sample history. **Stop watch**,
 collapsing the queue, or leaving the page ends the stream. A browser session
 also ends after ten minutes (`MQDECK_QUEUE_WATCH_MAX_DURATION`).
