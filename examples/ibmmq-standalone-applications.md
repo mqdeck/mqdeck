@@ -5,8 +5,8 @@ local queue on the same standalone queue manager. It does not use a remote
 queue, transmission queue, sender channel, receiver channel, or second queue
 manager.
 
-MQDeck observes the resulting application handles through the detailed `queues`
-check. The dependency map should show this path:
+MQDeck observes the resulting application handles when the Queues tab is
+collected. The path under test is:
 
 ```text
 amqsput (publisher) -> QM1 -> MQDECK.DEMO.LOCAL -> amqsget (consumer)
@@ -54,10 +54,10 @@ for the next message.
 
 ## Verify through MQDeck
 
-After the next detailed collection, open the `ibmmq-standalone` host and select
-**Dependencies**. The queue lane should contain both an observed publisher and
-an observed consumer. The **Applications** tab exposes the process IDs, users,
-connection type, open options, and queue roles used to derive the map.
+Open the host, collect data, and open **Queues**. Expand `MQDECK.DEMO.LOCAL`.
+The queue detail shows open input and output counts. The flow under the queue
+lists publisher and consumer handles observed on that collection. Enable Queue
+Watch on that queue to follow depth while the samples stay connected.
 
 Stop the sample applications with `Ctrl+C`. MQDeck does not stop, alter, or
 manage either application.

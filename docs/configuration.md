@@ -15,11 +15,19 @@
 | `MQDECK_QUEUE_WATCH_MAX_PER_AGENT` | `8` | Maximum distinct samplers routed through one Agent |
 | `MQDECK_QUEUE_WATCH_MAX_PER_QUEUE_MANAGER` | `4` | Maximum distinct watched queues for one inventory host |
 | `MQDECK_QUEUE_WATCH_MAX_CLIENTS` | `64` | Maximum simultaneous browser watch streams |
+| `MQDECK_LLM_ENABLED` | `auto` | Optional local assistant: `auto`, `true`, or `false` |
+| `MQDECK_MODEL_DIR` | `./models` | Directory of optional GGUF models |
 
-Queue Watch clients for the same Agent, inventory host, and queue share one
-sampler. The default five-second interval is suitable for interactive
-diagnosis without treating MQDeck as a permanent telemetry collector. Use a
-one-second interval only for short, controlled troubleshooting sessions.
+The assistant is off unless you add a model. Setup, `llama-server`, and an
+external OpenAI-compatible endpoint are covered in
+[Local assistant and models](llm.md).
+
+Queue Watch starts only after **Start watch** on an expanded IBM MQ queue.
+Clients for the same Agent, inventory host, and queue share one sampler. Each
+sample is `DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH`. It does not request
+last put, last get, or message age, and it does not turn `MONQ` or `STATQ` on.
+The default five-second interval is for a short diagnosis, not a permanent
+collector. Use a one-second interval only for a brief troubleshooting session.
 
 The inventory is one static, self-contained YAML file. List every IBM MQ queue
 manager and RabbitMQ node that must appear in the overview, using final literal
@@ -94,16 +102,18 @@ repository, `key_repository` can omit the `.kdb` suffix. `endpoint` and
 The Agent removes inherited IBM MQ connection variables and sets `MQCCDTURL`
 and optional `MQSSLKEYR` only for the read-only command process.
 
-The API derives `client` transport and the complete read-only IBM MQ view, or
-HTTP transport and the complete RabbitMQ view. The direct endpoint host is used
-as the machine label, so several queue managers can share a machine without
+The API applies IBM MQ client mode. Overview collects queue-manager status.
+Queues and Channels collect those objects when the operator opens the tab.
+Distributed queue managers also collect listener status; z/OS does not, because
+those listeners belong to CHINIT. RabbitMQ uses the Management API. The direct
+endpoint host is used as the machine label, so several queue managers can share a machine without
 repeating metadata in YAML. CCDT entries are labeled `CCDT`. Cluster and
 repository roles are read live from IBM MQ.
 
 For IBM MQ, the configured `channel` is also returned as the access channel in
-every report. Object inventories are authority-scoped: missing channels,
-queues, or listeners may indicate insufficient `DISPLAY`/`INQUIRE` authority
-rather than absence. MQDeck reports recognized authorization failures as a
+every report. Object inventories are authority-scoped: missing channels or
+queues may indicate insufficient `DISPLAY`/`INQUIRE` authority rather than
+absence. MQDeck reports recognized authorization failures as a
 partial-visibility warning. System queues are included in the queue view by
 default.
 
@@ -156,3 +166,5 @@ clear timeout message. Use TLS in every non-local deployment.
 | `MQDECK_AUTH_SESSION_SECRET` | Signed session secret |
 
 There are no Elasticsearch, storage-mode, schedule, or Test Flight settings.
+Assistant settings belong on the API, not on Web or the Agent. See
+[Local assistant and models](llm.md).

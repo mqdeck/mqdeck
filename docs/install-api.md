@@ -44,6 +44,10 @@ For Queue Watch routes under `/api/v1/hosts/*/queues/*/watch`, preserve
 appropriate for an operator-controlled session. The API sets
 `X-Accel-Buffering: no`. The API needs no database or Elasticsearch.
 
+The local assistant is optional and stays disabled until you add a GGUF model
+or an OpenAI-compatible endpoint. See
+[Local assistant and models](llm.md).
+
 ## Windows Server
 
 Use the current public release and API version from `COMPONENTS.md`:

@@ -1,24 +1,15 @@
 # Kubernetes and Helm
 
-The chart deploys API, Agent, and Web as separate workloads. The chart version
-and the three image versions are independent. Set only the image tags that the
-deployment intends to change; there is no Elasticsearch dependency.
+Install MQDeck with the Linux or Windows packages in
+[Getting started](getting-started.md). Those packages match the current
+on-demand API: a static inventory file, an outbound Agent, and no
+Elasticsearch.
 
-```bash
-CHART_VERSION=X.Y.Z
-API_VERSION=1.0.25 # MQDECK_API_VERSION
-AGENT_VERSION=1.0.26 # MQDECK_AGENT_VERSION
-WEB_VERSION=1.0.28 # MQDECK_WEB_VERSION
-helm upgrade --install mqdeck oci://ghcr.io/mqdeck/charts/mqdeck \
-  --version "${CHART_VERSION}" --namespace mqdeck --create-namespace \
-  --set api.image.tag="${API_VERSION}" \
-  --set agent.image.tag="${AGENT_VERSION}" \
-  --set web.image.tag="${WEB_VERSION}"
-```
+The Helm chart in `charts/mqdeck` is not a supported install path for this
+release. It still injects Elasticsearch environment variables, does not mount
+`inventory.yaml`, and describes an Agent Service port the current Agent does
+not listen on. Do not point a production cluster at that chart until it is
+updated for the on-demand control plane.
 
-Provide:
-
-- an inventory ConfigMap or Secret mounted into API;
-- `MQDECK_AGENT_TOKEN` from a Secret;
-- WebSocket-capable Ingress routing;
-- Agent egress to API and assigned brokers.
+When the chart is updated, image tags stay independent of the chart version.
+Set only the component tags listed in the public release `COMPONENTS.md`.

@@ -18,7 +18,12 @@ flowchart LR
     AGENT["MQDeck Agent"] -->|"outbound authenticated WebSocket"| API
     AGENT -->|"allowlisted read-only checks"| IBM["IBM MQ"]
     AGENT -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
+    API -.->|"optional assistant"| MODEL["Local model"]
 ```
+
+The local model is optional and sits next to the API. The Agent never calls it.
+A collected report is sent to the model only when an operator asks the
+assistant. Setup is in [`docs/llm.md`](docs/llm.md).
 
 The API chooses the `agent_id` named in the inventory, its
 `default_agent_id`,
@@ -33,14 +38,15 @@ enterprise channels.
 ## Components
 
 - **Web**: static inventory overview, live Agent directory, on-demand reports,
-  and an operator-enabled live queue-movement watch.
-- **API**: YAML inventory and in-memory control plane.
-- **Agent**: outbound WebSocket client and read-only diagnostic executor.
+  Queue Watch, and an optional local assistant.
+- **API**: YAML inventory, in-memory control plane, and optional model endpoint.
+- **Agent**: outbound WebSocket client. Collection is read-only. The Channels
+  tab can send one `START CHANNEL` command when an operator confirms it.
 
-Complete example files are distributed with the API and Agent:
+Copy the public templates in [`examples/`](examples/README.md):
 
-- `mqdeck-api/inventory.example.yaml`
-- `mqdeck-agent/mqdeck.on-demand.example.yaml`
+- [`examples/inventory.yaml`](examples/inventory.yaml)
+- [`examples/agent.yaml`](examples/agent.yaml)
 
 Each component is versioned independently. Public install and upgrade packages
 are always downloaded from this repository's
@@ -61,16 +67,21 @@ explicit combination of component versions.
 
 The architecture and security decisions are documented in
 [`docs/on-demand-architecture.md`](docs/on-demand-architecture.md).
+Optional on-prem model setup is documented in
+[`docs/llm.md`](docs/llm.md).
 
 ## Safety model
 
-The Agent validates every target received from the API. Queue Watch reuses the
-same authenticated Agent connection, shares one sampler among viewers of the
-same queue, and requests only that queue's current depth at a bounded interval.
-RabbitMQ uses `GET`
-operations; IBM MQ command execution remains restricted to a single `DISPLAY`
-MQSC command. The remote protocol cannot publish, consume, mutate broker state,
-or execute arbitrary shell strings.
+The Agent validates every target received from the API. Queue Watch starts
+only from **Start watch**, reuses the authenticated Agent connection, and
+shares one sampler among viewers of the same queue. Each sample is
+`DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH`. It does not enable `MONQ` or
+`STATQ`. The default interval is five seconds
+(`MQDECK_QUEUE_WATCH_INTERVAL`). RabbitMQ checks use `GET`.
+IBM MQ collection uses one `DISPLAY` command per check. The only other MQSC
+command is `START CHANNEL`, and only after an operator confirms it on the
+Channels tab. The protocol cannot publish, consume, or run an arbitrary shell
+command.
 
 ## License
 

@@ -10,7 +10,10 @@ definitions and status, and Channels reads channel definitions and status.
 
 MQDeck is no longer a telemetry, time-series, or synthetic-transaction
 platform. Elasticsearch, scheduled broker collection, retained observations,
-and Test Flight are outside the simplified product.
+and Test Flight are outside the simplified product. An optional local model
+can read a report after the operator asks. It is not on the Agent path and it
+is not required for inventory, collection, or Queue Watch. See
+[Local assistant and models](llm.md).
 
 ## Runtime flow
 
@@ -20,6 +23,7 @@ sequenceDiagram
     participant API as MQDeck API
     participant A as Connected Agent
     participant MQ as IBM MQ or RabbitMQ
+    participant Model as Local model
 
     UI->>API: GET /api/v1/hosts
     API-->>UI: Static YAML inventory
@@ -32,13 +36,19 @@ sequenceDiagram
     API-->>UI: Normalized report + check results
     opt Operator enables Queue Watch
         UI->>API: SSE /queues/{queue}/watch
-        loop Every 2 seconds while open
+        loop Every 5 seconds by default while Start watch is on
             API->>A: watch_queue (read-only)
-            A->>MQ: DISPLAY QSTATUS
+            A->>MQ: DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH
             MQ-->>A: Current depth
             A-->>API: Correlated sample
             API-->>UI: Net movement + current depth
         end
+    end
+    opt Operator asks the assistant
+        UI->>API: POST /hosts/{id}/ai/analyze or /ai/chat
+        API->>Model: collected report only
+        Model-->>API: summary or answer
+        API-->>UI: assistant response
     end
 ```
 
@@ -50,19 +60,32 @@ uses the `agent_id` named on the inventory entry, the configured
 an agent selected by the operator. If none is specified, the API selects an
 available connected agent.
 
-Queue Watch is the first, collapsed section in queue details. It is deliberately
-opt-in and expands only after the operator enables it; it exists only while its
-queue detail accordion remains open. The browser receives one-way Server-Sent Events (SSE),
-which is simpler than another bidirectional browser socket for telemetry. API
-to Agent traffic continues over the existing authenticated WebSocket. Each
-sample requests only `CURDEPTH` for the exact queue. Clients watching the same
-Agent, inventory host, and queue share one sampler and therefore one IBM MQ
-command per interval. The default interval is five seconds, and every browser
-session expires after ten minutes. Closing the accordion or disabling the
-switch cancels the stream. Navigating away or expanding another queue also
-unmounts the active watch, closes its EventSource, propagates an explicit
-request cancellation to the Agent, and releases the API watch slot. Sampler
-limits apply globally, per Agent, and per queue manager.
+Expanding a local IBM MQ queue shows the snapshot already collected for that
+tab: depth, rates, and open handles. That view does not start Queue Watch.
+The operator starts it with **Start watch** and stops it with **Stop watch**.
+RabbitMQ queues do not offer Queue Watch.
+
+While the watch is on, the browser receives one-way Server-Sent Events (SSE).
+API to Agent traffic stays on the existing authenticated WebSocket. Each sample
+is only:
+
+```text
+DISPLAY QSTATUS(queue-name) TYPE(QUEUE) CURDEPTH
+```
+
+The command names one queue. It does not request last put, last get, message
+age, or application handles, and it does not change `MONQ` or `STATQ`. If those
+monitoring or statistics switches are off, they stay off. Last put and last get
+shown above the flow come from the Queues tab collection, and only when
+real-time monitoring was already enabled on the queue manager.
+
+Clients watching the same Agent, inventory host, and queue share one sampler
+and therefore one IBM MQ command per interval. The default interval is five
+seconds (`MQDECK_QUEUE_WATCH_INTERVAL`). Each browser session expires after ten
+minutes (`MQDECK_QUEUE_WATCH_MAX_DURATION`). **Stop watch**, collapsing the
+queue row, opening another queue, or leaving the page closes the EventSource,
+cancels the Agent request, and releases the API watch slot. Sampler limits
+apply globally, per Agent, and per queue manager.
 
 Incoming and outgoing values represent net depth movement between samples.
 Simultaneous puts and gets can offset one another, so Queue Watch is an
@@ -102,12 +125,14 @@ selectable.
 - The WebSocket handshake requires a bearer token and must use TLS outside a
   trusted development machine.
 - The Agent revalidates every received target before execution.
-- Existing adapter allowlists still restrict IBM MQ to `DISPLAY` operations and
-  RabbitMQ to read-only HTTP/diagnostic operations.
+- IBM MQ collection is limited to one `DISPLAY` command per check. The Channels
+  tab may send `START CHANNEL(name)` after the operator confirms it. RabbitMQ
+  stays on read-only HTTP checks.
 - IBM MQ TLS and enterprise client policies use a CCDT on the selected Agent;
   MQDeck passes only `MQCCDTURL` and optional `MQSSLKEYR` to `runmqsc`.
-- Arbitrary shell strings, MQSC mutations, publishing, consuming, and Test
-  Flight operations are not part of the control protocol.
+- The control protocol does not publish, consume, run a shell string, or accept
+  arbitrary MQSC. `START CHANNEL` is the only runtime change, and it is sent
+  only for the channel name the operator confirmed.
 - Queue names are validated, bounded, and never interpolated into arbitrary
   MQSC. The Agent selects its fixed `queue_status` collector.
 
@@ -137,5 +162,5 @@ control_plane:
   reconnect_delay: 5s
 ```
 
-See `mqdeck-api/inventory.example.yaml` and
-`mqdeck-agent/mqdeck.on-demand.example.yaml` for complete examples.
+See [examples/inventory.yaml](../examples/inventory.yaml) and
+[examples/agent.yaml](../examples/agent.yaml) for complete public templates.

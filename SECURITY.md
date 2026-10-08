@@ -25,11 +25,13 @@ production data in the report.
 
 ## Security model
 
-MQDeck limits broker interaction to read-only operations:
+MQDeck limits broker interaction to read-only collection, plus one explicit channel start:
 
 - RabbitMQ HTTP checks use `GET`, and local checks use allowlisted diagnostic
   subcommands.
-- IBM MQ REST checks use `GET`, and local MQSC checks must begin with `DISPLAY`.
+- IBM MQ collection uses one `DISPLAY` MQSC command per check. The only other
+  accepted MQSC command is `START CHANNEL(name)`, and only when an operator
+  confirms it in Web.
 - Adapter responses and WebSocket messages are size-bounded.
 - Agents initiate authenticated outbound WebSocket connections; they expose no
   inbound command listener.

@@ -17,7 +17,7 @@ the component that changed. For example, public release `v1.0.0` ships API
 | Install and upgrade archives | [mqdeck releases](https://github.com/mqdeck/mqdeck/releases) |
 | Component versions in a delivery | `COMPONENTS.md` on that release |
 | Checksums | `*_SHA256SUMS` and `BUNDLE_SHA256SUMS` on that release |
-| Helm chart | [mqdeck releases](https://github.com/mqdeck/mqdeck/releases) (`chart-vX.Y.Z`) and `oci://ghcr.io/mqdeck/charts/mqdeck` |
+| Helm chart | Not a supported install path for the current on-demand API. See [Kubernetes and Helm](install-helm.md). |
 
 Public install and upgrade commands always use:
 

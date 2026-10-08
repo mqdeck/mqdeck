@@ -92,7 +92,7 @@
             </article>
             <article class="feature-card">
               <div class="feature-icon pulse-icon" aria-hidden="true"><span></span></div>
-              <small>LIVE QUEUE WATCH</small><h3>See accumulation and drain as they happen.</h3><p>Enable a lightweight watch inside an IBM MQ queue detail to follow net arrivals, departures, and current depth with animated visual signals.</p>
+              <small>LIVE QUEUE WATCH</small><h3>See accumulation and drain as they happen.</h3><p>Start watch on an expanded IBM MQ queue. Each sample reads only CURDEPTH for that queue and does not enable monitoring or statistics.</p>
             </article>
             <article class="feature-card">
               <div class="feature-icon shield-icon" aria-hidden="true">✓</div>
@@ -100,7 +100,7 @@
             </article>
             <article class="feature-card">
               <div class="feature-icon shield-icon" aria-hidden="true">R</div>
-              <small>READ ONLY BY DESIGN</small><h3>Keep remote execution narrow and auditable.</h3><p>The Agent revalidates every target. IBM MQ stays on DISPLAY operations; RabbitMQ stays on GET and allowlisted diagnostics.</p>
+              <small>NARROW BY DESIGN</small><h3>Keep remote execution narrow and auditable.</h3><p>The Agent revalidates every target. IBM MQ collection stays on DISPLAY. The Channels tab can send START CHANNEL after you confirm it. RabbitMQ stays on GET.</p>
             </article>
             <article class="feature-card feature-card-accent">
               <div class="release-label"><span></span> Simplified architecture</div>
@@ -117,7 +117,7 @@
           <div class="architecture-copy">
             <div class="eyebrow">One correlated request</div>
             <h2>The Agent goes out. The command comes back.</h2>
-            <p>The persistent connection is initiated from inside the broker network. When Web requests a report, API routes it to the preferred or selected Agent and waits for the correlated result.</p>
+            <p>The persistent connection is initiated from inside the broker network. When Web requests a report, API routes it to the preferred or selected Agent and waits for the correlated result. An optional local model sits with the API and receives a report only when an operator asks the assistant.</p>
             <ul class="check-list">
               <li><span>✓</span> WebSocket over the existing HTTPS port</li>
               <li><span>✓</span> Request IDs, timeout, and bounded concurrency</li>
@@ -131,7 +131,7 @@
             <div class="diagram-arrow"><span>read only</span><i>←</i></div>
             <div class="diagram-column agent-column"><small>NETWORK POINT</small><div class="diagram-node primary-node"><i>M</i><span><strong>MQDeck Agent</strong><small>validate · execute · respond</small></span></div></div>
             <div class="diagram-arrow"><span>outbound WebSocket</span><i>→</i></div>
-            <div class="diagram-column query-column"><small>CONTROL PLANE</small><div class="diagram-node"><i class="component-mark agent">A</i><span><strong>MQDeck API</strong><small>inventory · route · correlate</small></span></div><div class="query-stack"><span>Web</span><i>→</i><span>API</span><i>↔</i><span>Agent</span></div></div>
+            <div class="diagram-column query-column"><small>CONTROL PLANE</small><div class="diagram-node"><i class="component-mark agent">A</i><span><strong>MQDeck API</strong><small>inventory · route · correlate</small></span></div><div class="diagram-node"><i>AI</i><span><strong>Local model</strong><small>optional · API host only</small></span></div><div class="query-stack"><span>Web</span><i>→</i><span>API</span><i>↔</i><span>Agent</span></div></div>
           </div>
         </div>
       </section>
@@ -190,6 +190,7 @@ sudo systemctl enable --now mqdeck-web</code></pre></div>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/SECURITY.md"><span class="doc-number">07</span><div><strong>Security</strong><small>Review trust boundaries and deployment controls.</small></div><i>→</i></a>
             <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/upgrade.md"><span class="doc-number">08</span><div><strong>Upgrade and rollback</strong><small>Replace each binary safely without losing configuration.</small></div><i>→</i></a>
             <a href="https://github.com/mqdeck/mqdeck/tree/main/examples"><span class="doc-number">09</span><div><strong>Examples</strong><small>Start from inventory and Agent templates.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/llm.md"><span class="doc-number">10</span><div><strong>Local assistant</strong><small>Configure an optional GGUF model or OpenAI-compatible endpoint.</small></div><i>→</i></a>
           </div>
         </div>
       </section>

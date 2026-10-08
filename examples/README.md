@@ -11,5 +11,5 @@ from environment variables.
 | `ibmmq-svrconn.md` | Least-privilege IBM MQ client connection without `mqweb` |
 | `ibmmq-standalone-applications.md` | Local publisher and consumer sessions for diagnosis testing |
 
-Broker checks are executed only when a detail report is requested. The
-examples contain no schedules, storage configuration, or synthetic messaging.
+Broker checks run only when an operator collects a host view. These examples
+contain no schedules, retained storage, or Test Flight configuration.

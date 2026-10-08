@@ -2,12 +2,13 @@
 
 MQDeck can collect IBM MQ definitions and runtime status when `mqweb`,
 Administrative REST, and Messaging REST are disabled. The Agent runs the IBM
-MQ Client `runmqsc -c` utility through a dedicated `SVRCONN` channel and
-accepts only one `DISPLAY` statement per check.
+MQ Client `runmqsc -c` utility through a dedicated `SVRCONN` channel.
+Collection accepts one `DISPLAY` statement per check. The Channels tab can
+also send `START CHANNEL` for one channel after the operator confirms it.
 
 ## Requirements
 
-- IBM MQ Client 9.4, including `runmqsc` and `dmpmqmsg`, on the Agent machine.
+- IBM MQ Client 9.4, including `runmqsc`, on the Agent machine.
 - TCP access from the Agent to the queue manager listener.
 - A dedicated `SVRCONN` channel and least-privilege IBM MQ identity.
 - Permission to connect, display the configured object types, and use the IBM
@@ -132,8 +133,8 @@ codes require a CCDT profile matching the secured SVRCONN.
 For direct connections, the Agent supplies `MQSERVER` only to the `runmqsc`
 child process. For CCDT connections, it clears `MQSERVER` and supplies
 `MQCCDTURL` plus optional `MQSSLKEYR`. It passes the password through standard
-input, invokes no shell, bounds output, and rejects all MQSC operations that do
-not begin with `DISPLAY`.
+input, invokes no shell, bounds output, and rejects MQSC other than one
+`DISPLAY` command or `START CHANNEL(name)`.
 
 For client applications, IBM MQ exposes `CONNAME` when the handle belongs to a
 channel. MQDeck displays that value as the application origin alongside the
