@@ -9,11 +9,15 @@
     <meta property="og:description" content="Keep a simple YAML inventory and request fresh IBM MQ or RabbitMQ diagnostics through connected Workers only when needed." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mqdeck.github.io/mqdeck/" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content="https://mqdeck.github.io/mqdeck/assets/mqdeck-social-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="MQDeck messaging host inventory and on-demand diagnostics interface" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="canonical" href="https://mqdeck.github.io/mqdeck/" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=1.0.3" />
+    <script src="app.js?v=1.0.3" defer></script>
     <title>MQDeck | Messaging diagnostics on demand</title>
   </head>
   <body>
@@ -44,24 +48,66 @@
         <div class="hero-glow hero-glow-two" aria-hidden="true"></div>
         <div class="container hero-grid">
           <div class="hero-copy">
-            <div class="eyebrow">Read-only · on demand · no datastore</div>
-            <h1>Messaging diagnostics <em>when you need them.</em></h1>
+            <div class="eyebrow">MQDeck 1.0.3 · public release</div>
+            <h1>See what is happening in your queues. <em>Right now.</em></h1>
             <p class="hero-lede">
-              Keep a simple YAML inventory of IBM® MQ and RabbitMQ®. Browse it without touching a broker,
-              then request a fresh diagnosis through a connected Worker when an operator opens the details.
+              A focused console for IBM® MQ and RabbitMQ®. Keep a simple inventory, connect an outbound Worker,
+              and request fresh diagnostics only when an operator needs them.
             </p>
             <div class="hero-actions">
               <a class="button button-primary" href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md">
-                Get started
+                Start with the guide
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
               </a>
-              <a class="button button-secondary" href="#install">Install components</a>
+              <a class="button button-secondary" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.3">Download v1.0.3</a>
             </div>
             <div class="hero-notes" aria-label="Platform qualities">
-              <span><i class="status-dot"></i> No Elasticsearch</span>
+              <span><i class="status-dot"></i> Read-only collection</span>
               <span><i class="status-dot"></i> No scheduled polling</span>
-              <span><i class="status-dot"></i> Read-only adapters</span>
+              <span><i class="status-dot"></i> No datastore required</span>
             </div>
+          </div>
+          <div class="product-preview" aria-label="Illustrative MQDeck product interface">
+            <div class="preview-window">
+              <div class="preview-topbar">
+                <div class="preview-brand"><span class="preview-mark">M</span><div><strong>MQDECK</strong><small>Messaging operations</small></div></div>
+                <span class="preview-live"><span></span>2 workers online</span>
+                <span class="preview-avatar">OP</span>
+              </div>
+              <div class="preview-layout">
+                <aside class="preview-sidebar" aria-hidden="true">
+                  <div class="preview-nav active"><i></i>Hosts</div>
+                  <div class="preview-nav"><i></i>Workers</div>
+                  <div class="preview-nav"><i></i>AI analysis</div>
+                  <div class="preview-nav"><i></i>Audit</div>
+                  <div class="preview-sidebar-label">Adapters</div>
+                  <div class="preview-adapter"><b>MQ</b><span>IBM MQ<small>Ready</small></span></div>
+                  <div class="preview-adapter"><b>RM</b><span>RabbitMQ<small>Ready</small></span></div>
+                </aside>
+                <div class="preview-content">
+                  <div class="preview-heading"><div><span>ON-DEMAND INSPECTION</span><strong>Messaging hosts</strong></div><div class="preview-updated"><i></i>Inventory ready</div></div>
+                  <div class="metric-strip" aria-hidden="true">
+                    <div><small>Broker targets</small><strong>3</strong><span>configured</span></div>
+                    <div><small>Workers</small><strong class="metric-green">2</strong><span>connected</span></div>
+                    <div><small>Background polls</small><strong>0</strong><span>by design</span></div>
+                    <div><small>Datastores</small><strong>0</strong><span>required</span></div>
+                  </div>
+                  <div class="preview-section-title"><strong>Inventory</strong><span>Open a host to collect current data</span></div>
+                  <div class="host-list" aria-hidden="true">
+                    <div class="host-row"><span class="adapter-badge ibm">MQ</span><span class="host-name"><strong>payments-qm01</strong><small>Production · São Paulo</small></span><span class="host-type">IBM MQ</span><span class="health-pill"><span></span>Worker ready</span><span class="latency">On demand</span></div>
+                    <div class="host-row"><span class="adapter-badge ibm">MQ</span><span class="host-name"><strong>core-zos</strong><small>Production · Mainframe</small></span><span class="host-type">IBM MQ z/OS</span><span class="health-pill"><span></span>Worker ready</span><span class="latency">On demand</span></div>
+                    <div class="host-row"><span class="adapter-badge rabbit">RM</span><span class="host-name"><strong>orders-rabbit</strong><small>Staging · Kubernetes</small></span><span class="host-type">RabbitMQ</span><span class="health-pill"><span></span>Worker ready</span><span class="latency">On demand</span></div>
+                  </div>
+                  <div class="flow-card" aria-hidden="true">
+                    <div class="flow-card-heading"><div><small>ONE CORRELATED REQUEST</small><strong>Fresh data follows the operator</strong></div><span>Nothing scheduled</span></div>
+                    <div class="flow-map"><div class="flow-node"><i>WEB</i><span>Operator<small>opens details</small></span></div><div class="flow-line"><span></span></div><div class="flow-node flow-broker"><i>API</i><span>MQDeck API<small>routes request</small></span></div><div class="flow-line"><span></span></div><div class="flow-node"><i>W</i><span>Worker<small>collects &amp; returns</small></span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="preview-caption">Product interface · illustrative data</span>
+            <span class="preview-orbit preview-orbit-one" aria-hidden="true"></span>
+            <span class="preview-orbit preview-orbit-two" aria-hidden="true"></span>
           </div>
         </div>
       </section>
@@ -72,7 +118,7 @@
           <div class="compatibility-list">
             <strong><i class="component-mark">B</i>IBM MQ</strong>
             <strong><i class="component-mark">B</i>RabbitMQ</strong>
-            <strong><i class="component-mark worker">A</i>Outbound Workers</strong>
+            <strong><i class="component-mark worker">W</i>Outbound Workers</strong>
           </div>
         </div>
       </section>
@@ -80,34 +126,14 @@
       <section class="section platform-section" id="platform">
         <div class="container">
           <div class="section-heading narrow-heading">
-            <div class="eyebrow">A smaller operational surface</div>
-            <h2>Inventory first. Live broker data only on request.</h2>
-            <p>The inventory overview reads local configuration. Inside IBM MQ details, Overview checks only queue-manager status; Queues and Channels load their own data only when opened.</p>
+            <div class="eyebrow">Simple by design</div>
+            <h2>From inventory to current facts in three steps.</h2>
+            <p>MQDeck keeps the idle path quiet. Operators decide when live broker data should be collected.</p>
           </div>
           <div class="feature-grid">
-            <article class="feature-card feature-card-wide">
-              <div class="feature-icon topology-icon" aria-hidden="true"><span></span><span></span><span></span></div>
-              <div><small>MINIMAL YAML INVENTORY</small><h3>Only what the Worker needs to connect.</h3><p>Register connection data, searchable tags, and a default Worker ID. Direct or CCDT-based IBM MQ connections can reach distributed and z/OS queue managers.</p></div>
-              <div class="mini-topology" aria-hidden="true"><div><i>Y</i><span>Inventory</span></div><b></b><div class="center"><i>A</i><span>API</span></div><b></b><div><i>W</i><span>Web</span></div></div>
-            </article>
-            <article class="feature-card">
-              <div class="feature-icon pulse-icon" aria-hidden="true"><span></span></div>
-              <small>LIVE QUEUE WATCH</small><h3>See accumulation and drain as they happen.</h3><p>Start watch on an expanded IBM MQ queue. Each sample reads only CURDEPTH for that queue and does not enable monitoring or statistics.</p>
-            </article>
-            <article class="feature-card">
-              <div class="feature-icon shield-icon" aria-hidden="true">✓</div>
-              <small>OUTBOUND CONTROL</small><h3>Reach private network zones without opening Worker ports.</h3><p>Each Worker initiates one authenticated WebSocket to the API and reconnects automatically.</p>
-            </article>
-            <article class="feature-card">
-              <div class="feature-icon shield-icon" aria-hidden="true">R</div>
-              <small>NARROW BY DESIGN</small><h3>Keep remote execution narrow and auditable.</h3><p>The Worker revalidates every target. IBM MQ collection stays on DISPLAY. The Channels tab can send START CHANNEL after you confirm it. RabbitMQ stays on GET.</p>
-            </article>
-            <article class="feature-card feature-card-accent">
-              <div class="release-label"><span></span> Simplified architecture</div>
-              <strong class="release-version">3 parts</strong>
-              <p>Web, API, and Worker. No telemetry pipeline, scheduler, Test Flight, or observation database.</p>
-              <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/on-demand-architecture.md">Read the decision record <span>→</span></a>
-            </article>
+            <article class="feature-card step-card"><span class="step-number">01</span><div class="feature-icon topology-icon" aria-hidden="true"><span></span><span></span><span></span></div><small>REGISTER</small><h3>Describe each broker once.</h3><p>Add the endpoint, tags, and preferred Worker to a small YAML inventory. Browsing the inventory does not contact the broker.</p></article>
+            <article class="feature-card step-card"><span class="step-number">02</span><div class="feature-icon shield-icon" aria-hidden="true">W</div><small>CONNECT</small><h3>Let the Worker call out.</h3><p>The Worker opens one authenticated WebSocket to the API. No inbound Worker port is required.</p></article>
+            <article class="feature-card step-card"><span class="step-number">03</span><div class="feature-icon pulse-icon" aria-hidden="true"><span></span></div><small>INSPECT</small><h3>Collect only when needed.</h3><p>Open a broker, queue, or channel to request current facts. Queue Watch starts and stops explicitly.</p></article>
           </div>
         </div>
       </section>
@@ -179,18 +205,14 @@ sudo systemctl enable --now mqdeck-web</code></pre></div>
 
       <section class="section docs-section" id="documentation">
         <div class="container">
-          <div class="section-heading narrow-heading"><div class="eyebrow">Small system, clear guidance</div><h2>From inventory to first diagnosis.</h2><p>Use the focused guides for architecture, configuration, installation, and safe operations.</p></div>
+          <div class="section-heading narrow-heading"><div class="eyebrow">Focused documentation</div><h2>Everything needed to operate MQDeck.</h2><p>Start with the guided path, then go deeper only when your deployment requires it.</p></div>
           <div class="docs-grid">
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md"><span class="doc-number">01</span><div><strong>Getting started</strong><small>Install the three independent services.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/architecture.md"><span class="doc-number">02</span><div><strong>Architecture</strong><small>Understand inventory, routing, and ephemeral results.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md"><span class="doc-number">03</span><div><strong>Configuration</strong><small>Define minimal broker connections and Worker routing.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/installation-sequence.md"><span class="doc-number">04</span><div><strong>Installation sequence</strong><small>Install API, Web, and outbound Workers.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-worker-linux.md"><span class="doc-number">05</span><div><strong>Linux Worker</strong><small>Install and validate a native Worker.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-worker-windows.md"><span class="doc-number">06</span><div><strong>Windows services</strong><small>Create API, Worker, and Web services.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/SECURITY.md"><span class="doc-number">07</span><div><strong>Security</strong><small>Review trust boundaries and deployment controls.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/upgrade.md"><span class="doc-number">08</span><div><strong>Upgrade and rollback</strong><small>Replace each binary safely without losing configuration.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/tree/main/examples"><span class="doc-number">09</span><div><strong>Examples</strong><small>Start from inventory and Worker templates.</small></div><i>→</i></a>
-            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/llm.md"><span class="doc-number">10</span><div><strong>Local assistant</strong><small>Configure an optional GGUF model or OpenAI-compatible endpoint.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md"><span class="doc-number">01</span><div><strong>Getting started</strong><small>Go from release packages to the first diagnosis.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/installation-sequence.md"><span class="doc-number">02</span><div><strong>Install and upgrade</strong><small>Deploy API, Web, and Workers in the right order.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md"><span class="doc-number">03</span><div><strong>Configuration</strong><small>Define brokers, credentials, and Worker routing.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/architecture.md"><span class="doc-number">04</span><div><strong>Architecture</strong><small>Understand requests, boundaries, and ephemeral results.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/SECURITY.md"><span class="doc-number">05</span><div><strong>Security</strong><small>Review deployment controls and the read-only model.</small></div><i>→</i></a>
+            <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/llm.md"><span class="doc-number">06</span><div><strong>Optional local assistant</strong><small>Connect a private model only when you need one.</small></div><i>→</i></a>
           </div>
         </div>
       </section>
