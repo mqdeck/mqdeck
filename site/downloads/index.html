@@ -4,38 +4,25 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="index,follow" />
-    <link rel="stylesheet" href="../styles.css" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
     <title>MQDeck downloads</title>
   </head>
   <body>
-    <main class="section">
-      <div class="container">
-        <div class="section-heading narrow-heading">
-          <div class="eyebrow">Public releases</div>
-          <h1>Download from the central MQDeck release.</h1>
-          <p>API, Worker, and Web packages are published together on the public MQDeck release. Use the release tag in the download URL and the component versions listed in that release's <code>COMPONENTS.md</code>.</p>
-        </div>
-        <div class="broker-grid">
-          <article class="broker-card">
-            <div class="broker-card-header"><i class="component-mark worker">A</i><div><small>CONTROL PLANE</small><h2>MQDeck API</h2></div></div>
-            <p>Inventory, report normalization, Worker routing, and the read-only control plane.</p>
-            <div class="capability-list"><a href="https://github.com/mqdeck/mqdeck/releases">Public releases</a><a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-api.md">Install API</a></div>
-          </article>
-          <article class="broker-card">
-            <div class="broker-card-header"><i class="component-mark worker">A</i><div><small>NETWORK EXECUTOR</small><h2>MQDeck Worker</h2></div></div>
-            <p>Outbound broker access for each required network zone.</p>
-            <div class="capability-list"><a href="https://github.com/mqdeck/mqdeck/releases">Public releases</a><a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-worker-linux.md">Install Worker</a></div>
-          </article>
-          <article class="broker-card">
-            <div class="broker-card-header"><i class="component-mark worker">W</i><div><small>OPERATOR INTERFACE</small><h2>MQDeck Web</h2></div></div>
-            <p>Authenticated operator interface and same-origin API proxy.</p>
-            <div class="capability-list"><a href="https://github.com/mqdeck/mqdeck/releases">Public releases</a><a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-web.md">Install Web</a></div>
-          </article>
-        </div>
-        <p>Every public delivery lists exact component versions in <a class="text-link" href="https://github.com/mqdeck/mqdeck/releases">COMPONENTS.md</a> on the selected release tag.</p>
-        <p><a class="text-link" href="../">← Back to MQDeck</a></p>
+    <main class="wrap section">
+      <span class="micro">Public releases</span>
+      <h1>Download from the central MQDeck release.</h1>
+      <p class="hero-description" style="margin:16px 0 0">API, Worker, and Web packages are published together on the public MQDeck release. Use the release tag in the download URL and the component versions listed in that release's COMPONENTS.md.</p>
+      <div class="download-list">
+        <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-api.md"><strong>MQDeck API</strong><p>Inventory, report normalization, Worker routing, and the read-only control plane.</p></a>
+        <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-worker-linux.md"><strong>MQDeck Worker</strong><p>Outbound broker access for each required network zone.</p></a>
+        <a href="https://github.com/mqdeck/mqdeck/blob/main/docs/install-web.md"><strong>MQDeck Web</strong><p>Authenticated operator interface and same-origin API proxy.</p></a>
       </div>
+      <p style="margin-top:28px"><a class="text-link" href="https://github.com/mqdeck/mqdeck/releases">Open the public releases</a></p>
+      <p><a class="text-link" href="../">Back to MQDeck</a></p>
     </main>
   </body>
 </html>

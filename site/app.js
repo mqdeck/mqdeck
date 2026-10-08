@@ -1,80 +1,76 @@
-const header = document.querySelector("[data-header]");
-const navigation = document.querySelector("[data-navigation]");
-const menuToggle = document.querySelector("[data-menu-toggle]");
+const versions = { API: "1.0.33", Worker: "1.0.32", Web: "1.0.37" };
 
-function updateHeader() {
-  header?.classList.toggle("is-scrolled", window.scrollY > 16);
+function installCommand(service) {
+  const lower = service.toLowerCase();
+  const version = versions[service];
+  const platform = service === "Web" ? "standalone" : "linux_amd64";
+  const key = service.toUpperCase();
+  return [
+    "MQDECK_VERSION=1.0.3",
+    `${key}_VERSION=${version}`,
+    `curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v\${MQDECK_VERSION}/mqdeck-${lower}_\${${key}_VERSION}_${platform}.tar.gz"`,
+    `tar -xzf "mqdeck-${lower}_\${${key}_VERSION}_${platform}.tar.gz"`,
+    `cd "mqdeck-${lower}_\${${key}_VERSION}_${platform}"`,
+    `sudo ./install-${lower}.sh`,
+    `sudo systemctl enable --now mqdeck-${lower}`,
+  ].join("\n");
 }
 
-function closeNavigation() {
-  navigation?.classList.remove("is-open");
-  menuToggle?.setAttribute("aria-expanded", "false");
-}
+const command = document.querySelector("[data-command]");
+const label = document.querySelector("[data-terminal-label]");
+const note = document.querySelector("[data-copy-note]");
+const copyLabel = document.querySelector("[data-copy-label]");
+let service = "API";
 
-menuToggle?.addEventListener("click", () => {
-  const open = !navigation?.classList.contains("is-open");
-  navigation?.classList.toggle("is-open", open);
-  menuToggle.setAttribute("aria-expanded", String(open));
-});
-
-navigation?.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", closeNavigation);
-});
-
-window.addEventListener("scroll", updateHeader, { passive: true });
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 820) closeNavigation();
-});
-updateHeader();
-
-const installer = document.querySelector("[data-installer]");
-const installTabs = Array.from(document.querySelectorAll("[data-install-tab]"));
-const installPanels = Array.from(document.querySelectorAll("[data-install-panel]"));
-
-function selectInstallTab(name) {
-  installTabs.forEach((tab) => {
-    const selected = tab.dataset.installTab === name;
-    tab.setAttribute("aria-selected", String(selected));
-    tab.tabIndex = selected ? 0 : -1;
-  });
-  installPanels.forEach((panel) => {
-    panel.hidden = panel.dataset.installPanel !== name;
+function renderInstall() {
+  command.textContent = installCommand(service);
+  label.innerHTML = `${service} on RHEL <span> / v${versions[service]}</span>`;
+  document.getElementById("install-panel").setAttribute("aria-labelledby", `tab-${service}`);
+  document.querySelectorAll("[data-service]").forEach((button) => {
+    button.setAttribute("aria-selected", button.dataset.service === service ? "true" : "false");
   });
 }
 
-installTabs.forEach((tab, index) => {
-  tab.addEventListener("click", () => selectInstallTab(tab.dataset.installTab));
-  tab.addEventListener("keydown", (event) => {
-    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-    event.preventDefault();
-    const direction = event.key === "ArrowRight" ? 1 : -1;
-    const nextIndex = (index + direction + installTabs.length) % installTabs.length;
-    const nextTab = installTabs[nextIndex];
-    selectInstallTab(nextTab.dataset.installTab);
-    nextTab.focus();
+document.querySelectorAll("[data-service]").forEach((button) => {
+  button.addEventListener("click", () => {
+    service = button.dataset.service;
+    copyLabel.textContent = "Copy";
+    note.textContent = "Public release v1.0.3 · Linux deployment";
+    renderInstall();
   });
 });
 
-installer?.querySelectorAll("[data-copy]").forEach((button) => {
-  button.addEventListener("click", async () => {
-    const target = document.querySelector(button.dataset.copy);
-    const status = installer.querySelector("[data-copy-status]");
-    if (!target || !status) return;
+document.querySelector("[data-copy]").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(installCommand(service));
+    copyLabel.textContent = "Copied";
+    note.textContent = "Public release v1.0.3 · Linux deployment";
+    window.setTimeout(() => {
+      copyLabel.textContent = "Copy";
+    }, 2000);
+  } catch {
+    note.textContent = "Could not copy. Select the command above to copy it manually.";
+  }
+});
 
-    try {
-      await navigator.clipboard.writeText(target.textContent.trim());
-      status.textContent = "Command copied to clipboard.";
-      button.textContent = "Copied";
-      window.setTimeout(() => {
-        status.textContent = "";
-        button.textContent = "Copy";
-      }, 2200);
-    } catch {
-      status.textContent = "Select the command and copy it manually.";
-    }
+const menu = document.querySelector("[data-menu]");
+const mobileNav = document.querySelector("[data-mobile-nav]");
+menu.addEventListener("click", () => {
+  const open = mobileNav.hasAttribute("hidden");
+  mobileNav.toggleAttribute("hidden", !open);
+  menu.setAttribute("aria-expanded", open ? "true" : "false");
+  menu.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  menu.querySelector("[data-icon-open]").toggleAttribute("hidden", open);
+  menu.querySelector("[data-icon-close]").toggleAttribute("hidden", !open);
+});
+mobileNav.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", () => {
+    mobileNav.setAttribute("hidden", "");
+    menu.setAttribute("aria-expanded", "false");
+    menu.setAttribute("aria-label", "Open menu");
+    menu.querySelector("[data-icon-open]").removeAttribute("hidden");
+    menu.querySelector("[data-icon-close]").setAttribute("hidden", "");
   });
 });
 
-document.querySelectorAll("[data-current-year]").forEach((element) => {
-  element.textContent = String(new Date().getFullYear());
-});
+renderInstall();

@@ -1,7 +1,7 @@
 # Install Worker on Linux
 
 Install a Worker at every network point that must reach brokers. IBM MQ targets
-also require IBM MQ Client 9.4 with `runmqsc` available in `PATH`.
+also require IBM MQ Client 9.4. `mqdeck.worker.ibmmq.client` defaults to `/opt/mqm/bin`. The Worker runs `runmqsc`, `dmpmqmsg`, and the other client utilities from that directory.
 
 Download packages from the public
 [MQDeck releases](https://github.com/mqdeck/mqdeck/releases) page. Set

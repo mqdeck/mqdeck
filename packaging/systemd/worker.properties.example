@@ -7,6 +7,7 @@ mqdeck.worker.location=primary-datacenter
 mqdeck.worker.timezone=UTC
 mqdeck.worker.max.concurrency=4
 mqdeck.worker.command.timeout=60s
+mqdeck.worker.ibmmq.client=/opt/mqm/bin
 mqdeck.api.url=http://127.0.0.1:8080
 mqdeck.worker.token=replace-with-the-same-api-token
 mqdeck.worker.reconnect.delay=5s

@@ -139,7 +139,7 @@ selectable.
 - Message browse is a separate operator action on one local queue. It reads at
   most 10 messages from the front of the queue and then stops. It does not
   walk to the end of the queue and does not write a dump file. IBM MQ uses one
-  non-destructive browse. RabbitMQ uses the management API with
+  non-destructive browse with `dmpmqmsg` from `mqdeck.worker.ibmmq.client`. RabbitMQ uses the management API with
   `ack_requeue_true`, so the message stays and is marked redelivered. Browse
   does not run on expand and is not retained.
 - Queue names are validated, bounded, and never interpolated into arbitrary
@@ -165,6 +165,7 @@ mqdeck.worker.name=Worker Sao Paulo
 mqdeck.worker.location=sa-east-1
 mqdeck.worker.max.concurrency=4
 mqdeck.worker.command.timeout=60s
+mqdeck.worker.ibmmq.client=/opt/mqm/bin
 mqdeck.api.url=https://mqdeck.example.com
 mqdeck.worker.token=replace-with-the-same-api-token
 mqdeck.worker.reconnect.delay=5s

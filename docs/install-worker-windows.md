@@ -1,7 +1,6 @@
 # Install Worker on Windows Server
 
-Install IBM MQ Client 9.4 when the Worker observes IBM MQ, and ensure
-`runmqsc.exe` is available to the service account.
+Install IBM MQ Client 9.4 when the Worker observes IBM MQ. `mqdeck.worker.ibmmq.client` defaults to `/opt/mqm/bin`. On Windows, set it to the client bin directory, usually `C:\Program Files\IBM\MQ\bin`. The Worker runs `runmqsc`, `dmpmqmsg`, and the other client utilities from that directory.
 
 Download packages from the public
 [MQDeck releases](https://github.com/mqdeck/mqdeck/releases) page. Set

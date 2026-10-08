@@ -142,6 +142,7 @@ mqdeck.worker.location=sa-east-1
 mqdeck.worker.timezone=America/Sao_Paulo
 mqdeck.worker.max.concurrency=4
 mqdeck.worker.command.timeout=60s
+mqdeck.worker.ibmmq.client=/opt/mqm/bin
 mqdeck.api.url=http://127.0.0.1:8080
 mqdeck.worker.token=replace-with-the-same-api-token
 mqdeck.worker.reconnect.delay=5s
@@ -149,7 +150,7 @@ mqdeck.worker.insecure.skip.verify=false
 ```
 
 `mqdeck.worker.id` is the stable routing key. `mqdeck.worker.name` is the friendly name shown
-in the control panel. `mqdeck.worker.command.timeout` is a local floor for each on-demand broker
+in the control panel. `mqdeck.worker.ibmmq.client` is the IBM MQ client bin directory. The default is `/opt/mqm/bin`. The Worker runs `runmqsc`, `dmpmqmsg`, and the other client utilities from that directory. `mqdeck.worker.command.timeout` is a local floor for each on-demand broker
 collect when the queue manager is slow to answer; keep it at or below
 `mqdeck.diagnostic.timeout` on the API so the control plane can still return a
 clear timeout message. Use TLS in every non-local deployment.
