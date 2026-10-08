@@ -11,7 +11,7 @@ listed in that release's `COMPONENTS.md`.
 ## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-MQDECK_VERSION=1.0.8 # MQDECK_VERSION
+MQDECK_VERSION=1.0.9 # MQDECK_VERSION
 WORKER_VERSION=1.0.34 # MQDECK_WORKER_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-worker_${WORKER_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-worker_${WORKER_VERSION}_linux_amd64.tar.gz"
