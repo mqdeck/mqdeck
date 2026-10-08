@@ -20,7 +20,7 @@ sudo ./install-web.sh
 ```
 
 `wget` can be used instead of `curl -fLO` with the same URL. Review
-`/etc/mqdeck/web.env`, then enable the service:
+`/etc/mqdeck/web.properties`, then enable the service:
 
 ```bash
 sudo systemctl enable --now mqdeck-web
@@ -29,9 +29,9 @@ curl --fail http://127.0.0.1:3000/login
 ```
 
 The browser uses same-origin Web proxy routes. The service package points Web
-to the local API at `http://127.0.0.1:8080`; change `MQDECK_API_URL` only when
+to the local API at `http://127.0.0.1:8080`; change `mqdeck.api.url` only when
 the API runs on another machine. Only Web needs operator login credentials; it
-never connects directly to brokers or Agents.
+never connects directly to brokers or Workers.
 
 ## Windows Server
 

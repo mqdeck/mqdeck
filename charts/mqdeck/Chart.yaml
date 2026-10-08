@@ -1,6 +1,6 @@
 apiVersion: v2
 name: mqdeck
-description: Install MQDeck Agent, API, and Web components independently or together.
+description: Install MQDeck Worker, API, and Web components independently or together.
 type: application
 version: 1.0.19
 appVersion: "1.0.19"

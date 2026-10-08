@@ -1,7 +1,7 @@
 # Install API
 
 The API package contains only `mqdeck-api`, a minimal inventory example, its
-environment template, installer, and service definition.
+properties template, installer, and service definition.
 
 Download packages from the public
 [MQDeck releases](https://github.com/mqdeck/mqdeck/releases) page. Set
@@ -28,17 +28,17 @@ With `wget`, replace the first download command with:
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 ```
 
-Review `/etc/mqdeck/inventory.yaml` and `/etc/mqdeck/api.env`. Then validate and
+Review `/etc/mqdeck/inventory.yaml` and `/etc/mqdeck/api.properties`. Then validate and
 start the component:
 
 ```bash
-sudo -u mqdeck bash -c 'set -a; . /etc/mqdeck/api.env; set +a; /opt/mqdeck/api/mqdeck-api -validate'
+sudo -u mqdeck /opt/mqdeck/api/mqdeck-api -validate
 sudo systemctl enable --now mqdeck-api
 sudo systemctl status mqdeck-api --no-pager
 curl --fail http://127.0.0.1:8080/healthz
 ```
 
-Allow WebSocket upgrades for `/api/v1/agents/connect` in the reverse proxy.
+Allow WebSocket upgrades for `/api/v1/workers/connect` in the reverse proxy.
 For Queue Watch routes under `/api/v1/hosts/*/queues/*/watch`, preserve
 `text/event-stream`, disable response buffering, and use a streaming timeout
 appropriate for an operator-controlled session. The API sets
@@ -65,7 +65,7 @@ Verify its component checksum from the same public release, then run PowerShell
 as Administrator:
 
 ```powershell
-[Environment]::SetEnvironmentVariable("MQDECK_AGENT_TOKEN", "replace-with-a-long-random-secret", "Machine")
+[Environment]::SetEnvironmentVariable("MQDECK_WORKER_TOKEN", "replace-with-a-long-random-secret", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000", "Machine")
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-api-service.ps1

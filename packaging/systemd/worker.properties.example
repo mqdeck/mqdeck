@@ -1,0 +1,13 @@
+# Each line is property.name=value. The Worker reads this file itself.
+# A container can set the same item as an environment variable, for example MQDECK_WORKER_ID.
+# When both are present, the environment variable wins.
+mqdeck.worker.id=network-zone-a
+mqdeck.worker.name=Primary datacenter Worker
+mqdeck.worker.location=primary-datacenter
+mqdeck.worker.timezone=UTC
+mqdeck.worker.max.concurrency=4
+mqdeck.worker.command.timeout=60s
+mqdeck.api.url=http://127.0.0.1:8080
+mqdeck.worker.token=replace-with-the-same-api-token
+mqdeck.worker.reconnect.delay=5s
+mqdeck.worker.insecure.skip.verify=false

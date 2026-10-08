@@ -1,6 +1,6 @@
 # Upgrade and rollback
 
-API, Agent, and Web have independent versions. Upgrade only the component named
+API, Worker, and Web have independent versions. Upgrade only the component named
 by its release notes; unchanged components keep their installed versions.
 
 Public packages are always downloaded from the
@@ -15,7 +15,7 @@ Before changing anything, record each installed version independently:
 
 ```bash
 /opt/mqdeck/api/mqdeck-api -version 2>/dev/null || true
-/opt/mqdeck/agent/mqdeck-agent -version 2>/dev/null || true
+/opt/mqdeck/worker/mqdeck-worker -version 2>/dev/null || true
 node -p "require('/opt/mqdeck/web/package.json').version" 2>/dev/null || true
 ```
 
@@ -28,8 +28,7 @@ sudo cp -a /etc/mqdeck/. /var/backups/mqdeck/
 ```
 
 Do not copy configuration from a package over `/etc/mqdeck`. The installers
-preserve the existing inventory, Agent configuration, Web environment, and
-component secrets.
+preserve the existing inventory and the component properties files.
 
 ## Verify a component package
 
@@ -38,19 +37,19 @@ from the same public release as the binary:
 
 ```bash
 MQDECK_VERSION=1.0.2 # MQDECK_VERSION
-AGENT_VERSION=1.0.27 # MQDECK_AGENT_VERSION
-curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-agent_${AGENT_VERSION}_SHA256SUMS"
-sha256sum --check "mqdeck-agent_${AGENT_VERSION}_SHA256SUMS" --ignore-missing
+WORKER_VERSION=1.0.27 # MQDECK_WORKER_VERSION
+curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-worker_${WORKER_VERSION}_SHA256SUMS"
+sha256sum --check "mqdeck-worker_${WORKER_VERSION}_SHA256SUMS" --ignore-missing
 ```
 
 On Windows:
 
 ```powershell
 $MqdeckVersion = "1.0.2" # MQDECK_VERSION
-$AgentVersion = "1.0.27" # MQDECK_AGENT_VERSION
-Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-agent_${AgentVersion}_SHA256SUMS" -OutFile "mqdeck-agent_${AgentVersion}_SHA256SUMS"
-(Get-FileHash ".\mqdeck-agent_${AgentVersion}_windows_amd64.zip" -Algorithm SHA256).Hash.ToLower()
-Select-String -Path ".\mqdeck-agent_${AgentVersion}_SHA256SUMS" -Pattern "windows_amd64.zip"
+$WorkerVersion = "1.0.27" # MQDECK_WORKER_VERSION
+Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-worker_${WorkerVersion}_SHA256SUMS" -OutFile "mqdeck-worker_${WorkerVersion}_SHA256SUMS"
+(Get-FileHash ".\mqdeck-worker_${WorkerVersion}_windows_amd64.zip" -Algorithm SHA256).Hash.ToLower()
+Select-String -Path ".\mqdeck-worker_${WorkerVersion}_SHA256SUMS" -Pattern "windows_amd64.zip"
 ```
 
 Do not mix a checksum from one public release with an asset from another.
@@ -67,33 +66,33 @@ curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}
 tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-api_${API_VERSION}_linux_amd64"
 ./mqdeck-api -version
-sudo bash -c 'set -a; . /etc/mqdeck/api.env; set +a; MQDECK_INVENTORY_PATH=/etc/mqdeck/inventory.yaml ./mqdeck-api -validate'
+sudo -u mqdeck ./mqdeck-api -validate
 sudo ./install-api.sh
 curl --fail http://127.0.0.1:8080/healthz
 ```
 
-The API installer replaces only the API binary and service definition.
+The API installer replaces the API binary and the service unit. It leaves `/etc/mqdeck/api.properties` in place.
 
-## Upgrade Agents on Linux
+## Upgrade Workers on Linux
 
-Upgrade one network zone at a time and confirm that each Agent reconnects
+Upgrade one network zone at a time and confirm that each Worker reconnects
 before continuing:
 
 ```bash
 MQDECK_VERSION=1.0.2 # MQDECK_VERSION
-AGENT_VERSION=1.0.27 # MQDECK_AGENT_VERSION
-curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
-tar -xzf "mqdeck-agent_${AGENT_VERSION}_linux_amd64.tar.gz"
-cd "mqdeck-agent_${AGENT_VERSION}_linux_amd64"
-./mqdeck-agent -version
-sudo bash -c 'set -a; . /etc/mqdeck/agent.env; set +a; ./mqdeck-agent -config /etc/mqdeck/agent.yaml -validate'
-sudo ./install-agent.sh
-sudo systemctl status mqdeck-agent --no-pager
-sudo journalctl -u mqdeck-agent -n 50 --no-pager
+WORKER_VERSION=1.0.27 # MQDECK_WORKER_VERSION
+curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-worker_${WORKER_VERSION}_linux_amd64.tar.gz"
+tar -xzf "mqdeck-worker_${WORKER_VERSION}_linux_amd64.tar.gz"
+cd "mqdeck-worker_${WORKER_VERSION}_linux_amd64"
+./mqdeck-worker -version
+sudo -u mqdeck ./mqdeck-worker -validate
+sudo ./install-worker.sh
+sudo systemctl status mqdeck-worker --no-pager
+sudo journalctl -u mqdeck-worker -n 50 --no-pager
 ```
 
-An Agent upgrade does not require upgrading API or Web unless its release notes
-explicitly identify a protocol compatibility requirement.
+A Worker upgrade does not require upgrading API or Web unless its release notes
+explicitly identify a protocol compatibility requirement. The installer leaves `/etc/mqdeck/worker.properties` in place.
 
 ## Upgrade Web on Linux
 
@@ -108,8 +107,7 @@ sudo ./install-web.sh
 curl --fail http://127.0.0.1:3000/login
 ```
 
-The Web installer preserves `/etc/mqdeck/web.env` and retains the replaced
-application at `/opt/mqdeck/web.previous`.
+The Web installer preserves `/etc/mqdeck/web.properties`. The replaced application remains at `/opt/mqdeck/web.previous`.
 
 ## Windows Server
 
@@ -119,7 +117,7 @@ Use the same public release tag and independent component variables from
 ```powershell
 $MqdeckVersion = "1.0.2" # MQDECK_VERSION
 $ApiVersion = "1.0.27" # MQDECK_API_VERSION
-$AgentVersion = "1.0.27" # MQDECK_AGENT_VERSION
+$WorkerVersion = "1.0.27" # MQDECK_WORKER_VERSION
 $WebVersion = "1.0.30" # MQDECK_WEB_VERSION
 ```
 
@@ -134,7 +132,7 @@ installed executable, and then start that service. Existing files under
 Verify the component that changed, then run one end-to-end broker check:
 
 1. API: confirm `/healthz` and the static inventory.
-2. Agent: confirm presence in Agents, open a broker, and inspect its service
+2. Worker: confirm presence in Workers, open a broker, and inspect its service
    log for collection errors.
 3. Web: confirm login, inventory layout, and one broker detail page.
 4. For IBM MQ, verify queues, channel definitions, current channel state, and
@@ -148,4 +146,4 @@ into a clean directory and run its service installer. Restore configuration
 only when the failed change included an intentional configuration migration.
 
 Rollback order is the reverse of the components changed in that deployment;
-there is no requirement for API, Agent, and Web version numbers to match.
+there is no requirement for API, Worker, and Web version numbers to match.

@@ -1,4 +1,4 @@
-User-agent: *
+User-worker: *
 Allow: /
 
 Sitemap: https://mqdeck.github.io/mqdeck/sitemap.xml

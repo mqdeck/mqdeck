@@ -2,10 +2,10 @@ global:
   elasticsearch:
     url: https://elasticsearch.example.com:9200
 
-agent:
+worker:
   enabled: true
-  existingConfigMap: mqdeck-agent-config
-  existingSecret: mqdeck-agent-secrets
+  existingConfigMap: mqdeck-worker-config
+  existingSecret: mqdeck-worker-secrets
 
 api:
   enabled: false

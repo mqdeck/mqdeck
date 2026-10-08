@@ -21,7 +21,7 @@ jobs:
           helm lint charts/mqdeck
           helm template mqdeck charts/mqdeck --namespace mqdeck >/dev/null
           helm template mqdeck charts/mqdeck --namespace mqdeck \
-            --set agent.enabled=true --set-file agent.config=examples/agent.yaml >/dev/null
+            --set worker.enabled=true --set-file worker.config=packaging/systemd/worker.properties.example >/dev/null
           helm template mqdeck charts/mqdeck --namespace mqdeck \
             -f charts/mqdeck/examples/values-openshift.yaml >/dev/null
       - name: Validate package scripts

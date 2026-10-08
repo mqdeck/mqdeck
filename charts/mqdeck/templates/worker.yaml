@@ -1,0 +1,85 @@
+{{- if .Values.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mqdeck.fullname" . }}-worker
+  labels:
+    {{- include "mqdeck.componentLabels" (dict "root" . "component" "worker") | nindent 4 }}
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "mqdeck.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: worker
+  template:
+    metadata:
+      labels:
+        {{- include "mqdeck.componentLabels" (dict "root" . "component" "worker") | nindent 8 }}
+        {{- with .Values.worker.podLabels }}{{ toYaml . | nindent 8 }}{{- end }}
+      {{- with .Values.worker.podAnnotations }}
+      annotations: {{ toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "mqdeck.serviceAccountName" . }}
+      automountServiceAccountToken: false
+      securityContext: {{ toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: worker
+          image: {{ include "mqdeck.image" (dict "root" . "image" .Values.worker.image) | quote }}
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          securityContext: {{ toYaml .Values.containerSecurityContext | nindent 12 }}
+          env:
+            - name: MQDECK_ELASTICSEARCH_URL
+              value: {{ .Values.global.elasticsearch.url | quote }}
+          {{- if or .Values.worker.existingSecret .Values.worker.secretValues }}
+          envFrom:
+            - secretRef:
+                name: {{ default (printf "%s-worker" (include "mqdeck.fullname" .)) .Values.worker.existingSecret }}
+          {{- end }}
+          {{- if .Values.worker.service.enabled }}
+          ports:
+            - name: test-runner
+              containerPort: {{ .Values.worker.service.port }}
+          {{- end }}
+          resources: {{ toYaml .Values.worker.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/mqdeck
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          configMap:
+            name: {{ default (printf "%s-worker" (include "mqdeck.fullname" .)) .Values.worker.existingConfigMap }}
+        - name: tmp
+          emptyDir: {}
+      nodeSelector: {{ toYaml .Values.worker.nodeSelector | nindent 8 }}
+      affinity: {{ toYaml .Values.worker.affinity | nindent 8 }}
+      tolerations: {{ toYaml .Values.worker.tolerations | nindent 8 }}
+{{- if .Values.worker.service.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mqdeck.fullname" . }}-worker
+  labels:
+    {{- include "mqdeck.componentLabels" (dict "root" . "component" "worker") | nindent 4 }}
+spec:
+  type: {{ .Values.worker.service.type }}
+  selector:
+    app.kubernetes.io/name: {{ include "mqdeck.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: worker
+  ports:
+    - name: http
+      port: {{ .Values.worker.service.port }}
+      targetPort: test-runner
+{{- end }}
+{{- end }}

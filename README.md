@@ -4,7 +4,7 @@ MQDeck is a lightweight, read-only diagnostic console for IBM MQ and RabbitMQ.
 Its inventory overview comes from a local YAML file and never probes brokers in
 the background. An IBM MQ detail page uses three scoped tabs: Overview reads
 only queue-manager status, while Queues and Channels request their respective
-fresh, bounded data through a connected Agent.
+fresh, bounded data through a connected Worker.
 
 The simplified architecture does not require Elasticsearch, scheduled
 telemetry ingestion, retained observations, or Test Flight.
@@ -15,19 +15,19 @@ telemetry ingestion, retained observations, or Test Flight.
 flowchart LR
     YAML["Local inventory.yaml"] --> API["MQDeck API"]
     WEB["MQDeck Web"] -->|"inventory, report, and queue-watch SSE"| API
-    AGENT["MQDeck Agent"] -->|"outbound authenticated WebSocket"| API
-    AGENT -->|"allowlisted read-only checks"| IBM["IBM MQ"]
-    AGENT -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
+    WORKER["MQDeck Worker"] -->|"outbound authenticated WebSocket"| API
+    WORKER -->|"allowlisted read-only checks"| IBM["IBM MQ"]
+    WORKER -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
     API -.->|"optional assistant"| MODEL["Local model"]
 ```
 
-The local model is optional and sits next to the API. The Agent never calls it.
+The local model is optional and sits next to the API. The Worker never calls it.
 A collected report is sent to the model only when an operator asks the
 assistant. Setup is in [`docs/llm.md`](docs/llm.md).
 
-The API chooses the `agent_id` named in the inventory, its
-`default_agent_id`,
-or an Agent selected in the broker detail page. Results are correlated in
+The API chooses the `worker_id` named in the inventory, its
+`default_worker_id`,
+or a Worker selected in the broker detail page. Results are correlated in
 memory, returned with their individual check evidence, and discarded.
 
 Inventory entries can carry searchable tags and identify IBM MQ as
@@ -37,16 +37,16 @@ enterprise channels.
 
 ## Components
 
-- **Web**: static inventory overview, live Agent directory, on-demand reports,
+- **Web**: static inventory overview, live Worker directory, on-demand reports,
   Queue Watch, and an optional local assistant.
 - **API**: YAML inventory, in-memory control plane, and optional model endpoint.
-- **Agent**: outbound WebSocket client. Collection is read-only. The Channels
+- **Worker**: outbound WebSocket client. Collection is read-only. The Channels
   tab can send one `START CHANNEL` command when an operator confirms it.
 
 Copy the public templates in [`examples/`](examples/README.md):
 
 - [`examples/inventory.yaml`](examples/inventory.yaml)
-- [`examples/agent.yaml`](examples/agent.yaml)
+- [`packaging/systemd/worker.properties.example`](packaging/systemd/worker.properties.example)
 
 Each component is versioned independently. Public install and upgrade packages
 are always downloaded from this repository's
@@ -72,8 +72,8 @@ Optional on-prem model setup is documented in
 
 ## Safety model
 
-The Agent validates every target received from the API. Queue Watch starts
-only from **Start watch**, reuses the authenticated Agent connection, and
+The Worker validates every target received from the API. Queue Watch starts
+only from **Start watch**, reuses the authenticated Worker connection, and
 shares one sampler among viewers of the same queue. Each sample is
 `DISPLAY QSTATUS(name) TYPE(QUEUE) CURDEPTH`. It does not enable `MONQ` or
 `STATQ`. The default interval is five seconds

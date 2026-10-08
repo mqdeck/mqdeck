@@ -1,0 +1,27 @@
+# Each line is property.name=value. The API reads this file itself.
+# A container can set the same item as an environment variable, MQDECK_API_ADDRESS.
+# When both are present, the environment variable wins.
+mqdeck.api.address=:8080
+mqdeck.inventory.path=/etc/mqdeck/inventory.yaml
+mqdeck.worker.token=replace-with-a-long-random-secret
+mqdeck.diagnostic.timeout=90s
+mqdeck.cors.origins=http://localhost:3000,http://127.0.0.1:3000
+
+# Queue Watch uses one shared sampler per Worker, inventory host, and queue.
+mqdeck.queue.watch.interval=5s
+mqdeck.queue.watch.max.duration=10m
+mqdeck.queue.watch.max.samplers=32
+mqdeck.queue.watch.max.per.worker=8
+mqdeck.queue.watch.max.per.queue.manager=4
+mqdeck.queue.watch.max.clients=64
+
+# Optional local assistant. See docs/llm.md in the public MQDeck repository.
+# mqdeck.llm.enabled=auto
+# mqdeck.model.dir=/opt/mqdeck/api/models
+# mqdeck.llama.server.bin=/opt/mqdeck/llm/llama-server
+# mqdeck.llm.model=
+# CUDA llama-server only. 0 keeps inference on the CPU. 99 offloads every layer.
+# GTX 1660 (6 GB): use 99 with a 3B Q4 model and leave the context at 4096.
+# mqdeck.llm.gpu.layers=99
+# mqdeck.llm.context=4096
+# mqdeck.llm.base.url=

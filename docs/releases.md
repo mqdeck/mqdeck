@@ -2,13 +2,13 @@
 
 MQDeck publishes installable packages from the public
 [`mqdeck/mqdeck`](https://github.com/mqdeck/mqdeck/releases) repository.
-Each public release tag (`vX.Y.Z`) is a delivery of the latest API, Agent, and
+Each public release tag (`vX.Y.Z`) is a delivery of the latest API, Worker, and
 Web packages available when that tag was cut. The delivery versions are listed
 in that release's `COMPONENTS.md`.
 
-API, Agent, Web, the IBM MQ adapter, and the Helm chart remain versioned by
+API, Worker, Web, the IBM MQ adapter, and the Helm chart remain versioned by
 the component that changed. For example, public release `v1.0.0` ships API
-1.0.24, Agent 1.0.25, and Web 1.0.28.
+1.0.24, Worker 1.0.25, and Web 1.0.28.
 
 ## Where public users download packages
 
@@ -29,7 +29,7 @@ The release tag (`MQDECK_VERSION`) selects the public delivery. Asset file
 names still embed the component version from `COMPONENTS.md` (for example
 `mqdeck-api_1.0.24_linux_amd64.tar.gz`).
 
-Component source repositories (`mqdeck-api`, `mqdeck-agent`, `mqdeck-web`) are
+Component source repositories (`mqdeck-api`, `mqdeck-worker`, `mqdeck-web`) are
 private. Their releases are an internal build feed only; operators and public
 users must not be directed there for downloads.
 
@@ -39,7 +39,7 @@ users must not be directed there for downloads.
    changed component repository).
 2. Create and push `vX.Y.Z` in the public `mqdeck` repository.
 3. The **Publish MQDeck release** workflow:
-   - resolves the latest API, Agent, and Web private releases;
+   - resolves the latest API, Worker, and Web private releases;
    - updates documentation version markers on `main`;
    - copies those package assets into the public `mqdeck` release;
    - writes `COMPONENTS.md` and `BUNDLE_SHA256SUMS`.

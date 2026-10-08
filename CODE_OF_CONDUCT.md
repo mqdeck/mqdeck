@@ -9,7 +9,7 @@ experience, or level of technical knowledge.
 ## Expected behavior
 
 - Be respectful and constructive.
-- Focus feedback on the work and its operational impact.
+- Focus feedback on the worker and its operational impact.
 - Protect credentials, production identifiers, broker data, and other
   confidential information.
 - Accept correction, clarify misunderstandings, and de-escalate conflict.

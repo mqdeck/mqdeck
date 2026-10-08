@@ -33,15 +33,15 @@ MQDeck limits broker interaction to read-only collection, plus one explicit chan
   accepted MQSC command is `START CHANNEL(name)`, and only when an operator
   confirms it in Web.
 - Adapter responses and WebSocket messages are size-bounded.
-- Agents initiate authenticated outbound WebSocket connections; they expose no
+- Workers initiate authenticated outbound WebSocket connections; they expose no
   inbound command listener.
-- The Agent revalidates every target before executing adapter checks.
+- The Worker revalidates every target before executing adapter checks.
 - Credentials are never returned by inventory or report endpoints.
 - Diagnostic results exist only for the request and are not persisted.
 
 These controls reduce risk but do not replace deployment hardening. Operators
 remain responsible for TLS, identity and access management, network isolation,
-secret storage, Agent-token rotation, and reverse-proxy WebSocket controls.
+secret storage, Worker-token rotation, and reverse-proxy WebSocket controls.
 
 Verify downloaded artifacts against the release `SHA256SUMS` file and use only
-explicit, immutable versions. Require TLS for every non-local Agent connection.
+explicit, immutable versions. Require TLS for every non-local Worker connection.

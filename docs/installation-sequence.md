@@ -4,7 +4,7 @@
 
 Download the API release for the target operating system, install its service,
 and review the static inventory. Confirm `GET /healthz` before continuing.
-The API version is selected independently from Agent and Web versions.
+The API version is selected independently from Worker and Web versions.
 
 ## 2. Web component
 
@@ -24,16 +24,16 @@ MQDeck identifies the access channel and warns when IBM MQ explicitly rejects
 a collection for insufficient authority; objects hidden by authority must not
 be interpreted as nonexistent.
 
-## 4. Agent components
+## 4. Worker components
 
-Install one Agent service per required network zone. Its ID must match an
-inventory `agent_id` value or `default_agent_id`. Confirm it appears in
-`GET /api/v1/agents`, then open a host, collect Overview, and open Queues and
+Install one Worker service per required network zone. Its ID must match an
+inventory `worker_id` value or `default_worker_id`. Confirm it appears in
+`GET /api/v1/workers`, then open a host, collect Overview, and open Queues and
 Channels. Expand a queue to see depth and open handles.
 
-For IBM MQ for z/OS, install the IBM MQ client and `runmqsc` on that Agent. If
+For IBM MQ for z/OS, install the IBM MQ client and `runmqsc` on that Worker. If
 the inventory uses `ccdt_url`, place the CCDT and optional TLS key repository at
-the literal paths declared in the inventory and grant the Agent service account
+the literal paths declared in the inventory and grant the Worker service account
 read access before opening the queue manager.
 
 Each component is downloaded, configured, started, stopped, upgraded, and

@@ -18,7 +18,7 @@ systemctl disable --now mqdeck-api 2>/dev/null || true
 rm -f /etc/systemd/system/mqdeck-api.service
 rm -rf /opt/mqdeck/api
 if [ "$purge" = true ]; then
-  rm -f /etc/mqdeck/api.env
+  rm -f /etc/mqdeck/api.properties
 fi
 systemctl daemon-reload
 echo "Removed MQDeck API. Configuration was $([ "$purge" = true ] && echo removed || echo retained)."

@@ -1,5 +1,5 @@
 [Unit]
-Description=MQDeck read-only on-demand agent
+Description=MQDeck read-only on-demand worker
 Documentation=https://github.com/mqdeck/mqdeck
 Wants=network-online.target
 After=network-online.target
@@ -8,8 +8,7 @@ After=network-online.target
 Type=simple
 User=mqdeck
 Group=mqdeck
-EnvironmentFile=-/etc/mqdeck/agent.env
-ExecStart=/opt/mqdeck/agent/mqdeck-agent -config /etc/mqdeck/agent.yaml
+ExecStart=/opt/mqdeck/worker/mqdeck-worker
 Restart=on-failure
 RestartSec=10s
 NoNewPrivileges=true

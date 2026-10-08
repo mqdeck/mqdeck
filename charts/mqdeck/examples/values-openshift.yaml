@@ -3,7 +3,7 @@ global:
     url: https://elasticsearch.example.svc:9200
     existingSecret: mqdeck-elasticsearch
 
-agent:
+worker:
   enabled: false
 
 api:

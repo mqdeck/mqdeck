@@ -1,5 +1,5 @@
 version: 1
-default_agent_id: network-zone-a
+default_worker_id: network-zone-a
 
 # Only connection and routing data belongs here. MQDeck selects the read-only
 # collection profile, timeout and response limits automatically.

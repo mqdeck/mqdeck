@@ -18,7 +18,7 @@ systemctl disable --now mqdeck-web 2>/dev/null || true
 rm -f /etc/systemd/system/mqdeck-web.service
 rm -rf /opt/mqdeck/web /opt/mqdeck/web.previous /opt/mqdeck/web.new
 if [ "$purge" = true ]; then
-  rm -f /etc/mqdeck/web.env
+  rm -f /etc/mqdeck/web.properties
 fi
 systemctl daemon-reload
 echo "Removed MQDeck Web. Configuration was $([ "$purge" = true ] && echo removed || echo retained)."

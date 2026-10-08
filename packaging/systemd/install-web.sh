@@ -35,8 +35,8 @@ if [ -d /opt/mqdeck/web ]; then
   mv /opt/mqdeck/web /opt/mqdeck/web.previous
 fi
 mv /opt/mqdeck/web.new /opt/mqdeck/web
-if [ ! -f /etc/mqdeck/web.env ]; then
-  install -o root -g mqdeck -m 0640 "$source_dir/web.env.example" /etc/mqdeck/web.env
+if [ ! -f /etc/mqdeck/web.properties ]; then
+  install -o root -g mqdeck -m 0640 "$source_dir/web.properties.example" /etc/mqdeck/web.properties
 fi
 install -o root -g root -m 0644 "$source_dir/mqdeck-web.service" /etc/systemd/system/mqdeck-web.service
 systemctl daemon-reload

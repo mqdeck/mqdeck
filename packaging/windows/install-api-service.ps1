@@ -24,5 +24,5 @@ if ($existingService) {
 } else {
     sc.exe create $ServiceName binPath= $binaryPath start= auto obj= "NT AUTHORITY\LocalService" DisplayName= "MQDeck API" | Out-Null
 }
-sc.exe description $ServiceName "MQDeck inventory and Agent control plane" | Out-Null
+sc.exe description $ServiceName "MQDeck inventory and Worker control plane" | Out-Null
 Write-Host "MQDeck API service is created. Review $inventoryPath and machine-level MQDECK_* variables, then run Start-Service $ServiceName."

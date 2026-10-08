@@ -2,12 +2,12 @@
 
 The local assistant is optional. In the [getting started](getting-started.md)
 and [architecture](architecture.md) drawings it is the dotted path from the API
-to the local model. Inventory, Agent collection, reports, and Queue Watch work
+to the local model. Inventory, Worker collection, reports, and Queue Watch worker
 with `MQDECK_LLM_ENABLED=false` or with no model installed.
 
 When it is enabled, inference runs on the API host, or on an
 OpenAI-compatible endpoint you configure. Collected broker data is sent only to
-that endpoint, and only after an operator asks. The Agent does not load models
+that endpoint, and only after an operator asks. The Worker does not load models
 and does not call the assistant.
 
 In Web, open a host, collect data, and choose **Show findings**. Rule findings
@@ -16,13 +16,12 @@ when the model endpoint is ready.
 
 ## Choose a mode
 
-Set this in `/etc/mqdeck/api.env` on Linux, or as a machine environment variable
-for the API service on Windows. Restart `mqdeck-api` after any change.
+Set this in `/etc/mqdeck/api.properties` on Linux as `mqdeck.llm.enabled=auto`, or as the machine environment variable `MQDECK_LLM_ENABLED` for the API service on Windows and in a container. When both are present, the environment variable wins. Restart `mqdeck-api` after any change.
 
 | `MQDECK_LLM_ENABLED` | Behavior |
 | --- | --- |
-| `auto` (default) | Start the assistant when a model and `llama-server` (or `MQDECK_LLM_BASE_URL`) are available. If they are missing, the API still starts and diagnostics keep working. |
-| `true` | Require a working model endpoint. The API process exits if the model or server cannot start. |
+| `auto` (default) | Start the assistant when a model and `llama-server` (or `MQDECK_LLM_BASE_URL`) are available. If they are missing, the API still starts and diagnostics keep workering. |
+| `true` | Require a workering model endpoint. The API process exits if the model or server cannot start. |
 | `false` | Do not start a local server and do not call an external endpoint. |
 
 ## Option A - GGUF file and `llama-server`
@@ -128,15 +127,15 @@ sudo curl -fL \
 sudo chown -R mqdeck:mqdeck /opt/mqdeck/api/models
 ```
 
-`/etc/mqdeck/api.env`:
+`/etc/mqdeck/api.properties`:
 
-```bash
-MQDECK_LLM_ENABLED=auto
-MQDECK_MODEL_DIR=/opt/mqdeck/api/models
-MQDECK_LLM_MODEL=Qwen2.5-3B-Instruct-Q4_K_M.gguf
-MQDECK_LLAMA_SERVER_BIN=/opt/mqdeck/llm/llama-server
-MQDECK_LLM_GPU_LAYERS=99
-MQDECK_LLM_CONTEXT=4096
+```properties
+mqdeck.llm.enabled=auto
+mqdeck.model.dir=/opt/mqdeck/api/models
+mqdeck.llm.model=Qwen2.5-3B-Instruct-Q4_K_M.gguf
+mqdeck.llama.server.bin=/opt/mqdeck/llm/llama-server
+mqdeck.llm.gpu.layers=99
+mqdeck.llm.context=4096
 ```
 
 `99` asks `llama-server` to put every layer on the GPU. Keep the context at
@@ -154,17 +153,17 @@ While the assistant is answering, `nvidia-smi` should show `llama-server`
 using memory on the GTX 1660. If the process is missing and the API reports
 that the server exited, the usual cause is a driver older than the CUDA 12.8
 build, or the service user not being in `video` and `render`. Fix that and
-restart the API. Do not switch this host to a 7B model to work around it.
+restart the API. Do not switch this host to a 7B model to worker around it.
 
 ### 3. Point the API at them
 
-Linux `/etc/mqdeck/api.env`:
+Linux `/etc/mqdeck/api.properties`:
 
-```bash
-MQDECK_LLM_ENABLED=auto
-MQDECK_MODEL_DIR=/opt/mqdeck/api/models
-MQDECK_LLAMA_SERVER_BIN=/opt/mqdeck/llm/llama-server
-# MQDECK_LLM_MODEL=SmolLM2-360M-Instruct-Q4_K_M.gguf
+```properties
+mqdeck.llm.enabled=auto
+mqdeck.model.dir=/opt/mqdeck/api/models
+mqdeck.llama.server.bin=/opt/mqdeck/llm/llama-server
+# mqdeck.llm.model=SmolLM2-360M-Instruct-Q4_K_M.gguf
 ```
 
 Windows (Administrator PowerShell), then restart `MQDeckAPI`:
@@ -201,11 +200,13 @@ If `"ready"` is false, read `"message"`. Typical cases:
 Use this when another service already serves the model. Do not install
 `llama-server` or download a GGUF for MQDeck.
 
-```bash
-MQDECK_LLM_ENABLED=auto
-MQDECK_LLM_BASE_URL=http://127.0.0.1:8081/v1
-# MQDECK_LLM_MODEL=name-expected-by-that-endpoint
+```properties
+mqdeck.llm.enabled=auto
+mqdeck.llm.base.url=http://127.0.0.1:8081/v1
+# mqdeck.llm.model=name-expected-by-that-endpoint
 ```
+
+In a container, set `MQDECK_LLM_ENABLED` and `MQDECK_LLM_BASE_URL` instead.
 
 `MQDECK_LLM_BASE_URL` is the base URL, including the `/v1` prefix when the
 server uses the OpenAI path layout. The API waits until that endpoint answers

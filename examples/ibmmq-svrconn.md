@@ -1,21 +1,21 @@
 # Observe IBM MQ through a client SVRCONN
 
 MQDeck can collect IBM MQ definitions and runtime status when `mqweb`,
-Administrative REST, and Messaging REST are disabled. The Agent runs the IBM
+Administrative REST, and Messaging REST are disabled. The Worker runs the IBM
 MQ Client `runmqsc -c` utility through a dedicated `SVRCONN` channel.
 Collection accepts one `DISPLAY` statement per check. The Channels tab can
 also send `START CHANNEL` for one channel after the operator confirms it.
 
 ## Requirements
 
-- IBM MQ Client 9.4, including `runmqsc`, on the Agent machine.
-- TCP access from the Agent to the queue manager listener.
+- IBM MQ Client 9.4, including `runmqsc`, on the Worker machine.
+- TCP access from the Worker to the queue manager listener.
 - A dedicated `SVRCONN` channel and least-privilege IBM MQ identity.
 - Permission to connect, display the configured object types, and use the IBM
   MQ remote MQSC command/reply queues.
 
 The target queue manager can run on a distributed platform or IBM MQ for z/OS.
-Client mode does not require a local queue manager on the Agent host.
+Client mode does not require a local queue manager on the Worker host.
 
 Ask the IBM MQ administrator to create the channel and map the authenticated
 identity according to the site's TLS, CONNAUTH, and CHLAUTH standards. Do not
@@ -64,7 +64,7 @@ generic, read-only SVRCONN shared according to the site's security policy:
   adapter: ibmmq
   platform: zos
   tags: [production, mainframe, payments]
-  agent_id: mainframe-network-agent
+  worker_id: mainframe-network-worker
   endpoint: mainframe.example.net(1414)
   queue_manager: CSQ1
   channel: MQDECK.READONLY
@@ -79,7 +79,7 @@ MQ listener objects.
 
 Only replace `endpoint` with `ccdt_url` when the channel requires TLS, channel
 exits, or a managed connection list. In that case, the CCDT and optional
-`tls.key_repository` files must be readable by the Agent service account; the
+`tls.key_repository` files must be readable by the Worker service account; the
 CCDT owns connection names, TLS CipherSpecs, and client channel policy.
 
 ## Validate the connection
@@ -100,11 +100,11 @@ runmqsc.exe -c -u $env:IBMMQ_QM1_USERNAME QM1
 
 Enter the password, issue `DISPLAY QMGR ALL`, and then `END`. A successful
 response proves the same client path used by MQDeck. Finally validate the API
-inventory and Agent configuration:
+inventory and Worker configuration:
 
 ```bash
 mqdeck-api -validate
-mqdeck-agent -config agent.yaml -validate
+mqdeck-worker -validate
 ```
 
 On Linux, repeat the connection test as the service account. A successful test
@@ -117,7 +117,7 @@ sudo -u mqdeck env MQSERVER='MQDECK.READONLY/TCP/mq1.example.com(1414)' \
 ```
 
 If this service-account test fails while the root test succeeds, authorize or
-map the dedicated MQDeck identity on the SVRCONN; do not run the Agent service
+map the dedicated MQDeck identity on the SVRCONN; do not run the Worker service
 as root. Alternatively, configure a dedicated authenticated identity under
 `credentials` in the inventory.
 
@@ -130,7 +130,7 @@ usually identifies a queue-manager name mismatch, `2059`/`2538` indicate the
 connection path, `2035` indicates identity/CHLAUTH/authority, and TLS reason
 codes require a CCDT profile matching the secured SVRCONN.
 
-For direct connections, the Agent supplies `MQSERVER` only to the `runmqsc`
+For direct connections, the Worker supplies `MQSERVER` only to the `runmqsc`
 child process. For CCDT connections, it clears `MQSERVER` and supplies
 `MQCCDTURL` plus optional `MQSSLKEYR`. It passes the password through standard
 input, invokes no shell, bounds output, and rejects MQSC other than one

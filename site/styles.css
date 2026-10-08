@@ -966,7 +966,7 @@ h1 em {
   font-weight: 850;
 }
 
-.component-mark.agent { background: #326de6; }
+.component-mark.worker { background: #326de6; }
 .component-mark.large { width: 43px; height: 43px; border-radius: 11px; font-size: 17px; }
 
 .section-heading {

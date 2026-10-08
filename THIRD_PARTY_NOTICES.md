@@ -11,7 +11,7 @@ direct dependencies are included in the Go binaries:
 
 The Web standalone artifact contains its runtime Node.js packages, including
 their package metadata and license files. The Web container is based on the
-official Node.js Alpine image. Agent and API containers use the Distroless
+official Node.js Alpine image. Worker and API containers use the Distroless
 Debian static non-root image.
 
 ## Trademarks and independence

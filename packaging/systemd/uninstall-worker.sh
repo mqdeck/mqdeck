@@ -14,11 +14,11 @@ elif [ "$#" -gt 0 ]; then
   exit 1
 fi
 
-systemctl disable --now mqdeck-agent 2>/dev/null || true
-rm -f /etc/systemd/system/mqdeck-agent.service
-rm -rf /opt/mqdeck/agent
+systemctl disable --now mqdeck-worker 2>/dev/null || true
+rm -f /etc/systemd/system/mqdeck-worker.service
+rm -rf /opt/mqdeck/worker
 if [ "$purge" = true ]; then
-  rm -f /etc/mqdeck/agent.yaml /etc/mqdeck/agent.env
+  rm -f /etc/mqdeck/worker.properties
 fi
 systemctl daemon-reload
-echo "Removed MQDeck Agent. Configuration was $([ "$purge" = true ] && echo removed || echo retained)."
+echo "Removed MQDeck Worker. Configuration was $([ "$purge" = true ] && echo removed || echo retained)."

@@ -1,5 +1,5 @@
 [Unit]
-Description=MQDeck inventory and Agent control plane
+Description=MQDeck inventory and Worker control plane
 Documentation=https://github.com/mqdeck/mqdeck
 Wants=network-online.target
 After=network-online.target
@@ -8,7 +8,6 @@ After=network-online.target
 Type=simple
 User=mqdeck
 Group=mqdeck
-EnvironmentFile=/etc/mqdeck/api.env
 ExecStart=/opt/mqdeck/api/mqdeck-api
 Restart=on-failure
 RestartSec=10s

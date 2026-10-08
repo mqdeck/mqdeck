@@ -48,19 +48,19 @@ jobs:
           }
 
           api_tag="$(gh release list --repo mqdeck/mqdeck-api --limit 1 --json tagName --jq '.[0].tagName')"
-          agent_tag="$(gh release list --repo mqdeck/mqdeck-agent --limit 1 --json tagName --jq '.[0].tagName')"
+          worker_tag="$(gh release list --repo mqdeck/mqdeck-worker --limit 1 --json tagName --jq '.[0].tagName')"
           web_tag="$(gh release list --repo mqdeck/mqdeck-web --limit 1 --json tagName --jq '.[0].tagName')"
 
           [[ -n "${api_tag}" ]] || { echo "No API release found" >&2; exit 1; }
-          [[ -n "${agent_tag}" ]] || { echo "No Agent release found" >&2; exit 1; }
+          [[ -n "${worker_tag}" ]] || { echo "No Worker release found" >&2; exit 1; }
           [[ -n "${web_tag}" ]] || { echo "No Web release found" >&2; exit 1; }
 
           echo "api_tag=${api_tag}" >> "$GITHUB_OUTPUT"
-          echo "agent_tag=${agent_tag}" >> "$GITHUB_OUTPUT"
+          echo "worker_tag=${worker_tag}" >> "$GITHUB_OUTPUT"
           echo "web_tag=${web_tag}" >> "$GITHUB_OUTPUT"
 
           echo "api_version=${api_tag#v}" >> "$GITHUB_OUTPUT"
-          echo "agent_version=${agent_tag#v}" >> "$GITHUB_OUTPUT"
+          echo "worker_version=${worker_tag#v}" >> "$GITHUB_OUTPUT"
           echo "web_version=${web_tag#v}" >> "$GITHUB_OUTPUT"
 
       - name: Update documentation versions
@@ -68,15 +68,15 @@ jobs:
         env:
           MQDECK_VERSION: ${{ steps.release.outputs.version }}
           API_VERSION: ${{ steps.components.outputs.api_version }}
-          AGENT_VERSION: ${{ steps.components.outputs.agent_version }}
+          WORKER_VERSION: ${{ steps.components.outputs.worker_version }}
           WEB_VERSION: ${{ steps.components.outputs.web_version }}
         run: |
           set -euo pipefail
 
           mapfile -t files < <(
             {
-              grep -rlE 'MQDECK_VERSION|MQDECK_(API|AGENT|WEB)_VERSION' docs --include='*.md' || true
-              grep -rlE 'MQDECK_VERSION|MQDECK_(API|AGENT|WEB)_VERSION' site --include='*.html' || true
+              grep -rlE 'MQDECK_VERSION|MQDECK_(API|WORKER|WEB)_VERSION' docs --include='*.md' || true
+              grep -rlE 'MQDECK_VERSION|MQDECK_(API|WORKER|WEB)_VERSION' site --include='*.html' || true
             } | sort -u
           )
 
@@ -89,11 +89,11 @@ jobs:
             sed -Ei \
               -e "s|(MQDECK_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_VERSION)|\1${MQDECK_VERSION}\2|g" \
               -e "s|(API_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_API_VERSION)|\1${API_VERSION}\2|g" \
-              -e "s|(AGENT_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_AGENT_VERSION)|\1${AGENT_VERSION}\2|g" \
+              -e "s|(WORKER_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_WORKER_VERSION)|\1${WORKER_VERSION}\2|g" \
               -e "s|(WEB_VERSION=)[^[:space:]]+([[:space:]]+# MQDECK_WEB_VERSION)|\1${WEB_VERSION}\2|g" \
               -e 's|(\$MqdeckVersion = ")[^"]+(" # MQDECK_VERSION)|\1'"${MQDECK_VERSION}"'\2|g' \
               -e 's|(\$ApiVersion = ")[^"]+(" # MQDECK_API_VERSION)|\1'"${API_VERSION}"'\2|g' \
-              -e 's|(\$AgentVersion = ")[^"]+(" # MQDECK_AGENT_VERSION)|\1'"${AGENT_VERSION}"'\2|g' \
+              -e 's|(\$WorkerVersion = ")[^"]+(" # MQDECK_WORKER_VERSION)|\1'"${WORKER_VERSION}"'\2|g' \
               -e 's|(\$WebVersion = ")[^"]+(" # MQDECK_WEB_VERSION)|\1'"${WEB_VERSION}"'\2|g' \
               "${file}"
           done
@@ -126,7 +126,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.MQDECK_RELEASE_TOKEN }}
           API_TAG: ${{ steps.components.outputs.api_tag }}
-          AGENT_TAG: ${{ steps.components.outputs.agent_tag }}
+          WORKER_TAG: ${{ steps.components.outputs.worker_tag }}
           WEB_TAG: ${{ steps.components.outputs.web_tag }}
         run: |
           set -euo pipefail
@@ -134,7 +134,7 @@ jobs:
           mkdir -p dist
 
           api_tmp="$(mktemp -d)"
-          agent_tmp="$(mktemp -d)"
+          worker_tmp="$(mktemp -d)"
           web_tmp="$(mktemp -d)"
 
           gh release download "${API_TAG}" \
@@ -142,10 +142,10 @@ jobs:
             --pattern 'mqdeck-api_*' \
             --dir "${api_tmp}"
 
-          gh release download "${AGENT_TAG}" \
-            --repo mqdeck/mqdeck-agent \
-            --pattern 'mqdeck-agent_*' \
-            --dir "${agent_tmp}"
+          gh release download "${WORKER_TAG}" \
+            --repo mqdeck/mqdeck-worker \
+            --pattern 'mqdeck-worker_*' \
+            --dir "${worker_tmp}"
 
           gh release download "${WEB_TAG}" \
             --repo mqdeck/mqdeck-web \
@@ -153,7 +153,7 @@ jobs:
             --dir "${web_tmp}"
 
           cp "${api_tmp}"/* dist/
-          cp "${agent_tmp}"/* dist/
+          cp "${worker_tmp}"/* dist/
           cp "${web_tmp}"/* dist/
 
       - name: Generate release manifest
@@ -161,7 +161,7 @@ jobs:
         env:
           MQDECK_VERSION: ${{ steps.release.outputs.version }}
           API_VERSION: ${{ steps.components.outputs.api_version }}
-          AGENT_VERSION: ${{ steps.components.outputs.agent_version }}
+          WORKER_VERSION: ${{ steps.components.outputs.worker_version }}
           WEB_VERSION: ${{ steps.components.outputs.web_version }}
         run: |
           set -euo pipefail
@@ -172,7 +172,7 @@ jobs:
           Components included in this release:
 
           - API: ${API_VERSION}
-          - Agent: ${AGENT_VERSION}
+          - Worker: ${WORKER_VERSION}
           - Web: ${WEB_VERSION}
 
           Release tag: v${MQDECK_VERSION}

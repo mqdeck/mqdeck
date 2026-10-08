@@ -5,11 +5,11 @@ For example on RHEL-family systems:
 
 ```bash
 sudo systemctl disable --now mqdeck-web
-sudo systemctl disable --now mqdeck-agent
+sudo systemctl disable --now mqdeck-worker
 sudo systemctl disable --now mqdeck-api
 ```
 
-Then run the matching `uninstall-web.sh`, `uninstall-agent.sh`, or
+Then run the matching `uninstall-web.sh`, `uninstall-worker.sh`, or
 `uninstall-api.sh` from that component package. Preserve inventory and
 credentials when they must be reused.
 
