@@ -9,6 +9,17 @@
 | `MQDECK_AGENT_TOKEN` | required | Bearer token shared with Agents |
 | `MQDECK_DIAGNOSTIC_TIMEOUT` | `90s` | Maximum time the API waits for an Agent collect; raise for slow queue managers |
 | `MQDECK_CORS_ORIGINS` | `http://localhost:3000` | Allowed Web origins |
+| `MQDECK_QUEUE_WATCH_INTERVAL` | `5s` | Delay between shared queue-depth samples; allowed range is `1s` to `1m` |
+| `MQDECK_QUEUE_WATCH_MAX_DURATION` | `10m` | Maximum duration of one browser watch session; allowed range is `1m` to `1h` |
+| `MQDECK_QUEUE_WATCH_MAX_SAMPLERS` | `32` | Maximum distinct queue samplers per API instance |
+| `MQDECK_QUEUE_WATCH_MAX_PER_AGENT` | `8` | Maximum distinct samplers routed through one Agent |
+| `MQDECK_QUEUE_WATCH_MAX_PER_QUEUE_MANAGER` | `4` | Maximum distinct watched queues for one inventory host |
+| `MQDECK_QUEUE_WATCH_MAX_CLIENTS` | `64` | Maximum simultaneous browser watch streams |
+
+Queue Watch clients for the same Agent, inventory host, and queue share one
+sampler. The default five-second interval is suitable for interactive
+diagnosis without treating MQDeck as a permanent telemetry collector. Use a
+one-second interval only for short, controlled troubleshooting sessions.
 
 The inventory is one static, self-contained YAML file. List every IBM MQ queue
 manager and RabbitMQ node that must appear in the overview, using final literal

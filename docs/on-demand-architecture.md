@@ -55,10 +55,14 @@ opt-in and expands only after the operator enables it; it exists only while its
 queue detail accordion remains open. The browser receives one-way Server-Sent Events (SSE),
 which is simpler than another bidirectional browser socket for telemetry. API
 to Agent traffic continues over the existing authenticated WebSocket. Each
-sample runs only the allowlisted queue-status check; closing the accordion or
-disabling the switch cancels the stream. Navigating away or expanding another
-queue also unmounts the active watch, closes its EventSource, propagates the
-request cancellation through Web, and releases the API watch slot.
+sample requests only `CURDEPTH` for the exact queue. Clients watching the same
+Agent, inventory host, and queue share one sampler and therefore one IBM MQ
+command per interval. The default interval is five seconds, and every browser
+session expires after ten minutes. Closing the accordion or disabling the
+switch cancels the stream. Navigating away or expanding another queue also
+unmounts the active watch, closes its EventSource, propagates an explicit
+request cancellation to the Agent, and releases the API watch slot. Sampler
+limits apply globally, per Agent, and per queue manager.
 
 Incoming and outgoing values represent net depth movement between samples.
 Simultaneous puts and gets can offset one another, so Queue Watch is an
@@ -85,6 +89,9 @@ selectable.
 - Agent presence, outstanding requests, and diagnostic results exist in memory.
 - Results are returned to the requesting browser and are not retained.
 - Queue Watch samples and session totals are not retained.
+- Queue Watch is an interactive diagnostic aid, not a permanent monitoring or
+  accounting feed. IBM MQ events and statistics remain the appropriate source
+  for long-running alerts and throughput history.
 - The inventory is self-contained and does not expand environment variables.
   Restrict its filesystem permissions because it contains the credentials the
   Agent needs for read-only diagnostics.

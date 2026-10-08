@@ -65,8 +65,9 @@ The architecture and security decisions are documented in
 ## Safety model
 
 The Agent validates every target received from the API. Queue Watch reuses the
-same authenticated Agent connection and runs only the built-in IBM MQ queue
-status collector. RabbitMQ uses `GET`
+same authenticated Agent connection, shares one sampler among viewers of the
+same queue, and requests only that queue's current depth at a bounded interval.
+RabbitMQ uses `GET`
 operations; IBM MQ command execution remains restricted to a single `DISPLAY`
 MQSC command. The remote protocol cannot publish, consume, mutate broker state,
 or execute arbitrary shell strings.
