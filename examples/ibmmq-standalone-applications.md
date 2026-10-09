@@ -1,4 +1,4 @@
-# IBM MQ standalone publisher and consumer
+# IBM® MQ standalone publisher and consumer
 
 This public laboratory keeps one publisher and one consumer connected to a
 local queue on the same standalone queue manager. It does not use a remote
@@ -61,3 +61,7 @@ Watch on that queue to follow depth while the samples stay connected.
 
 Stop the sample applications with `Ctrl+C`. MQDeck does not stop, alter, or
 manage either application.
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. MQDeck is independent and is not affiliated
+with or endorsed by IBM. See [Trademarks and product independence](../TRADEMARKS.md).

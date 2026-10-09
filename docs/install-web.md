@@ -33,6 +33,14 @@ to the local API at `http://127.0.0.1:8080`; change `mqdeck.api.url` only when
 the API runs on another machine. Only Web needs operator login credentials; it
 never connects directly to brokers or Workers.
 
+For Microsoft Entra ID SAML SSO, internal access profiles, group mapping, and
+local recovery users, follow [Identity and access](identity-and-access.md). A
+production deployment must provide a stable external HTTPS origin through
+`mqdeck.public.url` and protect the file configured by
+`mqdeck.platform.config.path`. The Linux package defaults the latter to
+`/var/lib/mqdeck-web/platform-config.json`; systemd creates that state directory
+for the unprivileged `mqdeck` service account.
+
 ## Windows Server
 
 After installing Node.js 20.20 or newer, run PowerShell as Administrator:
@@ -47,6 +55,7 @@ Set-Location ".\mqdeck-web\mqdeck-web_${WebVersion}_standalone"
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_USERNAME", "admin", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_PASSWORD", "replace-with-a-strong-password", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_SESSION_SECRET", "replace-with-a-long-random-secret", "Machine")
+[Environment]::SetEnvironmentVariable("MQDECK_PUBLIC_URL", "https://mqdeck.example.com", "Machine")
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-web-service.ps1
 Start-Service MQDeckWeb
@@ -54,7 +63,13 @@ Get-Service MQDeckWeb
 ```
 
 The Windows installer also defaults `MQDECK_API_URL` to
-`http://127.0.0.1:8080` when the variable has not already been configured.
+`http://127.0.0.1:8080` and `MQDECK_PLATFORM_CONFIG_PATH` to
+`%ProgramData%\MQDeck\Web\platform-config.json` when those variables have not
+already been configured.
 
 For an existing Web service, follow the [upgrade and rollback
 guide](upgrade.md). Authentication and API settings are preserved.
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

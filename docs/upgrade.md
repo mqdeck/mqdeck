@@ -147,3 +147,7 @@ only when the failed change included an intentional configuration migration.
 
 Rollback order is the reverse of the components changed in that deployment;
 there is no requirement for API, Worker, and Web version numbers to match.
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

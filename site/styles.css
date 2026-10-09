@@ -1,6 +1,6 @@
 :root {
  --font-sans: "Manrope", sans-serif;
- --font-mono: "IBM Plex Mono", monospace;
+ --font-mono: "JetBrains Mono", monospace;
 }
 :root {
  --background: oklch(.992 .002 255); --foreground: oklch(.23 .014 262);
@@ -24,7 +24,7 @@
 .btn-icon { width:36px; padding:0; }
 .btn:hover { filter:brightness(.97); }
 .download-list { display:grid; gap:18px; margin-top:28px; }
-.download-list a { display:block; border-top:1px solid var(--border); padding-top:16px; }
+.download-list a, .download-list article { display:block; border-top:1px solid var(--border); padding-top:16px; }
 .download-list strong { display:block; margin-bottom:6px; }
 .download-list p { margin:0; color:var(--muted-foreground); font-size:13px; line-height:1.7; }
 .header-inner { height:100%; display:flex; align-items:center; justify-content:space-between; gap:32px; }
@@ -53,7 +53,7 @@
 .trust-band { border-block:1px solid var(--border); }
 .trust-inner { min-height:83px; display:flex; align-items:center; justify-content:space-between; gap:30px; }
 .micro { font-family:var(--font-mono); font-size:10px; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted-foreground); }
-.brokers { display:flex; align-items:center; gap:35px; font-size:17px; font-weight:700; }.ibm-word {font-family:Georgia,serif;font-weight:800}.rabbit-word {display:flex;align-items:center;gap:7px}.rabbit-icon {color:var(--primary);font-size:25px;line-height:1}
+.brokers { display:flex; align-items:center; gap:35px; font-size:14px; font-weight:700; }.rabbit-word {display:flex;align-items:center;gap:7px}.rabbit-icon {color:var(--primary);font-size:25px;line-height:1}
 .trust-properties {display:flex; gap:20px; font-size:10px; color:var(--muted-foreground)} .trust-properties span {display:flex;align-items:center;gap:5px}.trust-properties svg {width:12px;color:var(--primary)}
 .section { padding-block:78px; }
 .section-title { display:flex; justify-content:space-between; align-items:flex-end; gap:35px; margin-bottom:38px; }

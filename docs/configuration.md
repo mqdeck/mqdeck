@@ -175,9 +175,21 @@ On Linux the Worker reads `/etc/mqdeck/worker.properties`. A container sets `MQD
 | `MQDECK_AUTH_PASSWORD` | Static operator password |
 | `MQDECK_AUTH_DISPLAY_NAME` | Display name |
 | `MQDECK_AUTH_SESSION_SECRET` | Signed session secret |
+| `MQDECK_PUBLIC_URL` | External HTTPS origin used for SAML Entity ID and callback URLs |
+| `MQDECK_PLATFORM_CONFIG_PATH` | Identity, group mapping, and local-user configuration file |
 
 On Linux, write these in `/etc/mqdeck/web.properties`. `mqdeck.web.port=3000` is the listen port. A container sets `PORT` or `MQDECK_WEB_PORT`. When both a property and an environment variable are present, the environment variable wins. An explicit `PORT` is the listen port.
+
+SSO, Entra group mappings, internal profiles, and local users are managed in
+**Settings**. See [Identity and access](identity-and-access.md). Until a database
+is selected, that data is stored in the exclusive platform configuration file;
+passwords are scrypt hashes and the file is written atomically with owner-only
+permissions.
 
 There are no Elasticsearch, storage-mode, schedule, or Test Flight settings.
 Assistant settings belong on the API, not on Web or the Worker. See
 [Local assistant and models](llm.md).
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

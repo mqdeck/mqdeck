@@ -17,6 +17,11 @@ Copy-Item (Join-Path $sourceDirectory "app\*") $InstallDirectory -Recurse -Force
 if (-not [Environment]::GetEnvironmentVariable("MQDECK_API_URL", "Machine")) {
     [Environment]::SetEnvironmentVariable("MQDECK_API_URL", "http://127.0.0.1:8080", "Machine")
 }
+$platformConfigDirectory = Join-Path $env:ProgramData "MQDeck\Web"
+New-Item -ItemType Directory -Force -Path $platformConfigDirectory | Out-Null
+if (-not [Environment]::GetEnvironmentVariable("MQDECK_PLATFORM_CONFIG_PATH", "Machine")) {
+    [Environment]::SetEnvironmentVariable("MQDECK_PLATFORM_CONFIG_PATH", (Join-Path $platformConfigDirectory "platform-config.json"), "Machine")
+}
 $serverPath = Join-Path $InstallDirectory "server.js"
 $binaryPath = '"{0}" "{1}"' -f $nodePath, $serverPath
 if ($existingService) {
@@ -25,4 +30,4 @@ if ($existingService) {
     sc.exe create $ServiceName binPath= $binaryPath start= auto obj= "NT AUTHORITY\LocalService" DisplayName= "MQDeck Web" | Out-Null
 }
 sc.exe description $ServiceName "MQDeck Web interface" | Out-Null
-Write-Host "MQDeck Web service is created for the local API at http://127.0.0.1:8080. Review the machine-level MQDECK_AUTH_* variables, then run Start-Service $ServiceName."
+Write-Host "MQDeck Web service is created for the local API at http://127.0.0.1:8080. Review the machine-level MQDECK_AUTH_*, MQDECK_PUBLIC_URL, and MQDECK_PLATFORM_CONFIG_PATH variables, then run Start-Service $ServiceName."

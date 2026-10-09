@@ -1,6 +1,9 @@
 # MQDeck
 
-MQDeck is a lightweight, read-only diagnostic console for IBM MQ and RabbitMQ.
+MQDeck is an independent, on-demand operations console compatible with IBM® MQ
+software and RabbitMQ. Collection is read-only by default; separately authorized
+administrators can start or stop named channels and use temporary Queue Watch
+instrumentation.
 Its inventory overview comes from a local YAML file and never probes brokers in
 the background. An IBM MQ detail page uses three scoped tabs: Overview reads
 only queue-manager status, while Queues and Channels request their respective
@@ -16,7 +19,7 @@ flowchart LR
     YAML["Local inventory.yaml"] --> API["MQDeck API"]
     WEB["MQDeck Web"] -->|"inventory, report, and queue-watch SSE"| API
     WORKER["MQDeck Worker"] -->|"outbound authenticated WebSocket"| API
-    WORKER -->|"allowlisted read-only checks"| IBM["IBM MQ"]
+    WORKER -->|"allowlisted collection and actions"| IBM["IBM MQ"]
     WORKER -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
     API -.->|"optional assistant"| MODEL["Local model"]
 ```
@@ -38,11 +41,13 @@ enterprise channels.
 ## Components
 
 - **Web**: static inventory overview, live Worker directory, on-demand reports,
-  Queue Watch, and an optional local assistant.
+  Queue Watch, Microsoft Entra ID SAML SSO, local recovery accounts, role-based
+  access control, and an optional local assistant.
 - **API**: YAML inventory, in-memory control plane, and optional model endpoint.
-- **Worker**: outbound WebSocket client. Collection is read-only. The Channels
-  tab can send one `START CHANNEL` command when an operator confirms it. Queue
-  Watch can set one local queue's `MONQ` to `LOW` and restore `OFF` or `QMGR`.
+- **Worker**: outbound WebSocket client. Collection is read-only. Authorized
+  operations can send `START CHANNEL` or `STOP CHANNEL ... MODE(QUIESCE)` for a
+  named channel after confirmation. Queue Watch can set one local queue's
+  `MONQ` to `LOW` and restore `OFF` or `QMGR`.
 
 Copy the public templates in [`examples/`](examples/README.md):
 
@@ -70,6 +75,8 @@ The architecture and security decisions are documented in
 [`docs/on-demand-architecture.md`](docs/on-demand-architecture.md).
 Optional on-prem model setup is documented in
 [`docs/llm.md`](docs/llm.md).
+Identity, SSO, local accounts, and access profiles are documented in
+[`docs/identity-and-access.md`](docs/identity-and-access.md).
 
 ## Safety model
 
@@ -88,10 +95,10 @@ sets a local queue from `OFF` or `QMGR` to `MONQ(LOW)` and restores `OFF` or
 move in one sample, the UI shows passing activity instead of an invented split.
 The default watch interval is five seconds (`MQDECK_QUEUE_WATCH_INTERVAL`).
 RabbitMQ checks use `GET`. IBM MQ collection uses one `DISPLAY` command per
-check. The other MQSC commands are `START CHANNEL`, after an operator confirms
-it on the Channels tab, and the Queue Watch `ALTER QLOCAL(name) MONQ(...)`
-above. The protocol cannot publish, consume, or run an arbitrary shell
-command.
+check. The other MQSC commands are confirmed, permission-checked
+`START CHANNEL(name)` and `STOP CHANNEL(name) MODE(QUIESCE)` operations, plus
+the Queue Watch `ALTER QLOCAL(name) MONQ(...)` commands above. The protocol
+cannot publish, consume, or run an arbitrary shell command.
 
 ## License
 
@@ -102,6 +109,6 @@ MQDeck binaries are governed by the
 
 IBM, IBM MQ, RabbitMQ, and other third-party names are used only to describe
 compatibility. MQDeck is an independent product and is not affiliated with,
-endorsed by, sponsored by, or supported by IBM, Broadcom, or any other
-trademark owner. See [Third-party notices](THIRD_PARTY_NOTICES.md) for the
-applicable attributions.
+endorsed by, sponsored by, certified by, or supported by IBM, Broadcom, or any
+other trademark owner. See [Trademarks and product independence](TRADEMARKS.md)
+and [Third-party notices](THIRD_PARTY_NOTICES.md).

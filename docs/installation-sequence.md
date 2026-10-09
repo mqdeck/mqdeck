@@ -15,10 +15,11 @@ Do not assume the Web version must match the installed API version.
 
 ## 3. Broker identities
 
-Grant display authority for collection. IBM MQ uses a dedicated `SVRCONN`
+Grant display authority for collection. IBM® MQ uses a dedicated `SVRCONN`
 channel and one `DISPLAY` command per check. If operators will use **Start**
 on the Channels tab, that same identity also needs permission to run
-`START CHANNEL`. If operators will use Queue Watch, the identity also needs
+`START CHANNEL`. If administrators will use **Stop**, it also needs permission
+to run `STOP CHANNEL`. If operators will use Queue Watch, the identity also needs
 authority to change `MONQ` on the local queues they watch. RabbitMQ uses HTTP
 `GET` against the Management API. Confirm
 the identity can display every object type the operator expects to observe.
@@ -40,3 +41,7 @@ read access before opening the queue manager.
 
 Each component is downloaded, configured, started, stopped, upgraded, and
 rolled back independently through the operating-system service manager.
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

@@ -6,7 +6,7 @@ Each public release tag (`vX.Y.Z`) is a delivery of the latest API, Worker, and
 Web packages available when that tag was cut. The delivery versions are listed
 in that release's `COMPONENTS.md`.
 
-API, Worker, Web, the IBM MQ adapter, and the Helm chart remain versioned by
+API, Worker, Web, the adapter for IBM® MQ, and the Helm chart remain versioned by
 the component that changed. For example, public release `v1.0.0` ships API
 1.0.24, Worker 1.0.25, and Web 1.0.28.
 
@@ -61,3 +61,7 @@ tag. They always build the tagged source, never an arbitrary branch head.
 
 For installation commands, see the component-specific guides. For replacing
 one or more installed components, see [Upgrade and rollback](upgrade.md).
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

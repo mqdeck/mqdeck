@@ -16,18 +16,18 @@ Debian static non-root image.
 
 ## Trademarks and independence
 
-IBM and IBM MQ are trademarks of International Business Machines Corporation
-in many jurisdictions worldwide.
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation in the United States, other countries, or both.
 
 RabbitMQ is a trademark of Broadcom Inc. in the United States and other
 countries.
 
-Kubernetes, Microsoft Azure, Amazon Web Services (AWS), Red Hat OpenShift,
-Elasticsearch, and other product and service names are trademarks of their
-respective owners.
+Kubernetes, Microsoft, Microsoft Entra, Microsoft Azure, Windows, Amazon Web
+Services (AWS), Red Hat OpenShift, Elasticsearch, and other product and service
+names are trademarks of their respective owners.
 
 References to third-party products are nominative and describe compatibility
 only. MQDeck is an independent product and is not affiliated with, endorsed
 by, sponsored by, or supported by IBM, Broadcom, or any other trademark owner.
 No third-party logo is included in the MQDeck website or used as an MQDeck
-brand element.
+brand element. See the complete [trademark and independence notice](TRADEMARKS.md).

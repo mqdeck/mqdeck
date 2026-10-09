@@ -36,6 +36,11 @@ sequenceDiagram
       API-->>Web: enqueue, dequeue, passing activity, or net movement, plus last put and last get
       Worker->>Broker: ALTER QLOCAL(name) MONQ(OFF) or MONQ(QMGR)
     end
+    opt Authorized channel operation confirmed
+      Web->>API: start or stop named channel
+      API->>Worker: start_channel or stop_channel
+      Worker->>Broker: START CHANNEL(name) or STOP CHANNEL(name) MODE(QUIESCE)
+    end
     opt Operator asks the assistant
       Web->>API: analyze or chat on the collected report
       API->>Model: that report only
@@ -75,9 +80,15 @@ ready, only an operator request sends the current report to it. The Worker is
 not on that path. See [Local assistant and models](llm.md).
 
 IBM MQ collection stays on `DISPLAY`. The Channels tab can also send
-`START CHANNEL` for one named channel after the operator confirms it. Queue
-Watch can change that queue's `MONQ` to `LOW` and back to `OFF` or `QMGR`.
-Those are the only commands that change broker runtime state.
+`START CHANNEL` for one named inactive channel. Administrators can send
+`STOP CHANNEL ... MODE(QUIESCE)` for a running channel. Both actions require
+confirmation. Queue Watch can change that queue's `MONQ` to `LOW` and back to
+`OFF` or `QMGR`. Those are the only commands that change broker runtime state.
+
+Web authenticates operators locally or with Microsoft Entra ID SAML. It maps
+Entra groups or local accounts to the built-in Administrator and User profiles,
+then enforces permissions at the Web API boundary. See
+[Identity and access](identity-and-access.md).
 
 WebSocket over HTTPS was selected because the Worker must initiate a
 bidirectional connection through ordinary firewalls and reverse proxies. At
@@ -86,3 +97,7 @@ operational complexity without a useful product benefit.
 
 See [on-demand architecture](on-demand-architecture.md) for protocol and
 security details.
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

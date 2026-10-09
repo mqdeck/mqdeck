@@ -1,6 +1,6 @@
 # Install Worker on Linux
 
-Install a Worker at every network point that must reach brokers. IBM MQ targets
+Install a Worker at every network point that must reach brokers. IBM® MQ targets
 also require IBM MQ Client 9.4. `mqdeck.worker.ibmmq.client` defaults to `/opt/mqm/bin`. The Worker runs `runmqsc`, `dmpmqmsg`, and the other client utilities from that directory.
 
 Download packages from the public
@@ -74,3 +74,7 @@ collection failure includes the broker ID and the read-only check that failed.
 
 For an existing Worker, use the [upgrade and rollback guide](upgrade.md) so the
 configuration is preserved and Workers are upgraded one network zone at a time.
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

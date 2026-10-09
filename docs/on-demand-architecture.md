@@ -2,7 +2,9 @@
 
 ## Product definition
 
-MQDeck is a read-only, on-demand diagnostic console for IBM MQ and RabbitMQ.
+MQDeck is an independent, on-demand operations console compatible with IBM® MQ
+software and RabbitMQ. Collection is read-only; a small, separately authorized
+set of confirmed channel and Queue Watch operations can change runtime state.
 It keeps a small local YAML inventory and contacts a broker only when an
 operator opens a broker tab or explicitly requests a refresh. IBM MQ collection
 is scoped by tab: Overview reads only queue-manager state, Queues reads queue
@@ -153,14 +155,16 @@ selectable.
   trusted development machine.
 - The Worker revalidates every received target before execution.
 - IBM MQ collection is limited to one `DISPLAY` command per check. The Channels
-  tab may send `START CHANNEL(name)` after the operator confirms it. Queue
+  tab may send `START CHANNEL(name)` after the operator confirms it. An
+  administrator may also send `STOP CHANNEL(name) MODE(QUIESCE)`. Queue
   Watch may send `ALTER QLOCAL(name) MONQ(LOW)` and later `MONQ(OFF)` or
   `MONQ(QMGR)` for that queue only. RabbitMQ stays on read-only HTTP checks.
 - IBM MQ TLS and enterprise client policies use a CCDT on the selected Worker;
   MQDeck passes only `MQCCDTURL` and optional `MQSSLKEYR` to `runmqsc`.
 - The control protocol does not publish, consume, run a shell string, or accept
-  arbitrary MQSC. Runtime changes are `START CHANNEL` for the channel the
-  operator confirmed, and the Queue Watch `MONQ` change described above.
+  arbitrary MQSC. Runtime changes are `START CHANNEL` or
+  `STOP CHANNEL ... MODE(QUIESCE)` for the channel the operator confirmed, and
+  the Queue Watch `MONQ` change described above.
 - Message browse is a separate operator action on one local queue. It reads at
   most 10 messages from the front of the queue and then stops. It does not
   walk to the end of the queue and does not write a dump file. IBM MQ uses one
@@ -197,3 +201,10 @@ mqdeck.worker.reconnect.delay=5s
 ```
 
 See [examples/inventory.yaml](../examples/inventory.yaml) for the broker inventory template.
+
+Web identity and server-enforced permissions are described in
+[Identity and access](identity-and-access.md).
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

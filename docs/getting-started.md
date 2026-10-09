@@ -1,9 +1,11 @@
 # Getting started
 
-MQDeck lets you look at an IBM MQ queue manager or a RabbitMQ node when you
+MQDeck lets you inspect an IBM® MQ queue manager or a RabbitMQ node when you
 ask, and stays quiet the rest of the time. The inventory is a local file. A
-connected Worker, placed in the broker network, runs the read-only check and
-returns the result. Nothing is stored after the page responds.
+connected Worker, placed in the broker network, runs the allowlisted check and
+returns the result. Nothing is stored after the page responds. Separately
+authorized actions can start or stop a named channel or run a temporary Queue
+Watch session.
 
 You install three small services. They do not need Elasticsearch, a scheduler,
 or a telemetry database.
@@ -17,7 +19,7 @@ flowchart LR
     YAML["Local inventory.yaml"] --> API["MQDeck API"]
     WEB["MQDeck Web"] -->|"inventory, report, and queue-watch SSE"| API
     WORKER["MQDeck Worker"] -->|"outbound authenticated WebSocket"| API
-    WORKER -->|"allowlisted read-only checks"| IBM["IBM MQ"]
+    WORKER -->|"allowlisted collection and actions"| IBM["IBM MQ"]
     WORKER -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
     API -.->|"optional assistant"| MODEL["Local model"]
 ```
@@ -47,7 +49,7 @@ See [Local assistant and models](llm.md).
 | --- | --- | --- |
 | [API](install-api.md) | A host the operators and Workers can reach | Holds `inventory.yaml` and routes each request |
 | [Web](install-web.md) | Next to the API, or behind your reverse proxy | Login, inventory, and the host pages |
-| [Worker](install-worker-linux.md) | Inside each broker network zone | Executes the read-only check. No inbound port |
+| [Worker](install-worker-linux.md) | Inside each broker network zone | Executes allowlisted collection and actions. No inbound port |
 
 Put the Worker on Linux or [Windows](install-worker-windows.md), wherever
 `runmqsc` or the RabbitMQ management API is reachable. One Worker can serve
@@ -67,7 +69,8 @@ includes a PowerShell installer that creates the service.
 Install in this order:
 
 1. [API](install-api.md), then confirm `GET /healthz`.
-2. [Web](install-web.md), then sign in.
+2. [Web](install-web.md), then sign in. For corporate access, continue with
+   [Microsoft Entra ID SSO and role mapping](identity-and-access.md).
 3. [Worker on Linux](install-worker-linux.md) or [Worker on Windows](install-worker-windows.md), then confirm it appears in the Worker list.
 
 Copy [examples/inventory.yaml](../examples/inventory.yaml) as the shape of the
@@ -80,10 +83,18 @@ The API does not expand `${...}` placeholders.
 1. Open the inventory. That page lists hosts from the file and does not contact a broker.
 2. Open a host and choose **Collect data**. IBM MQ loads Overview first. Queues and Channels load when you open those tabs.
 3. Expand a local IBM MQ queue for one current, exact-name status inquiry. It shows depth, handles, and last put/get. Choose **Start watch** only when you want repeated samples. That watch can turn queue `MONQ` to `LOW` until you stop it.
-4. On an inactive IBM MQ channel, **Start** sends `START CHANNEL` through the selected Worker. Collection itself stays on `DISPLAY`.
-5. The [local assistant](llm.md) is optional. Reports and Queue Watch work without a model.
+4. On an inactive IBM MQ channel, **Start** sends `START CHANNEL` through the
+   selected Worker. Administrators can also stop a running channel with
+   `STOP CHANNEL ... MODE(QUIESCE)`. Both actions require confirmation and are
+   checked by the server.
+5. Administrators can configure [SSO, group mappings, and local users](identity-and-access.md).
+6. The [local assistant](llm.md) is optional. Reports and Queue Watch work without a model.
 
 The [installation sequence](installation-sequence.md) is the short verification
 path. Settings live in the [configuration reference](configuration.md). An
 existing install follows [upgrade and rollback](upgrade.md). The design notes
 are in [on-demand architecture](on-demand-architecture.md).
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. MQDeck is independent and is not affiliated
+with or endorsed by IBM. See [Trademarks and product independence](../TRADEMARKS.md).

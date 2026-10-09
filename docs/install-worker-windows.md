@@ -1,6 +1,6 @@
 # Install Worker on Windows Server
 
-Install IBM MQ Client 9.4 when the Worker observes IBM MQ. `mqdeck.worker.ibmmq.client` defaults to `/opt/mqm/bin`. On Windows, set it to the client bin directory, usually `C:\Program Files\IBM\MQ\bin`. The Worker runs `runmqsc`, `dmpmqmsg`, and the other client utilities from that directory.
+Install IBM® MQ Client 9.4 when the Worker observes IBM MQ. `mqdeck.worker.ibmmq.client` defaults to `/opt/mqm/bin`. On Windows, set it to the client bin directory, usually `C:\Program Files\IBM\MQ\bin`. The Worker runs `runmqsc`, `dmpmqmsg`, and the other client utilities from that directory.
 
 Download packages from the public
 [MQDeck releases](https://github.com/mqdeck/mqdeck/releases) page. Set
@@ -61,3 +61,7 @@ Start-Service MQDeckWorker
 For an existing Windows service, follow the [upgrade and rollback
 guide](upgrade.md). The installer stops the service and leaves it stopped until
 the new binary has been validated.
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. References describe compatibility only. See
+[Trademarks and product independence](../TRADEMARKS.md).

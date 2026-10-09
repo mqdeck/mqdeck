@@ -1,10 +1,11 @@
-# Observe IBM MQ through a client SVRCONN
+# Observe IBM® MQ through a client SVRCONN
 
 MQDeck can collect IBM MQ definitions and runtime status when `mqweb`,
 Administrative REST, and Messaging REST are disabled. The Worker runs the IBM
 MQ Client `runmqsc -c` utility through a dedicated `SVRCONN` channel.
 Collection accepts one `DISPLAY` statement per check. The Channels tab can
 also send `START CHANNEL` for one channel after the operator confirms it.
+Administrators can send `STOP CHANNEL(name) MODE(QUIESCE)` after confirmation.
 Queue Watch can send `ALTER QLOCAL(name) MONQ(LOW)`, then restore `MONQ(OFF)`
 or `MONQ(QMGR)`, for the queue being watched.
 
@@ -136,10 +137,14 @@ For direct connections, the Worker supplies `MQSERVER` only to the `runmqsc`
 child process. For CCDT connections, it clears `MQSERVER` and supplies
 `MQCCDTURL` plus optional `MQSSLKEYR`. It passes the password through standard
 input, invokes no shell, bounds output, and rejects MQSC other than one
-`DISPLAY` command, `START CHANNEL(name)`, or the Queue Watch
+`DISPLAY` command, `START CHANNEL(name)`, `STOP CHANNEL(name) MODE(QUIESCE)`, or the Queue Watch
 `ALTER QLOCAL(name) MONQ(OFF|QMGR|LOW)`.
 
 For client applications, IBM MQ exposes `CONNAME` when the handle belongs to a
 channel. MQDeck displays that value as the application origin alongside the
 channel name. Bindings-mode applications run inside the queue manager host and
 do not have a remote IP address, so they are identified as local processes.
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. MQDeck is independent and is not affiliated
+with or endorsed by IBM. See [Trademarks and product independence](../TRADEMARKS.md).

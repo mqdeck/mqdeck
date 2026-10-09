@@ -1,6 +1,6 @@
 # MQDeck 1.0.14
 
-MQDeck 1.0.14 makes the IBM MQ channel view faster to read during daily
+MQDeck 1.0.14 makes the IBM® MQ channel view faster to read during daily
 operations while preserving the complete channel inventory introduced in
 1.0.13.
 
@@ -36,3 +36,8 @@ operations while preserving the complete channel inventory introduced in
 
 No inventory or data migration is required. Upgrade API, Workers, then Web by
 following the [upgrade guide](https://github.com/mqdeck/mqdeck/blob/main/docs/upgrade.md).
+
+IBM and IBM MQ are trademarks or registered trademarks of International
+Business Machines Corporation. MQDeck is independent and is not affiliated
+with or endorsed by IBM. See the
+[trademark notice](https://github.com/mqdeck/mqdeck/blob/main/TRADEMARKS.md).
