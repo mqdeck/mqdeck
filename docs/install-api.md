@@ -28,7 +28,9 @@ With `wget`, replace the first download command with:
 wget "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 ```
 
-Review `/etc/mqdeck/inventory.yaml` and `/etc/mqdeck/api.properties`. Then validate and
+Review `/var/lib/mqdeck-api/inventory.yaml` and `/etc/mqdeck/api.properties`.
+Set different strong values for `mqdeck.worker.token` and
+`mqdeck.management.token`; copy the management value to Web. Then validate and
 start the component:
 
 ```bash
@@ -43,6 +45,8 @@ For Queue Watch routes under `/api/v1/hosts/*/queues/*/watch`, preserve
 `text/event-stream`, disable response buffering, and use a streaming timeout
 appropriate for an operator-controlled session. The API sets
 `X-Accel-Buffering: no`. The API needs no database or Elasticsearch.
+The API service can write only its systemd state directory, which contains the
+managed inventory and `audit.jsonl`.
 
 The local assistant is optional and stays disabled until you add a GGUF model
 or an OpenAI-compatible endpoint. See
@@ -66,6 +70,7 @@ as Administrator:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("MQDECK_WORKER_TOKEN", "replace-with-a-long-random-secret", "Machine")
+[Environment]::SetEnvironmentVariable("MQDECK_MANAGEMENT_TOKEN", "replace-with-a-different-long-random-secret", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000", "Machine")
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-api-service.ps1
@@ -74,8 +79,8 @@ Start-Service MQDeckAPI
 Get-Service MQDeckAPI
 ```
 
-Validate the executable before starting, and restart `MQDeckAPI` after changing
-the inventory or machine-level environment variables.
+Validate the executable before starting. Valid inventory file changes reload
+automatically; restart `MQDeckAPI` only after changing environment variables.
 
 To replace an existing API without overwriting its inventory or environment,
 follow the [upgrade and rollback guide](upgrade.md).

@@ -41,11 +41,18 @@ operations, and the Queue Watch `MONQ` change:
   inbound command listener.
 - The Worker revalidates every target before executing adapter checks.
 - Credentials are never returned by inventory or report endpoints.
+- Inventory uploads are limited to 2 MiB, schema-validated before write, stored
+  with restricted permissions, and activated only after the file replacement
+  succeeds. Invalid external edits keep the last valid runtime snapshot.
 - Diagnostic results exist only for the request and are not persisted.
+- Managed actions are appended and synced to a restricted JSON Lines audit log;
+  the Audit page reads that log rather than sample browser data.
 - Web enforces signed sessions and server-side permissions. The built-in
   Administrator profile can start and stop channels, use Watch Activity, and
-  manage identity settings. The built-in User profile can only start inactive
-  channels.
+  manage inventory, audit, and identity settings. The built-in User profile can
+  only start inactive channels.
+- A dedicated `MQDECK_MANAGEMENT_TOKEN`, distinct from the Worker token, protects
+  server-to-server inventory, audit, channel-action, and Queue Watch requests.
 - Microsoft Entra ID SAML assertions are checked for signature, issuer,
   audience, expiry, and request correlation. Users without a mapped Entra group
   receive the configured default profile, which defaults to User.

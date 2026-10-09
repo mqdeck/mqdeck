@@ -56,6 +56,7 @@ Set-Location ".\mqdeck-web\mqdeck-web_${WebVersion}_standalone"
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_PASSWORD", "replace-with-a-strong-password", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_AUTH_SESSION_SECRET", "replace-with-a-long-random-secret", "Machine")
 [Environment]::SetEnvironmentVariable("MQDECK_PUBLIC_URL", "https://mqdeck.example.com", "Machine")
+[Environment]::SetEnvironmentVariable("MQDECK_MANAGEMENT_TOKEN", "replace-with-the-same-api-management-secret", "Machine")
 Set-ExecutionPolicy -Scope Process Bypass
 .\install-web-service.ps1
 Start-Service MQDeckWeb
@@ -66,6 +67,9 @@ The Windows installer also defaults `MQDECK_API_URL` to
 `http://127.0.0.1:8080` and `MQDECK_PLATFORM_CONFIG_PATH` to
 `%ProgramData%\MQDeck\Web\platform-config.json` when those variables have not
 already been configured.
+
+`MQDECK_MANAGEMENT_TOKEN` must exactly match the API value. Keep it out of the
+browser and use a different secret from `MQDECK_WORKER_TOKEN`.
 
 For an existing Web service, follow the [upgrade and rollback
 guide](upgrade.md). Authentication and API settings are preserved.

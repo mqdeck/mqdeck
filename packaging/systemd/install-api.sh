@@ -18,10 +18,14 @@ if ! id mqdeck >/dev/null 2>&1; then
   useradd --system --home-dir /nonexistent --shell /usr/sbin/nologin mqdeck
 fi
 install -d -o root -g root -m 0755 /opt/mqdeck/api /etc/mqdeck
-install -d -o mqdeck -g mqdeck -m 0750 /var/lib/mqdeck
+install -d -o mqdeck -g mqdeck -m 0750 /var/lib/mqdeck-api
 install -o root -g root -m 0755 "$source_dir/mqdeck-api" /opt/mqdeck/api/mqdeck-api
-if [ ! -f /etc/mqdeck/inventory.yaml ]; then
-  install -o root -g mqdeck -m 0640 "$source_dir/inventory.example.yaml" /etc/mqdeck/inventory.yaml
+if [ ! -f /var/lib/mqdeck-api/inventory.yaml ]; then
+  if [ -f /etc/mqdeck/inventory.yaml ]; then
+    install -o mqdeck -g mqdeck -m 0600 /etc/mqdeck/inventory.yaml /var/lib/mqdeck-api/inventory.yaml
+  else
+    install -o mqdeck -g mqdeck -m 0600 "$source_dir/inventory.example.yaml" /var/lib/mqdeck-api/inventory.yaml
+  fi
 fi
 if [ ! -f /etc/mqdeck/api.properties ]; then
   install -o root -g mqdeck -m 0640 "$source_dir/api.properties.example" /etc/mqdeck/api.properties
@@ -31,4 +35,4 @@ systemctl daemon-reload
 if [ "$was_active" = true ]; then
   systemctl start "$service_name"
 fi
-echo "Installed MQDeck API. Review /etc/mqdeck/inventory.yaml and /etc/mqdeck/api.properties, validate, then enable the service."
+echo "Installed MQDeck API. Review /var/lib/mqdeck-api/inventory.yaml and /etc/mqdeck/api.properties, validate, then enable the service."

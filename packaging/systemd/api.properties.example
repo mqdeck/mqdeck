@@ -2,8 +2,10 @@
 # A container can set the same item as an environment variable, MQDECK_API_ADDRESS.
 # When both are present, the environment variable wins.
 mqdeck.api.address=:8080
-mqdeck.inventory.path=/etc/mqdeck/inventory.yaml
+mqdeck.inventory.path=/var/lib/mqdeck-api/inventory.yaml
+mqdeck.audit.log.path=/var/lib/mqdeck-api/audit.jsonl
 mqdeck.worker.token=replace-with-a-long-random-secret
+mqdeck.management.token=replace-with-a-different-long-random-secret
 mqdeck.diagnostic.timeout=90s
 mqdeck.cors.origins=http://localhost:3000,http://127.0.0.1:3000
 

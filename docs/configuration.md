@@ -5,8 +5,10 @@
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `MQDECK_API_ADDRESS` | `:8080` | HTTP and WebSocket listener |
-| `MQDECK_INVENTORY_PATH` | `./inventory.yaml` | Static broker inventory |
+| `MQDECK_INVENTORY_PATH` | `./inventory.yaml` | Managed broker inventory; Linux package default is `/var/lib/mqdeck-api/inventory.yaml` |
+| `MQDECK_AUDIT_LOG_PATH` | `./data/audit.jsonl` | Append-only application audit log; Linux package default is `/var/lib/mqdeck-api/audit.jsonl` |
 | `MQDECK_WORKER_TOKEN` | required | Bearer token shared with Workers |
+| `MQDECK_MANAGEMENT_TOKEN` | required | Separate server-to-server token shared only by API and Web; minimum 24 characters |
 | `MQDECK_DIAGNOSTIC_TIMEOUT` | `90s` | Maximum time the API waits for a Worker collect; raise for slow queue managers |
 | `MQDECK_CORS_ORIGINS` | `http://localhost:3000` | Allowed Web origins |
 | `MQDECK_QUEUE_WATCH_INTERVAL` | `5s` | Delay between shared queue-depth samples; allowed range is `1s` to `1m` |
@@ -40,13 +42,28 @@ is not replaced. The queue manager `MONQ` stays as configured.
 The default five-second interval is for a short diagnosis, not a permanent
 collector. Use a one-second interval only for a brief troubleshooting session.
 
-The inventory is one static, self-contained YAML file. List every IBM MQ queue
+The inventory is one self-contained YAML file. List every IBM MQ queue
 manager and RabbitMQ node that must appear in the overview, using final literal
 values. The API does not expand environment variables and rejects `${...}`
 placeholders. Protect the file with restricted filesystem permissions because
 it contains the read-only broker credentials. Collection tests, transport,
 timeouts, commands, and response limits are platform policy and are
 therefore rejected if added to the inventory.
+
+The API checks the file once per second and activates valid external changes
+without a restart. If a changed file is invalid, the API retains the previous
+valid snapshot and exposes the validation error to administrators. In
+**Settings → Inventory**, an Administrator can upload a complete replacement of
+at most 2 MiB. The API validates it before writing, uses a same-directory file
+swap, restricts its permissions, and never returns inventory credentials to the
+browser.
+
+Audit events are JSON objects separated by newlines. The API appends and syncs
+managed inventory, access, identity, channel, and Queue Watch actions; the Audit
+page reads this file through a permission-checked Web proxy. Restrict the file
+to the API service account, ship copies to your corporate log platform when
+retention or tamper-evidence is required, and configure external rotation by
+renaming the active file rather than truncating it in place.
 
 ```yaml
 version: 1
@@ -171,6 +188,7 @@ On Linux the Worker reads `/etc/mqdeck/worker.properties`. A container sets `MQD
 | --- | --- |
 | `MQDECK_WEB_PORT` | Listen port. The properties key is `mqdeck.web.port`. Default is `3000` |
 | `MQDECK_API_URL` | API base URL; defaults to `http://127.0.0.1:8080` in the service package |
+| `MQDECK_MANAGEMENT_TOKEN` | Must match the API value; used only by server-side Web routes |
 | `MQDECK_AUTH_USERNAME` | Static operator username |
 | `MQDECK_AUTH_PASSWORD` | Static operator password |
 | `MQDECK_AUTH_DISPLAY_NAME` | Display name |
@@ -180,7 +198,7 @@ On Linux the Worker reads `/etc/mqdeck/worker.properties`. A container sets `MQD
 
 On Linux, write these in `/etc/mqdeck/web.properties`. `mqdeck.web.port=3000` is the listen port. A container sets `PORT` or `MQDECK_WEB_PORT`. When both a property and an environment variable are present, the environment variable wins. An explicit `PORT` is the listen port.
 
-SSO, Entra group mappings, internal profiles, and local users are managed in
+SSO, Entra group mappings, internal profiles, local users, and inventory are managed in
 **Settings**. See [Identity and access](identity-and-access.md). Until a database
 is selected, that data is stored in the exclusive platform configuration file;
 passwords are scrypt hashes and the file is written atomically with owner-only

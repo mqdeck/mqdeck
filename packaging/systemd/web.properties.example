@@ -3,6 +3,7 @@
 # When both are present, the environment variable wins.
 mqdeck.web.port=3000
 mqdeck.api.url=http://127.0.0.1:8080
+mqdeck.management.token=replace-with-the-same-api-management-secret
 mqdeck.public.url=https://mqdeck.example.com
 mqdeck.platform.config.path=/var/lib/mqdeck-web/platform-config.json
 mqdeck.auth.username=admin

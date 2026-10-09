@@ -87,7 +87,7 @@ The API does not expand `${...}` placeholders.
    selected Worker. Administrators can also stop a running channel with
    `STOP CHANNEL ... MODE(QUIESCE)`. Both actions require confirmation and are
    checked by the server.
-5. Administrators can configure [SSO, group mappings, and local users](identity-and-access.md).
+5. Administrators can configure [SSO, group mappings, and local users](identity-and-access.md), replace the complete YAML in **Settings → Inventory**, and review persisted actions in **Audit**. A valid inventory replacement becomes active without restarting the API.
 6. The [local assistant](llm.md) is optional. Reports and Queue Watch work without a model.
 
 The [installation sequence](installation-sequence.md) is the short verification

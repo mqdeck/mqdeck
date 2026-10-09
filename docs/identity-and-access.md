@@ -8,7 +8,7 @@ and installations that do not use Entra ID.
 
 | Profile | Permissions |
 | --- | --- |
-| Administrator | Start and stop named channels, use Watch Activity, configure SSO, and manage local users |
+| Administrator | Start and stop named channels, use Watch Activity, replace inventory, read audit records, configure SSO, and manage local users |
 | User | Start an inactive channel |
 
 Permissions are enforced by Web API routes. Hiding an unavailable button is a
@@ -76,6 +76,7 @@ Set the following values for a packaged or production installation:
 | `MQDECK_AUTH_USERNAME` | Recovery administrator username |
 | `MQDECK_AUTH_PASSWORD` | Recovery administrator password |
 | `MQDECK_AUTH_DISPLAY_NAME` | Recovery administrator display name |
+| `MQDECK_MANAGEMENT_TOKEN` | Server-to-server secret shared with API for managed operations and audit |
 
 Rotate the bootstrap password and session secret before any shared deployment.
 

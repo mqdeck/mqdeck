@@ -135,7 +135,9 @@ selectable.
 
 ## State and persistence
 
-- `inventory.yaml` is the source of truth for broker metadata and routing.
+- `inventory.yaml` is the source of truth for broker metadata and routing. The
+  API validates and hot-reloads file changes, and Settings can replace it
+  without restarting the process.
 - Inventory tags and IBM MQ platform (`distributed` or `zos`) are static
   metadata; cluster roles and operational state still come from the broker.
 - Worker presence, outstanding requests, and diagnostic results exist in memory.
@@ -179,12 +181,17 @@ selectable.
 API, in `/etc/mqdeck/api.properties`:
 
 ```properties
-mqdeck.inventory.path=/etc/mqdeck/inventory.yaml
+mqdeck.inventory.path=/var/lib/mqdeck-api/inventory.yaml
+mqdeck.audit.log.path=/var/lib/mqdeck-api/audit.jsonl
 mqdeck.worker.token=replace-with-a-long-random-secret
+mqdeck.management.token=replace-with-a-different-long-random-secret
 mqdeck.diagnostic.timeout=90s
 ```
 
-A container sets the same values as `MQDECK_INVENTORY_PATH`, `MQDECK_WORKER_TOKEN`, and `MQDECK_DIAGNOSTIC_TIMEOUT`. The environment variable wins when both are present.
+A container sets the same values as `MQDECK_INVENTORY_PATH`,
+`MQDECK_AUDIT_LOG_PATH`, `MQDECK_WORKER_TOKEN`,
+`MQDECK_MANAGEMENT_TOKEN`, and `MQDECK_DIAGNOSTIC_TIMEOUT`. The environment
+variable wins when both are present.
 
 Worker, in `/etc/mqdeck/worker.properties`:
 

@@ -4,8 +4,9 @@ MQDeck is an independent, on-demand operations console compatible with IBM® MQ
 software and RabbitMQ. Collection is read-only by default; separately authorized
 administrators can start or stop named channels and use temporary Queue Watch
 instrumentation.
-Its inventory overview comes from a local YAML file and never probes brokers in
-the background. An IBM MQ detail page uses three scoped tabs: Overview reads
+Its inventory overview comes from a validated YAML file that can be replaced
+from Settings and hot-reloaded without an API restart; browsing never probes
+brokers in the background. An IBM MQ detail page uses three scoped tabs: Overview reads
 only queue-manager status, while Queues and Channels request their respective
 fresh, bounded data through a connected Worker.
 
@@ -42,8 +43,9 @@ enterprise channels.
 
 - **Web**: static inventory overview, live Worker directory, on-demand reports,
   Queue Watch, Microsoft Entra ID SAML SSO, local recovery accounts, role-based
-  access control, and an optional local assistant.
-- **API**: YAML inventory, in-memory control plane, and optional model endpoint.
+  access control, managed inventory upload, persisted audit view, and an optional local assistant.
+- **API**: hot-reloaded YAML inventory, JSON Lines audit log, in-memory control
+  plane, and optional model endpoint.
 - **Worker**: outbound WebSocket client. Collection is read-only. Authorized
   operations can send `START CHANNEL` or `STOP CHANNEL ... MODE(QUIESCE)` for a
   named channel after confirmation. Queue Watch can set one local queue's
