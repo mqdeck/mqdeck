@@ -36,8 +36,8 @@ Every public release includes component checksum files. Download the checksum
 from the same public release as the binary:
 
 ```bash
-MQDECK_VERSION=1.0.11 # MQDECK_VERSION
-WORKER_VERSION=1.0.36 # MQDECK_WORKER_VERSION
+MQDECK_VERSION=1.0.12 # MQDECK_VERSION
+WORKER_VERSION=1.0.38 # MQDECK_WORKER_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-worker_${WORKER_VERSION}_SHA256SUMS"
 sha256sum --check "mqdeck-worker_${WORKER_VERSION}_SHA256SUMS" --ignore-missing
 ```
@@ -45,8 +45,8 @@ sha256sum --check "mqdeck-worker_${WORKER_VERSION}_SHA256SUMS" --ignore-missing
 On Windows:
 
 ```powershell
-$MqdeckVersion = "1.0.11" # MQDECK_VERSION
-$WorkerVersion = "1.0.36" # MQDECK_WORKER_VERSION
+$MqdeckVersion = "1.0.12" # MQDECK_VERSION
+$WorkerVersion = "1.0.38" # MQDECK_WORKER_VERSION
 Invoke-WebRequest "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-worker_${WorkerVersion}_SHA256SUMS" -OutFile "mqdeck-worker_${WorkerVersion}_SHA256SUMS"
 (Get-FileHash ".\mqdeck-worker_${WorkerVersion}_windows_amd64.zip" -Algorithm SHA256).Hash.ToLower()
 Select-String -Path ".\mqdeck-worker_${WorkerVersion}_SHA256SUMS" -Pattern "windows_amd64.zip"
@@ -60,8 +60,8 @@ Set the public release tag and the API version from that release's
 `COMPONENTS.md`:
 
 ```bash
-MQDECK_VERSION=1.0.11 # MQDECK_VERSION
-API_VERSION=1.0.40 # MQDECK_API_VERSION
+MQDECK_VERSION=1.0.12 # MQDECK_VERSION
+API_VERSION=1.0.42 # MQDECK_API_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-api_${API_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-api_${API_VERSION}_linux_amd64"
@@ -79,8 +79,8 @@ Upgrade one network zone at a time and confirm that each Worker reconnects
 before continuing:
 
 ```bash
-MQDECK_VERSION=1.0.11 # MQDECK_VERSION
-WORKER_VERSION=1.0.36 # MQDECK_WORKER_VERSION
+MQDECK_VERSION=1.0.12 # MQDECK_VERSION
+WORKER_VERSION=1.0.38 # MQDECK_WORKER_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-worker_${WORKER_VERSION}_linux_amd64.tar.gz"
 tar -xzf "mqdeck-worker_${WORKER_VERSION}_linux_amd64.tar.gz"
 cd "mqdeck-worker_${WORKER_VERSION}_linux_amd64"
@@ -97,8 +97,8 @@ explicitly identify a protocol compatibility requirement. The installer leaves `
 ## Upgrade Web on Linux
 
 ```bash
-MQDECK_VERSION=1.0.11 # MQDECK_VERSION
-WEB_VERSION=1.0.43 # MQDECK_WEB_VERSION
+MQDECK_VERSION=1.0.12 # MQDECK_VERSION
+WEB_VERSION=1.0.46 # MQDECK_WEB_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 cd "mqdeck-web_${WEB_VERSION}_standalone"
@@ -115,10 +115,10 @@ Use the same public release tag and independent component variables from
 `COMPONENTS.md`:
 
 ```powershell
-$MqdeckVersion = "1.0.11" # MQDECK_VERSION
-$ApiVersion = "1.0.40" # MQDECK_API_VERSION
-$WorkerVersion = "1.0.36" # MQDECK_WORKER_VERSION
-$WebVersion = "1.0.43" # MQDECK_WEB_VERSION
+$MqdeckVersion = "1.0.12" # MQDECK_VERSION
+$ApiVersion = "1.0.42" # MQDECK_API_VERSION
+$WorkerVersion = "1.0.38" # MQDECK_WORKER_VERSION
+$WebVersion = "1.0.46" # MQDECK_WEB_VERSION
 ```
 
 Download and extract only the components being upgraded into new directories
