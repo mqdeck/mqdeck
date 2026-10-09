@@ -10,7 +10,7 @@ listed in that release's `COMPONENTS.md`.
 Run PowerShell as Administrator:
 
 ```powershell
-$MqdeckVersion = "1.0.12" # MQDECK_VERSION
+$MqdeckVersion = "1.0.13" # MQDECK_VERSION
 $WorkerVersion = "1.0.38" # MQDECK_WORKER_VERSION
 $url = "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-worker_${WorkerVersion}_windows_amd64.zip"
 Invoke-WebRequest $url -OutFile mqdeck-worker.zip
