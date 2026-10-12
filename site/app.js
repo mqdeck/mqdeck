@@ -1,4 +1,4 @@
-const versions = { API: "1.0.33", Worker: "1.0.32", Web: "1.0.37" };
+const versions = { API: "1.0.48", Worker: "1.0.42", Web: "1.0.51" };
 
 function installCommand(service) {
   const lower = service.toLowerCase();
@@ -6,7 +6,7 @@ function installCommand(service) {
   const platform = service === "Web" ? "standalone" : "linux_amd64";
   const key = service.toUpperCase();
   return [
-    "MQDECK_VERSION=1.0.37",
+    "MQDECK_VERSION=1.0.16",
     `${key}_VERSION=${version}`,
     `curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v\${MQDECK_VERSION}/mqdeck-${lower}_\${${key}_VERSION}_${platform}.tar.gz"`,
     `tar -xzf "mqdeck-${lower}_\${${key}_VERSION}_${platform}.tar.gz"`,
@@ -35,7 +35,7 @@ document.querySelectorAll("[data-service]").forEach((button) => {
   button.addEventListener("click", () => {
     service = button.dataset.service;
     copyLabel.textContent = "Copy";
-    note.textContent = "Public release v1.0.37 · Linux deployment";
+    note.textContent = "Public release v1.0.16 · Linux deployment";
     renderInstall();
   });
 });
@@ -44,7 +44,7 @@ document.querySelector("[data-copy]").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(installCommand(service));
     copyLabel.textContent = "Copied";
-    note.textContent = "Public release v1.0.37 · Linux deployment";
+    note.textContent = "Public release v1.0.16 · Linux deployment";
     window.setTimeout(() => {
       copyLabel.textContent = "Copy";
     }, 2000);

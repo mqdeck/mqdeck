@@ -11,7 +11,7 @@ in that release's `COMPONENTS.md`.
 ## RHEL, Rocky Linux, AlmaLinux, or Oracle Linux
 
 ```bash
-MQDECK_VERSION=1.0.15 # MQDECK_VERSION
+MQDECK_VERSION=1.0.16 # MQDECK_VERSION
 WEB_VERSION=1.0.51 # MQDECK_WEB_VERSION
 curl -fLO "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
 tar -xzf "mqdeck-web_${WEB_VERSION}_standalone.tar.gz"
@@ -46,7 +46,7 @@ for the unprivileged `mqdeck` service account.
 After installing Node.js 20.20 or newer, run PowerShell as Administrator:
 
 ```powershell
-$MqdeckVersion = "1.0.15" # MQDECK_VERSION
+$MqdeckVersion = "1.0.16" # MQDECK_VERSION
 $WebVersion = "1.0.51" # MQDECK_WEB_VERSION
 $url = "https://github.com/mqdeck/mqdeck/releases/download/v$MqdeckVersion/mqdeck-web_${WebVersion}_standalone.zip"
 Invoke-WebRequest $url -OutFile mqdeck-web.zip
