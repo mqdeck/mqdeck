@@ -9,7 +9,7 @@ sources:
   - https://github.com/mqdeck/mqdeck
 keywords:
   - ibmmq
-  - rabbitmq
+  - rdqm
   - observability
   - messaging
 maintainers:

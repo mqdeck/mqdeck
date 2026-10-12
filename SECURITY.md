@@ -28,8 +28,6 @@ production data in the report.
 MQDeck limits broker interaction to read-only collection, explicit named-channel
 operations, and the Queue Watch `MONQ` change:
 
-- RabbitMQ HTTP checks use `GET`, and local checks use allowlisted diagnostic
-  subcommands.
 - IBM MQ collection uses one `DISPLAY` MQSC command per check. The other
   accepted MQSC commands are `START CHANNEL(name)` and
   `STOP CHANNEL(name) MODE(QUIESCE)`, only when an authorized operator confirms

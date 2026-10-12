@@ -3,6 +3,9 @@
 # When both are present, the environment variable wins.
 mqdeck.web.port=3000
 mqdeck.api.url=http://127.0.0.1:8080
+# Same private value as the API, at least 24 characters. Leave unset until the
+# API has mqdeck.management.token. Required for audit, inventory upload,
+# channel actions, and Queue Watch.
 mqdeck.management.token=replace-with-the-same-api-management-secret
 mqdeck.public.url=https://mqdeck.example.com
 mqdeck.platform.config.path=/var/lib/mqdeck-web/platform-config.json

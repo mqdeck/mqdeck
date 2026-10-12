@@ -6,9 +6,9 @@
 | --- | --- | --- |
 | `MQDECK_API_ADDRESS` | `:8080` | HTTP and WebSocket listener |
 | `MQDECK_INVENTORY_PATH` | `./inventory.yaml` | Managed broker inventory; Linux package default is `/var/lib/mqdeck-api/inventory.yaml` |
-| `MQDECK_AUDIT_LOG_PATH` | `./data/audit.jsonl` | Append-only application audit log; Linux package default is `/var/lib/mqdeck-api/audit.jsonl` |
+| `MQDECK_AUDIT_LOG_PATH` | `/var/log/mqdeck/audit-api.log` | Append-only application audit log, mode `0600`, owned by the API service account |
 | `MQDECK_WORKER_TOKEN` | required | Bearer token shared with Workers |
-| `MQDECK_MANAGEMENT_TOKEN` | required | Separate server-to-server token shared only by API and Web; minimum 24 characters |
+| `MQDECK_MANAGEMENT_TOKEN` | unset | Optional at startup. A private value of at least 24 characters, shared with Web, enables audit reads, inventory upload, channel actions, and Queue Watch |
 | `MQDECK_DIAGNOSTIC_TIMEOUT` | `90s` | Maximum time the API waits for a Worker collect; raise for slow queue managers |
 | `MQDECK_CORS_ORIGINS` | `http://localhost:3000` | Allowed Web origins |
 | `MQDECK_QUEUE_WATCH_INTERVAL` | `5s` | Delay between shared queue-depth samples; allowed range is `1s` to `1m` |
@@ -43,7 +43,7 @@ The default five-second interval is for a short diagnosis, not a permanent
 collector. Use a one-second interval only for a brief troubleshooting session.
 
 The inventory is one self-contained YAML file. List every IBM MQ queue
-manager and RabbitMQ node that must appear in the overview, using final literal
+manager that must appear in the overview, using final literal
 values. The API does not expand environment variables and rejects `${...}`
 placeholders. Protect the file with restricted filesystem permissions because
 it contains the read-only broker credentials. Collection tests, transport,
@@ -91,7 +91,30 @@ remain accepted as compatibility aliases.
 `tags` is an optional list of short, literal identifiers such as `production`,
 `payments`, or `mainframe`. Tags are returned by the API, displayed in the
 inventory, and included in text search. `platform` accepts `distributed`
-(default) or `zos` for IBM MQ.
+(default), `zos`, or `rdqm` for IBM MQ.
+
+### IBM MQ RDQM
+
+RDQM uses the same `ibmmq` adapter and normal IBM MQ connection fields. Set
+`platform: rdqm` and assign the same optional `cluster_id` to each registered
+member:
+
+```yaml
+hosts:
+  - id: rdqm-payments-01
+    adapter: ibmmq
+    platform: rdqm
+    cluster_id: rdqm-payments
+    endpoint: rdqm01.example.net(1414)
+    queue_manager: PAYMENTS
+    channel: MQDECK.READONLY
+```
+
+The inventory and host Overview use this static association without contacting
+the queue managers. **Check Cluster Status** is the only action that runs the
+fixed, read-only `rdqmstatus` command set. That command must exist on the
+selected authorized Linux Worker; an SVRCONN connection alone cannot provide
+RDQM operating-system status.
 
 ### IBM MQ for z/OS and secure client connections
 
@@ -132,8 +155,8 @@ and optional `MQSSLKEYR` only for the read-only command process.
 
 The API applies IBM MQ client mode. Overview collects queue-manager status.
 Queues and Channels collect those objects when the operator opens the tab.
-Distributed queue managers also collect listener status; z/OS does not, because
-those listeners belong to CHINIT. RabbitMQ uses the Management API. The direct
+Distributed and RDQM queue managers also collect listener status; z/OS does not, because
+those listeners belong to CHINIT. RDQM cluster status additionally uses fixed `rdqmstatus` commands on a compatible Linux Worker. The direct
 endpoint host is used as the machine label, so several queue managers can share a machine without
 repeating metadata in YAML. CCDT entries are labeled `CCDT`. Cluster and
 repository roles are read live from IBM MQ.

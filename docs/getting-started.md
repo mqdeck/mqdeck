@@ -1,6 +1,6 @@
 # Getting started
 
-MQDeck lets you inspect an IBM® MQ queue manager or a RabbitMQ node when you
+MQDeck lets you inspect an IBM® MQ queue manager on distributed, z/OS, or RDQM when you
 ask, and stays quiet the rest of the time. The inventory is a local file. A
 connected Worker, placed in the broker network, runs the allowlisted check and
 returns the result. Nothing is stored after the page responds. Separately
@@ -20,7 +20,7 @@ flowchart LR
     WEB["MQDeck Web"] -->|"inventory, report, and queue-watch SSE"| API
     WORKER["MQDeck Worker"] -->|"outbound authenticated WebSocket"| API
     WORKER -->|"allowlisted collection and actions"| IBM["IBM MQ"]
-    WORKER -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
+    WORKER -->|"fixed rdqmstatus checks"| RDQM["RDQM Linux"]
     API -.->|"optional assistant"| MODEL["Local model"]
 ```
 
@@ -28,7 +28,7 @@ The Web page reads the inventory from the API without contacting a broker.
 When you collect a host, the API sends that one request to the Worker named in
 the inventory, the default Worker, or the Worker you pick on the page. The Worker
 opens the connection outward. IBM MQ is reached with `runmqsc` over a
-`SVRCONN`. RabbitMQ is reached with HTTP `GET`. The answer comes back on the
+`SVRCONN`. RDQM status is reached with fixed `rdqmstatus` commands on a compatible Linux Worker. The answer comes back on the
 same WebSocket, is shown once, and is discarded.
 
 Queue Watch, when you choose **Start watch**, reuses that Worker connection and
@@ -52,7 +52,7 @@ See [Local assistant and models](llm.md).
 | [Worker](install-worker-linux.md) | Inside each broker network zone | Executes allowlisted collection and actions. No inbound port |
 
 Put the Worker on Linux or [Windows](install-worker-windows.md), wherever
-`runmqsc` or the RabbitMQ management API is reachable. One Worker can serve
+`runmqsc` is reachable. RDQM cluster status additionally requires `rdqmstatus` on a compatible Linux Worker. One Worker can serve
 every queue manager in its zone. Use another Worker only when the network path
 is different.
 

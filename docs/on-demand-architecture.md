@@ -3,7 +3,7 @@
 ## Product definition
 
 MQDeck is an independent, on-demand operations console compatible with IBM® MQ
-software and RabbitMQ. Collection is read-only; a small, separately authorized
+software across distributed, z/OS, and RDQM platforms. Collection is read-only; a small, separately authorized
 set of confirmed channel and Queue Watch operations can change runtime state.
 It keeps a small local YAML inventory and contacts a broker only when an
 operator opens a broker tab or explicitly requests a refresh. IBM MQ collection
@@ -24,7 +24,7 @@ sequenceDiagram
     participant UI as MQDeck Web
     participant API as MQDeck API
     participant A as Connected Worker
-    participant MQ as IBM MQ or RabbitMQ
+    participant MQ as IBM MQ
     participant Model as Local model
 
     UI->>API: GET /api/v1/hosts
@@ -83,7 +83,7 @@ activity, and message age. This is a single read-only request, not polling.
 Results are cached for three seconds, and concurrent expansions for the same
 Worker, host, and queue share the same request. The operator starts repeated
 collection explicitly with **Start watch** and stops it with **Stop watch**.
-RabbitMQ queues do not offer Queue Watch.
+Queue Watch is available for IBM MQ local queues.
 
 While the watch is on, the browser receives one-way Server-Sent Events (SSE).
 API to Worker traffic stays on the existing authenticated WebSocket. Each sample
@@ -160,7 +160,7 @@ selectable.
   tab may send `START CHANNEL(name)` after the operator confirms it. An
   administrator may also send `STOP CHANNEL(name) MODE(QUIESCE)`. Queue
   Watch may send `ALTER QLOCAL(name) MONQ(LOW)` and later `MONQ(OFF)` or
-  `MONQ(QMGR)` for that queue only. RabbitMQ stays on read-only HTTP checks.
+  `MONQ(QMGR)` for that queue only.
 - IBM MQ TLS and enterprise client policies use a CCDT on the selected Worker;
   MQDeck passes only `MQCCDTURL` and optional `MQSSLKEYR` to `runmqsc`.
 - The control protocol does not publish, consume, run a shell string, or accept
@@ -170,8 +170,7 @@ selectable.
 - Message browse is a separate operator action on one local queue. It reads at
   most 10 messages from the front of the queue and then stops. It does not
   walk to the end of the queue and does not write a dump file. IBM MQ uses one
-  non-destructive browse with `dmpmqmsg` from `mqdeck.worker.ibmmq.client`. RabbitMQ uses the management API with
-  `ack_requeue_true`, so the message stays and is marked redelivered. Browse
+  non-destructive browse with `dmpmqmsg` from `mqdeck.worker.ibmmq.client`. Browse
   does not run on expand and is not retained.
 - Queue names are validated, bounded, and never interpolated into arbitrary
   MQSC. The Worker selects its fixed `queue_status` collector.
@@ -182,16 +181,21 @@ API, in `/etc/mqdeck/api.properties`:
 
 ```properties
 mqdeck.inventory.path=/var/lib/mqdeck-api/inventory.yaml
-mqdeck.audit.log.path=/var/lib/mqdeck-api/audit.jsonl
+mqdeck.audit.log.path=/var/log/mqdeck/audit-api.log
 mqdeck.worker.token=replace-with-a-long-random-secret
-mqdeck.management.token=replace-with-a-different-long-random-secret
 mqdeck.diagnostic.timeout=90s
 ```
 
 A container sets the same values as `MQDECK_INVENTORY_PATH`,
-`MQDECK_AUDIT_LOG_PATH`, `MQDECK_WORKER_TOKEN`,
-`MQDECK_MANAGEMENT_TOKEN`, and `MQDECK_DIAGNOSTIC_TIMEOUT`. The environment
-variable wins when both are present.
+`MQDECK_AUDIT_LOG_PATH`, `MQDECK_WORKER_TOKEN`, and
+`MQDECK_DIAGNOSTIC_TIMEOUT`. The environment variable wins when both are present.
+
+`mqdeck.management.token` is optional at startup. Set one private value of at
+least 24 characters on the API and the same value on Web to open audit reads,
+inventory upload, channel actions, and Queue Watch. Audit lines are written to
+`mqdeck.audit.log.path` as `mqdeck:mqdeck` mode `0600`. The inventory file uses
+the same owner and mode. `root:mqdeck` mode `0600` is not readable by the
+service user.
 
 Worker, in `/etc/mqdeck/worker.properties`:
 

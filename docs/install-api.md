@@ -29,9 +29,24 @@ wget "https://github.com/mqdeck/mqdeck/releases/download/v${MQDECK_VERSION}/mqde
 ```
 
 Review `/var/lib/mqdeck-api/inventory.yaml` and `/etc/mqdeck/api.properties`.
-Set different strong values for `mqdeck.worker.token` and
-`mqdeck.management.token`; copy the management value to Web. Then validate and
-start the component:
+Set `mqdeck.worker.token`. The API starts without `mqdeck.management.token`.
+The inventory file must be owned by the service account:
+
+```bash
+sudo chown mqdeck:mqdeck /var/lib/mqdeck-api/inventory.yaml
+sudo chmod 0600 /var/lib/mqdeck-api/inventory.yaml
+```
+
+`root:mqdeck` with mode `0600` is not readable by the `mqdeck` service user.
+The installer applies `mqdeck:mqdeck` and mode `0600` on each install.
+
+Audit is the JSON Lines file `/var/log/mqdeck/audit-api.log`, set by
+`mqdeck.audit.log.path`. The installer creates `/var/log/mqdeck` as
+`mqdeck:mqdeck` mode `0750` and the log file as mode `0600`. Recording starts
+with that path. Reading the log in Web, uploading
+inventory, changing channels, and Queue Watch also need the same
+`mqdeck.management.token` on the API and on Web. Use a private value of at
+least 24 characters. Then validate and start the component:
 
 ```bash
 sudo -u mqdeck /opt/mqdeck/api/mqdeck-api -validate
@@ -45,8 +60,8 @@ For Queue Watch routes under `/api/v1/hosts/*/queues/*/watch`, preserve
 `text/event-stream`, disable response buffering, and use a streaming timeout
 appropriate for an operator-controlled session. The API sets
 `X-Accel-Buffering: no`. The API needs no database or Elasticsearch.
-The API service can write only its systemd state directory, which contains the
-managed inventory and `audit.jsonl`.
+The API service can write its systemd state directory, which contains the
+managed inventory, and `/var/log/mqdeck`, which contains `audit-api.log`.
 
 The local assistant is optional and stays disabled until you add a GGUF model
 or an OpenAI-compatible endpoint. See

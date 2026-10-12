@@ -27,8 +27,17 @@ if [ ! -f /var/lib/mqdeck-api/inventory.yaml ]; then
     install -o mqdeck -g mqdeck -m 0600 "$source_dir/inventory.example.yaml" /var/lib/mqdeck-api/inventory.yaml
   fi
 fi
+# The service runs as mqdeck. A file left as root:mqdeck mode 0600 cannot be read.
+chown mqdeck:mqdeck /var/lib/mqdeck-api/inventory.yaml
+chmod 0600 /var/lib/mqdeck-api/inventory.yaml
+install -d -o mqdeck -g mqdeck -m 0750 /var/log/mqdeck
+touch /var/log/mqdeck/audit-api.log
+chown mqdeck:mqdeck /var/log/mqdeck/audit-api.log
+chmod 0600 /var/log/mqdeck/audit-api.log
 if [ ! -f /etc/mqdeck/api.properties ]; then
   install -o root -g mqdeck -m 0640 "$source_dir/api.properties.example" /etc/mqdeck/api.properties
+elif grep -q '^mqdeck.audit.log.path=/var/lib/mqdeck-api/audit.jsonl$' /etc/mqdeck/api.properties; then
+  sed -i 's|^mqdeck.audit.log.path=/var/lib/mqdeck-api/audit.jsonl$|mqdeck.audit.log.path=/var/log/mqdeck/audit-api.log|' /etc/mqdeck/api.properties
 fi
 install -o root -g root -m 0644 "$source_dir/mqdeck-api.service" /etc/systemd/system/mqdeck-api.service
 systemctl daemon-reload

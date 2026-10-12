@@ -3,9 +3,12 @@
 # When both are present, the environment variable wins.
 mqdeck.api.address=:8080
 mqdeck.inventory.path=/var/lib/mqdeck-api/inventory.yaml
-mqdeck.audit.log.path=/var/lib/mqdeck-api/audit.jsonl
+mqdeck.audit.log.path=/var/log/mqdeck/audit-api.log
 mqdeck.worker.token=replace-with-a-long-random-secret
-mqdeck.management.token=replace-with-a-different-long-random-secret
+# Optional at startup. Set a private value of at least 24 characters, and the
+# same value on Web, to enable audit reads, inventory upload, channel actions,
+# and Queue Watch. Audit lines are appended to mqdeck.audit.log.path.
+mqdeck.management.token=replace-with-the-same-api-management-secret
 mqdeck.diagnostic.timeout=90s
 mqdeck.cors.origins=http://localhost:3000,http://127.0.0.1:3000
 

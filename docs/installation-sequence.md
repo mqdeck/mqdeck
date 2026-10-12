@@ -20,8 +20,7 @@ channel and one `DISPLAY` command per check. If operators will use **Start**
 on the Channels tab, that same identity also needs permission to run
 `START CHANNEL`. If administrators will use **Stop**, it also needs permission
 to run `STOP CHANNEL`. If operators will use Queue Watch, the identity also needs
-authority to change `MONQ` on the local queues they watch. RabbitMQ uses HTTP
-`GET` against the Management API. Confirm
+authority to change `MONQ` on the local queues they watch. For RDQM cluster status, install the Worker on compatible Linux with `rdqmstatus` available. Confirm
 the identity can display every object type the operator expects to observe.
 MQDeck identifies the access channel and warns when IBM MQ explicitly rejects
 a collection for insufficient authority; objects hidden by authority must not

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MQDeck | Messaging clarity, on demand.</title>
-    <meta name="description" content="Independent on-demand operations for IBM MQ-compatible and RabbitMQ environments, with controlled collection and role-based actions." />
+    <meta name="description" content="Independent on-demand operations for IBM MQ distributed, z/OS, and RDQM environments, with controlled collection and role-based actions." />
     <meta property="og:title" content="MQDeck | Messaging clarity, on demand." />
     <meta property="og:description" content="Your brokers. One clear view. On-demand diagnostics and controlled operations, without a telemetry platform." />
     <meta property="og:type" content="website" />
@@ -48,7 +48,7 @@
         <div class="wrap hero-content">
           <div class="release-label"><span class="dot"></span> MQDECK 1.0.3 <span>Community-licensed · Public release</span></div>
           <h1 id="main-title">Messaging clarity.<br /><span>On your terms.</span></h1>
-          <p class="hero-description">Your IBM® MQ-compatible and RabbitMQ infrastructure, in focus.<br />Fresh diagnostics when you need them. Quiet when you don't.</p>
+          <p class="hero-description">Your IBM® MQ infrastructure, in focus.<br />Fresh diagnostics when you need them. Quiet when you don't.</p>
           <div class="hero-actions">
             <a class="btn" href="https://github.com/mqdeck/mqdeck/blob/main/docs/getting-started.md">Get started <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
             <a class="btn btn-outline" href="https://github.com/mqdeck/mqdeck/releases/tag/v1.0.3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v10m0 0 4-4m-4 4-4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="2"/></svg> Download v1.0.3</a>
@@ -59,7 +59,7 @@
       <div class="trust-band">
         <div class="wrap trust-inner">
           <span class="micro">Built for messaging operations</span>
-          <div class="brokers"><span>IBM MQ compatible</span><span class="rabbit-word"><span class="rabbit-icon" aria-hidden="true">▙</span>RabbitMQ</span></div>
+          <div class="brokers"><span>IBM MQ distributed</span><span>IBM MQ z/OS</span><span>RDQM</span></div>
           <div class="trust-properties"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>On demand</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>Role based</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>No datastore</span></div>
         </div>
       </div>
@@ -81,7 +81,7 @@
             <p>A connection initiated inside your network.<br />Read-only collection and allowlisted actions.<br />No inbound Worker listener.</p>
           </div>
           <div class="flow">
-            <div class="flow-node"><svg class="flow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v6H4zM4 14h16v4H4zM8 9h.01M8 16h.01" fill="none" stroke="currentColor" stroke-width="2"/></svg><div><strong>Your brokers</strong><small>IBM MQ / RabbitMQ</small></div></div>
+            <div class="flow-node"><svg class="flow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v6H4zM4 14h16v4H4zM8 9h.01M8 16h.01" fill="none" stroke="currentColor" stroke-width="2"/></svg><div><strong>Your brokers</strong><small>IBM MQ distributed / z/OS / RDQM</small></div></div>
             <div class="flow-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg><small>allowlisted</small></div>
             <div class="flow-node"><svg class="flow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8l8-4 8 4-8 4zM4 12l8 4 8-4M4 16l8 4 8-4" fill="none" stroke="currentColor" stroke-width="2"/></svg><div><strong>MQDeck Worker</strong><small>validate · execute · respond</small></div></div>
             <div class="flow-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg><small>outbound</small></div>
@@ -103,10 +103,10 @@
             <a class="text-link" href="https://github.com/mqdeck/mqdeck/blob/main/examples/ibmmq-svrconn.md">Configure compatibility <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
           </article>
           <article class="broker-item">
-            <div class="broker-heading"><h3>RabbitMQ</h3><span class="protocol">HTTP GET</span></div>
-            <p>Understand current node and cluster state through bounded, read-only Management API requests.</p>
-            <div class="feature-list"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>Nodes &amp; alarms</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>Queues &amp; rates</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>Connections</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>Consumers</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7" fill="none" stroke="currentColor" stroke-width="2"/></svg>Bindings</span></div>
-            <a class="text-link" href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md">Configure RabbitMQ <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+            <div class="broker-heading"><h3>IBM MQ RDQM</h3><span class="protocol">RDQMSTATUS</span></div>
+            <p>Inspect registered RDQM members and collect high-availability status only when requested.</p>
+            <div class="feature-list"><span>Cluster members</span><span>Queue manager location</span><span>Replication state</span><span>Resource failures</span></div>
+            <a class="text-link" href="https://github.com/mqdeck/mqdeck/blob/main/docs/configuration.md">Configure RDQM <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
           </article>
         </div>
       </section>

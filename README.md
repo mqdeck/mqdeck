@@ -1,7 +1,7 @@
 # MQDeck
 
 MQDeck is an independent, on-demand operations console compatible with IBM® MQ
-software and RabbitMQ. Collection is read-only by default; separately authorized
+software across distributed, z/OS, and RDQM platforms. Collection is read-only by default; separately authorized
 administrators can start or stop named channels and use temporary Queue Watch
 instrumentation.
 Its inventory overview comes from a validated YAML file that can be replaced
@@ -21,7 +21,7 @@ flowchart LR
     WEB["MQDeck Web"] -->|"inventory, report, and queue-watch SSE"| API
     WORKER["MQDeck Worker"] -->|"outbound authenticated WebSocket"| API
     WORKER -->|"allowlisted collection and actions"| IBM["IBM MQ"]
-    WORKER -->|"read-only HTTP diagnostics"| RMQ["RabbitMQ"]
+    WORKER -->|"fixed rdqmstatus checks"| RDQM["RDQM Linux"]
     API -.->|"optional assistant"| MODEL["Local model"]
 ```
 
@@ -96,8 +96,7 @@ sets a local queue from `OFF` or `QMGR` to `MONQ(LOW)` and restores `OFF` or
 `HIGH`, and it does not change the queue manager `MONQ`. When put and get both
 move in one sample, the UI shows passing activity instead of an invented split.
 The default watch interval is five seconds (`MQDECK_QUEUE_WATCH_INTERVAL`).
-RabbitMQ checks use `GET`. IBM MQ collection uses one `DISPLAY` command per
-check. The other MQSC commands are confirmed, permission-checked
+IBM MQ collection uses one `DISPLAY` command per check. RDQM cluster status uses a fixed, read-only `rdqmstatus` command set on a compatible Linux Worker. The other MQSC commands are confirmed, permission-checked
 `START CHANNEL(name)` and `STOP CHANNEL(name) MODE(QUIESCE)` operations, plus
 the Queue Watch `ALTER QLOCAL(name) MONQ(...)` commands above. The protocol
 cannot publish, consume, or run an arbitrary shell command.
@@ -109,8 +108,8 @@ MQDeck binaries are governed by the
 
 ## Trademarks and independence
 
-IBM, IBM MQ, RabbitMQ, and other third-party names are used only to describe
+IBM, IBM MQ, and other third-party names are used only to describe
 compatibility. MQDeck is an independent product and is not affiliated with,
-endorsed by, sponsored by, certified by, or supported by IBM, Broadcom, or any
+endorsed by, sponsored by, certified by, or supported by IBM or any
 other trademark owner. See [Trademarks and product independence](TRADEMARKS.md)
 and [Third-party notices](THIRD_PARTY_NOTICES.md).

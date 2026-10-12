@@ -19,9 +19,6 @@ Debian static non-root image.
 IBM and IBM MQ are trademarks or registered trademarks of International
 Business Machines Corporation in the United States, other countries, or both.
 
-RabbitMQ is a trademark of Broadcom Inc. in the United States and other
-countries.
-
 Kubernetes, Microsoft, Microsoft Entra, Microsoft Azure, Windows, Amazon Web
 Services (AWS), Red Hat OpenShift, Elasticsearch, and other product and service
 names are trademarks of their respective owners.

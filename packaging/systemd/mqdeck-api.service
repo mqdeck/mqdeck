@@ -17,6 +17,8 @@ ProtectHome=true
 ProtectSystem=strict
 StateDirectory=mqdeck-api
 StateDirectoryMode=0750
+LogsDirectory=mqdeck
+LogsDirectoryMode=0750
 CapabilityBoundingSet=
 
 [Install]

@@ -1,5 +1,11 @@
 # Architecture
 
+MQDeck currently supports IBM MQ queue managers on distributed, z/OS, and
+RDQM platforms through the `ibmmq` adapter. RDQM membership comes from the
+static inventory; cluster status is collected explicitly with allowlisted
+`rdqmstatus` commands on a compatible Linux Worker. The adapter boundary
+remains extensible without exposing arbitrary commands.
+
 MQDeck separates inventory browsing from broker access.
 
 ```mermaid

@@ -76,7 +76,7 @@ Set the following values for a packaged or production installation:
 | `MQDECK_AUTH_USERNAME` | Recovery administrator username |
 | `MQDECK_AUTH_PASSWORD` | Recovery administrator password |
 | `MQDECK_AUTH_DISPLAY_NAME` | Recovery administrator display name |
-| `MQDECK_MANAGEMENT_TOKEN` | Server-to-server secret shared with API for managed operations and audit |
+| `MQDECK_MANAGEMENT_TOKEN` | Optional. Same private value of at least 24 characters on API and Web. Enables audit reads, inventory upload, channel actions, and Queue Watch |
 
 Rotate the bootstrap password and session secret before any shared deployment.
 

@@ -16,8 +16,7 @@ MQDeck itself does not grant any license to IBM software. Operators are
 responsible for obtaining any required IBM software, subscriptions, licenses,
 and support directly from IBM or an authorized provider.
 
-RabbitMQ is a trademark of Broadcom Inc. Microsoft, Microsoft Entra, Windows,
-and Microsoft Azure are trademarks of the Microsoft group of companies. Other
+Microsoft, Microsoft Entra, Windows, and Microsoft Azure are trademarks of the Microsoft group of companies. Other
 company, product, and service names may be trademarks or service marks of their
 respective owners.
 

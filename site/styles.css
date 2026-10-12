@@ -53,7 +53,7 @@
 .trust-band { border-block:1px solid var(--border); }
 .trust-inner { min-height:83px; display:flex; align-items:center; justify-content:space-between; gap:30px; }
 .micro { font-family:var(--font-mono); font-size:10px; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted-foreground); }
-.brokers { display:flex; align-items:center; gap:35px; font-size:14px; font-weight:700; }.rabbit-word {display:flex;align-items:center;gap:7px}.rabbit-icon {color:var(--primary);font-size:25px;line-height:1}
+.brokers { display:flex; align-items:center; gap:35px; font-size:14px; font-weight:700; }
 .trust-properties {display:flex; gap:20px; font-size:10px; color:var(--muted-foreground)} .trust-properties span {display:flex;align-items:center;gap:5px}.trust-properties svg {width:12px;color:var(--primary)}
 .section { padding-block:78px; }
 .section-title { display:flex; justify-content:space-between; align-items:flex-end; gap:35px; margin-bottom:38px; }

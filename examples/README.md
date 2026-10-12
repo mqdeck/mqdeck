@@ -6,7 +6,7 @@ from environment variables.
 
 | File | Purpose |
 | --- | --- |
-| `inventory.yaml` | API-side IBM® MQ and RabbitMQ inventory with preferred Worker routing |
+| `inventory.yaml` | API-side IBM® MQ inventory with preferred Worker routing |
 | `ibmmq-svrconn.md` | Least-privilege IBM MQ client connection without `mqweb` |
 | `ibmmq-standalone-applications.md` | Local publisher and consumer sessions for diagnosis testing |
 
