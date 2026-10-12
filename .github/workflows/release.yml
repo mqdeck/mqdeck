@@ -137,66 +137,75 @@ jobs:
           import re
           from pathlib import Path
 
-          version = os.environ['MQDECK_VERSION']
-          versions = {key: os.environ[f'{key}_VERSION'] for key in ('API', 'WORKER', 'WEB')}
+          version = os.environ["MQDECK_VERSION"]
+          components = {k: os.environ[f"{k}_VERSION"] for k in ("API", "WORKER", "WEB")}
+          semver = r"\d+\.\d+\.\d+"
+          for value in (version, *components.values()):
+              if not re.fullmatch(semver, value):
+                  raise SystemExit(f"Invalid release/component version: {value}")
 
-          # Preserve the existing version-marker convention used by docs.
-          for folder, patterns in ((Path('docs'), ('*.md',)), (Path('site'), ('*.html',))):
-              for pattern in patterns:
-                  for path in folder.rglob(pattern):
-                      text = path.read_text()
-                      original = text
-                      for marker, value in [('MQDECK_VERSION', version),
-                                            ('MQDECK_API_VERSION', versions['API']),
-                                            ('MQDECK_WORKER_VERSION', versions['WORKER']),
-                                            ('MQDECK_WEB_VERSION', versions['WEB'])]:
-                          shell_var = 'MQDECK_VERSION' if marker == 'MQDECK_VERSION' else marker.removeprefix('MQDECK_')
-                          text = re.sub(r'(' + re.escape(shell_var) + r'=)[^\s]+(\s+# ' + marker + r')',
-                                        lambda m: m[1] + value + m[2], text)
-                          text = re.sub(r'(\$' + ('Mqdeck' if marker == 'MQDECK_VERSION' else marker.removeprefix('MQDECK_').title()) +
-                                        r'Version = ")[^"]+(" # ' + marker + r')',
-                                        lambda m: m[1] + value + m[2], text)
-                      if text != original:
-                          path.write_text(text)
 
-          # Explicitly update the landing page and its existing installation UI.
-          html = Path('site/index.html')
-          js = Path('site/app.js')
-          if not html.is_file() or not js.is_file():
-              raise SystemExit('Expected site/index.html and site/app.js')
+          def required(text: str, pattern: str, value: str, label: str) -> str:
+              updated, count = re.subn(pattern, lambda _: value, text)
+              if not count:
+                  raise SystemExit(f"Cannot find required version marker: {label}")
+              return updated
 
-          def replace_required(data, pattern, replacement, label):
-              result, count = re.subn(pattern, lambda _m: replacement, data)
-              if count < 1:
-                  raise SystemExit(f'Expected site version pattern missing: {label}')
-              return result
 
-          content = html.read_text()
-          content = replace_required(content, r'MQDECK \d+\.\d+\.\d+', f'MQDECK {version}', 'hero release')
-          content = replace_required(content, r'releases/tag/v\d+\.\d+\.\d+', f'releases/tag/v{version}', 'download link')
-          content = replace_required(content, r'Download v\d+\.\d+\.\d+', f'Download v{version}', 'download label')
-          content = replace_required(content, r'Public release v\d+\.\d+\.\d+', f'Public release v{version}', 'terminal note')
-          content = re.sub(r'(/ v)\d+\.\d+\.\d+(</span>)', lambda m: m[1] + versions['API'] + m[2], content)
-          html.write_text(content)
+          # Preserve existing inline version-marker replacement rules in documentation.
+          for folder, pattern in ((Path("docs"), "*.md"), (Path("site"), "*.html")):
+              for path in folder.rglob(pattern):
+                  content = path.read_text(encoding="utf-8")
+                  before = content
+                  for marker, value in (
+                      ("MQDECK_VERSION", version),
+                      ("MQDECK_API_VERSION", components["API"]),
+                      ("MQDECK_WORKER_VERSION", components["WORKER"]),
+                      ("MQDECK_WEB_VERSION", components["WEB"]),
+                  ):
+                      shell_name = "MQDECK_VERSION" if marker == "MQDECK_VERSION" else marker.removeprefix("MQDECK_")
+                      pattern_shell = rf"({re.escape(shell_name)}=)[^\s]+(\s+# {marker})"
+                      content = re.sub(pattern_shell, lambda m: m[1] + value + m[2], content)
+                      ps_var = "Mqdeck" if marker == "MQDECK_VERSION" else marker.removeprefix("MQDECK_").title()
+                      pattern_ps = rf'(\${ps_var}Version = ")[^"]+(" # {marker})'
+                      content = re.sub(pattern_ps, lambda m: m[1] + value + m[2], content)
+                  if content != before:
+                      path.write_text(content, encoding="utf-8")
 
-          content = js.read_text()
-          content = replace_required(content,
-              r'const versions = \{ API: "[^"]+", Worker: "[^"]+", Web: "[^"]+" \};',
-              f'const versions = {{ API: "{versions["API"]}", Worker: "{versions["WORKER"]}", Web: "{versions["WEB"]}" }};',
-              'component versions')
-          content = replace_required(content, r'MQDECK_VERSION=\d+\.\d+\.\d+',
-              f'MQDECK_VERSION={version}', 'install commands')
-          content = replace_required(content, r'Public release v\d+\.\d+\.\d+',
-              f'Public release v{version}', 'terminal copy message')
-          js.write_text(content)
+          html_path = Path("site/index.html")
+          js_path = Path("site/app.js")
+          if not html_path.exists() or not js_path.exists():
+              raise SystemExit("site/index.html or site/app.js missing")
 
-          # Fail the workflow if the published version is not reflected in key areas.
-          assert f'MQDECK {version}' in html.read_text()
-          assert f'releases/tag/v{version}' in html.read_text()
-          assert f'MQDECK_VERSION={version}' in js.read_text()
-          for component, component_version in versions.items():
-              assert component_version in js.read_text()
-          print(f'Site updated: MQDeck {version}, components {versions}')
+          html = html_path.read_text(encoding="utf-8")
+          html = required(html, rf"MQDECK {semver}", f"MQDECK {version}", "hero version")
+          html = required(html, rf"releases/tag/v{semver}", f"releases/tag/v{version}", "download URL")
+          html = required(html, rf"Download v{semver}", f"Download v{version}", "download label")
+          html = required(html, rf"Public release v{semver}", f"Public release v{version}", "terminal note")
+          html = required(html, rf'(API on RHEL <span> / v){semver}(</span>)',
+                          f'API on RHEL <span> / v{components["API"]}</span>', "API terminal label")
+          # Script uses client side rendering; also ensure static HTML fallback is current.
+          html_path.write_text(html, encoding="utf-8")
+
+          js = js_path.read_text(encoding="utf-8")
+          js = required(js, r'const versions = \{ API: "[^"]+", Worker: "[^"]+", Web: "[^"]+" \};',
+                        f'const versions = {{ API: "{components["API"]}", Worker: "{components["WORKER"]}", Web: "{components["WEB"]}" }};',
+                        "component versions")
+          js = required(js, rf'MQDECK_VERSION={semver}', f'MQDECK_VERSION={version}', "install script")
+          js = required(js, rf'Public release v{semver}', f'Public release v{version}', "runtime note")
+          js_path.write_text(js, encoding="utf-8")
+
+          # Validation is strict: release link, static fallback, JS installation variables, dynamic labels.
+          assert f"MQDECK {version}" in html
+          assert f"Download v{version}" in html
+          assert f"releases/tag/v{version}" in html
+          assert f"Public release v{version}" in html
+          assert f"API on RHEL <span> / v{components['API']}</span>" in html
+          assert f"MQDECK_VERSION={version}" in js
+          assert f"Public release v{version}" in js
+          for name, value in components.items():
+              assert f'{('API' if name == 'API' else name.title())}: "{value}"' in js, (name,value,js)
+          print(f"Updated site for MQDeck {version} / " + ", ".join(f"{k} {v}" for k, v in components.items()))
           PY
 
       - name: Commit site and documentation updates to main
